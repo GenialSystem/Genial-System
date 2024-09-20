@@ -21,6 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'address',
+        'cap',
+        'cellphone',
+        'city',
+        'province',
     ];
 
     /**
@@ -44,5 +49,37 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // A user (customer) can have many orders
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'customer_id');
+    }
+
+    public function estimates()
+    {
+        return $this->hasMany(Estimate::class, 'customer_id');
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    // A mechanic can belong to many orders
+    public function assignedOrders()
+    {
+        return $this->belongsToMany(Order::class, 'order_mechanic', 'mechanic_id', 'order_id');
+    }
+
+    public function customerInfo()
+    {
+        return $this->hasOne(CustomerInfo::class);
+    }
+
+    public function mechanicInfo()
+    {
+        return $this->hasOne(MechanicInfo::class);
     }
 }

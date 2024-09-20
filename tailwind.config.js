@@ -12,9 +12,27 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                tome: ['TomeSans', ...defaultTheme.fontFamily.sans],
+            colors: {
+                newOrder: '#FFF9EC',
+                workingOrder: '#E9EFF5',
+                doneOrder: '#EFF7E9',
+                cancelledOrder: '#FEF0F5'
+                },
+            },
+            colors: {
+                primary: '#DC0814', 
+                secondary: '#222222', 
+             
             },
         },
+        safelist: [
+            'bg-[#FFF9EC]',
+            'bg-[#E9EFF5]',
+            'bg-red-500',
+            'bg-green-200',
+            // Add other dynamic classes here
+          ],
     },
 
     plugins: [forms],

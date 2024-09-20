@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12.201" height="12.65" viewBox="0 0 12.201 12.65">
+  <g id="preventivi_icona" data-name="preventivi icona" transform="translate(0.1 0.1)">
+    <rect id="Rettangolo_876" data-name="Rettangolo 876" width="5.573" height="0.742" transform="translate(2.229 2.228)" fill="#222" stroke="#222" stroke-width="0.2"/>
+    <rect id="Rettangolo_878" data-name="Rettangolo 878" width="5.573" height="0.742" transform="translate(2.229 4.943)" fill="#222" stroke="#222" stroke-width="0.2"/>
+    <rect id="Rettangolo_879" data-name="Rettangolo 879" width="3.344" height="0.742" transform="translate(2.229 7.803)" fill="#222" stroke="#222" stroke-width="0.2"/>
+    <path id="Tracciato_864" data-name="Tracciato 864" d="M53.313,46.93l-.566-.511a.916.916,0,0,0-1.253.064l-3.576,3.965-.428,2.371,2.314-.671,3.576-3.967a.886.886,0,0,0-.064-1.253ZM49.08,51.768l-.873.254.163-.893Zm2.907-2.886L49.625,51.5l-1.045-.941,2.362-2.618Zm1.054-1.31a.318.318,0,0,1-.082.229l-.593.66-1.045-.93.593-.66a.33.33,0,0,1,.458-.023l.566.511A.318.318,0,0,1,53.04,47.571Z" transform="translate(-41.607 -40.41)" fill="#222" stroke="#222" stroke-width="0.2"/>
+    <path id="Tracciato_865" data-name="Tracciato 865" d="M26.827,32.44H23.551a1,1,0,0,1-1-1v-8.78a1,1,0,0,1,1-1H30.1a1,1,0,0,1,1,1v3.6h.742v-3.6A1.743,1.743,0,0,0,30.1,20.92H23.551a1.743,1.743,0,0,0-1.741,1.741v8.78a1.743,1.743,0,0,0,1.741,1.741h3.276Z" transform="translate(-21.81 -20.92)" fill="#222" stroke="#222" stroke-width="0.2"/>
+  </g>
+</svg>

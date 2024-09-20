@@ -12,7 +12,7 @@ class EstimateController extends Controller
      */
     public function index()
     {
-        //
+        return view('estimates.index');
     }
 
     /**
@@ -36,7 +36,7 @@ class EstimateController extends Controller
      */
     public function show(Estimate $estimate)
     {
-        //
+        return view('estimates.show', compact('estimate'));
     }
 
     /**

@@ -12,7 +12,20 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        //
+        return view('invoices.index');
+    }
+
+    public function indexForCustomers()
+    {
+        return view('invoices.index', ['role' => 'customer']);
+    }
+
+    /**
+     * Display a listing of the resource for mechanics.
+     */
+    public function indexForMechanics()
+    {
+        return view('invoices.index', ['role' => 'mechanic']);
     }
 
     /**
@@ -36,7 +49,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        //
+        return view('invoices.show', compact('invoice'));
     }
 
     /**

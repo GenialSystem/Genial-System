@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>GenialSystem</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -13,28 +13,35 @@
 
     <!-- Styles -->
     @livewireStyles
-    @vite('resources/css/app.css')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Chart.js and Data Labels Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 </head>
 
-<body class="font-sans antialiased bg-[#F5F5F5]">
-    <div id="app">
-        <!-- Sidebar -->
-        @livewire('sidebar')
+<body class="font-tome antialiased bg-[#F5F5F5]">
 
-        <!-- Main content -->
-        <div class="ml-64">
-            <!-- Navbar -->
-            @livewire('navbar')
 
-            <!-- Main Content -->
-            <main class="m-4">
-                @yield('content')
-            </main>
+    <body class="font-sans antialiased bg-[#F5F5F5]">
+        <div id="app">
+            <!-- Sidebar -->
+            @livewire('sidebar')
+            <!-- Main content -->
+            <div class="ml-64">
+                <!-- Navbar -->
+                @livewire('navbar')
+
+                <!-- Main Content -->
+                <main class="mx-6 my-2">
+                    @livewire('result-banner')
+                    @yield('content')
+                </main>
+            </div>
         </div>
-    </div>
-    @livewireScripts
-</body>
+        @livewireScripts
+
+    </body>
 
 </html>

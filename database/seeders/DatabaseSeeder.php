@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,20 +13,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = ['admin', 'mechanic', 'customer'];
+        DB::beginTransaction();  // Start the transaction
 
-        for ($i = 0; $i < 30; $i++) {
-            $user = User::create([
-                'name' => fake()->name,
-                'email' => fake()->unique()->safeEmail,
-                'password' => Hash::make('password'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        try {
+            $this->call(UserSeeder::class);
+            $this->call(PermissionsSeeder::class);
+            $this->call(CarPartSeeder::class);
+            $this->call(MechanicInfoSeeder::class);
+            $this->call(CustomerInfoSeeder::class);
+            $this->call(OrdersTableSeeder::class);
+            $this->call(WorkstationSeeder::class);
+            $this->call(EstimatesTableSeeder::class);
+            $this->call(InvoiceSeeder::class);
 
-            // Assign a random role
-            $randomRole = $roles[array_rand($roles)];
-            $user->assignRole($randomRole);
+            DB::commit();  // Commit the transaction if all seeders pass
+        } catch (Throwable $e) {
+            DB::rollBack();  // Rollback the transaction if any seeder fails
+            $this->command->error('Seeding failed: ' . $e->getMessage());
+            throw $e;
         }
     }
 }

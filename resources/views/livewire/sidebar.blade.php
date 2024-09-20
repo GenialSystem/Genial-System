@@ -1,173 +1,200 @@
 <aside id="default-sidebar"
-    class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+    class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[#E8E8E8]"
     aria-label="Sidebar">
-    <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-        <ul class="space-y-2 font-medium">
+    <div class="h-full px-3 py-4 overflow-y-auto flex flex-col">
+        <ul class="space-y-0.5 flex-grow">
 
-            <li class="menu-item">
-                <a href="#" class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Home</span>
+            <li class="menu-item hover:bg-[#E0E0E0]">
+                <a href="{{ route('home') }}"
+                    class="flex items-center p-4 text-secondary group hover:text-primary rounded-lg">
+                    <img src="{{ asset('images/casa icon.svg') }}" alt="">
+                    <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Home</span>
                 </a>
             </li>
             @role('admin')
-            <li class="menu-item">
-                <a href="{{ route('getUsersByRole', ['role' => 'customer']) }}"
-                    class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Clienti</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="{{ route('getUsersByRole', ['role' => 'mechanic']) }}"
-                    class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Tecnici</span>
-                </a>
-            </li>
+                <li class="menu-item hover:bg-[#E0E0E0]">
+                    <a href="{{ route('customers.index') }}"
+                        class="flex items-center p-4 text-secondary group hover:text-primary rounded-lg">
+                        <img src="{{ asset('images/cliente icona.svg') }}" alt="" class="hover:fill-primary">
+                        <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Clienti</span>
+                    </a>
+                </li>
 
-            <li class="menu-item">
-                <a href="#" class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Riparazioni</span>
-                </a>
-            </li>
+                <li class="menu-item hover:bg-[#E0E0E0]">
+                    <a href="{{ route('mechanics.index') }}"
+                        class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
+                        <img src="{{ asset('images/tecnici icon.svg') }}" alt="">
+
+                        <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Tecnici</span>
+                    </a>
+                </li>
+
+                <li class="menu-item hover:bg-[#E0E0E0]">
+                    <a href="{{ route('orders.index') }}"
+                        class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
+                        <img src="{{ asset('images/commesse icona.svg') }}" alt="">
+
+                        <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Riparazioni</span>
+                    </a>
+                </li>
             @endrole
             @role('customer')
-            <li class="menu-item">
-                <a href="#" class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Riepilogo Riparazioni</span>
-                </a>
-            </li>
+                <li class="menu-item hover:bg-[#E0E0E0]">
+                    <a href="###################"
+                        class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
+                        <img src="{{ asset('images/commesse icona.svg') }}" alt="">
+
+                        <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Riepilogo Riparazioni</span>
+                    </a>
+                </li>
             @endrole
             @hasanyrole(['admin', 'customer'])
-            <li class="menu-item">
-                <a href="#" class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Preventivi</span>
-                </a>
-            </li>
+                <li class="menu-item hover:bg-[#E0E0E0]">
+                    <a href="{{ route('estimates.index') }}"
+                        class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
+                        <img src="{{ asset('images/preventivi icona.svg') }}" alt="">
+
+                        <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Preventivi</span>
+                    </a>
+                </li>
             @endhasanyrole
             @role('admin')
-            <li class="menu-item">
-                <a href="#" class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Fatture clienti</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#" class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Fatture tecnici</span>
-                </a>
-            </li>
+                <li class="menu-item hover:bg-[#E0E0E0]">
+                    <a href="/invoices_customers"
+                        class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
+                        <img src="{{ asset('images/fatture.svg') }}" alt="">
+                        <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Fatture clienti</span>
+                    </a>
+                </li>
+                <li class="menu-item hover:bg-[#E0E0E0]">
+                    <a href="/invoices_mechanics"
+                        class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
+                        <img src="{{ asset('images/fatture.svg') }}" alt="">
+                        <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Fatture tecnici</span>
+                    </a>
+                </li>
 
-            <li class="menu-item">
-                <a href="#" class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Riepilogo auto riparate</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#" class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Postazioni di lavoro</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#" class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Programmazione</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#" class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Office</span>
-                </a>
-            </li>
+
+                <li class="menu-item hover:bg-[#E0E0E0]">
+                    <a href="{{ route('done_orders') }}"
+                        class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
+                        <img src="{{ asset('images/car icon.svg') }}" alt="">
+
+                        <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Riepilogo auto riparate</span>
+                    </a>
+                </li>
+                <li class="menu-item hover:bg-[#E0E0E0]">
+                    <a href="{{ route('workstations.index') }}"
+                        class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
+                        <img src="{{ asset('images/filiali icon.svg') }}" alt="">
+
+                        <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Postazioni di lavoro</span>
+                    </a>
+                </li>
+                <li class="menu-item hover:bg-[#E0E0E0]">
+                    <a href="####"
+                        class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
+                        <img src="{{ asset('images/calendario menu.svg') }}" alt="">
+
+                        <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Programmazione</span>
+                    </a>
+                </li>
+                <li class="menu-item hover:bg-[#E0E0E0]">
+                    <a href="##"
+                        class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
+                        <img src="{{ asset('images/office.svg') }}" alt="">
+
+                        <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Office</span>
+                    </a>
+                </li>
             @endrole
             @role('mechanic')
-            <li class="menu-item">
-                <a href="#" class="flex items-center p-4 text-gray-900 rounded-lg dark:text-white group">
-                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path
-                            d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                    </svg>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Il mio calendario</span>
-                </a>
-            </li>
+                <li class="menu-item hover:bg-[#E0E0E0]">
+                    <a href="###"
+                        class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
+                        <img src="{{ asset('images/calendario menu.svg') }}" alt="">
+
+                        <span class="flex-1 ms-3 whitespace-nowrap text-[15px]">Il mio calendario</span>
+                    </a>
+                </li>
             @endrole
         </ul>
+
+        <div class="relative flex place-content-center">
+            <!-- Button -->
+            <button id="dropdownButton"
+                class="hover:shadow-sm bg-gradient-to-br from-[#FACCD1] to-[#D2D2FC] w-12 h-12 rounded-full flex items-center justify-center text-3xl text-white border-white border-2">
+                +
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div id="dropdownMenu"
+                class="absolute top-[-20px] left-1/2 transform -translate-x-1/2 -translate-y-full mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible transition-opacity duration-200">
+                <ul class="text-[#222222] text-sm">
+                    <li><a href="#" class="block px-4 py-3 hover:text-[#4453A5] border-b border-b-[#F0F0F0]">Crea
+                            Nuovo
+                            Cliente
+                        </a></li>
+                    <li><a href="#" class="block px-4 py-3 hover:text-[#4453A5] border-b border-b-[#F0F0F0]">Crea
+                            Nuovo
+                            Tecnico
+                        </a></li>
+                    <li><a href="#" class="block px-4 py-3 hover:text-[#4453A5] border-b border-b-[#F0F0F0]">Crea
+                            Nuova
+                            Riparazione
+                        </a></li>
+                    <li><a href="#" class="block px-4 py-3 hover:text-[#4453A5] border-b border-b-[#F0F0F0]">Crea
+                            Nuovo
+                            Preventivo
+                        </a></li>
+                </ul>
+            </div>
+        </div>
+
+
     </div>
 </aside>
 
 <script>
-    // Get all elements with the class 'menu-item'
-    const menuItems = document.querySelectorAll('.menu-item');
+    document.addEventListener('DOMContentLoaded', () => {
+        // Get all anchor elements inside .menu-item
+        const menuItems = document.querySelectorAll('.menu-item a');
 
-    // Loop through each item and add a click event listener
-    menuItems.forEach(item => {
-        item.addEventListener('click', function() {
-            // Remove the red background and white text from all items
-            menuItems.forEach(i => {
-                i.classList.remove('bg-red-500');
-                i.classList.remove('text-white');
+        // Function to set active class based on local storage
+        function setActiveClass() {
+            const activeItemId = localStorage.getItem('activeMenuItem');
+            menuItems.forEach(item => {
+                if (item.getAttribute('href') === activeItemId) {
+                    item.classList.add('text-primary');
+                    item.classList.remove('text-secondary');
+                } else {
+                    item.classList.remove('text-primary');
+                    item.classList.add('text-secondary');
+                }
             });
+        }
 
-            // Add the red background and white text to the clicked item
-            item.classList.add('bg-red-500');
-            item.classList.add('text-white');
+        // Call setActiveClass on page load
+        setActiveClass();
+
+        // Loop through each item and add a click event listener
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Save the clicked item's href to local storage
+                localStorage.setItem('activeMenuItem', item.getAttribute('href'));
+
+                // Update the active class for all items
+                setActiveClass();
+            });
         });
+        const dropdownButton = document.getElementById('dropdownButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        if (dropdownButton && dropdownMenu) {
+            dropdownButton.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('opacity-0');
+                dropdownMenu.classList.toggle('invisible');
+            });
+        }
     });
 </script>

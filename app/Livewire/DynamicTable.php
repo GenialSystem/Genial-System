@@ -14,11 +14,14 @@ class DynamicTable extends Component
     public $searchTerm = '';
     public $role = null;
     public $model;
+    public $hasInput = true;
+    public $title;
 
-    public function mount($model, $role = null)
+    public function mount($model, $role = null, $hasInput = true)
     {
         $this->model = $model;
         $this->role = $role;
+        $this->hasInput = $hasInput;
     }
 
     public function updatedSearchTerm()
@@ -37,13 +40,21 @@ class DynamicTable extends Component
         if (!empty($this->searchTerm)) {
             $query->where(function ($q) {
                 foreach ($this->headers as $field) {
-                    $q->orWhere($field, 'like', "%{$this->searchTerm}%");
+                    // If the field contains '->', handle nested relations
+                    if (strpos($field, '->') !== false) {
+                        list($relation, $attribute) = explode('->', $field);
+                        $q->orWhereHas($relation, function ($query) use ($attribute) {
+                            $query->where($attribute, 'like', "%{$this->searchTerm}%");
+                        });
+                    } else {
+                        $q->orWhere($field, 'like', "%{$this->searchTerm}%");
+                    }
                 }
             });
         }
 
         $rows = $query->paginate(12);
-        // dd($rows);
+
         return view('livewire.dynamic-table', [
             'rows' => $rows,
         ]);

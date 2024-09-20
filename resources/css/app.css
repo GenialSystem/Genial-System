@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "TomeSans";
+    src: url("/public/font/TomeSans.ttf") format("truetype");
+}
+
+.sidebar-bottom-gradient {
+    background: transparent linear-gradient(134deg, #faccd1 0%, #d2d2fc 100%) 0%
+        0% no-repeat padding-box;
+}
+
+.custom-dotted-line {
+    border-top: 2px dotted;
+    border-color: #ff0000; /* Customize the color */
+    border-spacing: 1px; /* Adjust this value for spacing between dots */
+}
