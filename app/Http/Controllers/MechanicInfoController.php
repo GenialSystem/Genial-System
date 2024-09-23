@@ -45,6 +45,8 @@ class MechanicInfoController extends Controller
                 'password' => Hash::make('password'),
             ]);
 
+            $newUser->assignRole('mechanic');
+            
             // Create a new MechanicInfo instance
             $mechanicInfo = new MechanicInfo([
                 'user_id' => $newUser->id,

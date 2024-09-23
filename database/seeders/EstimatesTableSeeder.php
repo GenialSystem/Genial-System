@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CustomerInfo;
 use App\Models\Estimate;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -14,7 +15,7 @@ class EstimatesTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $customers = User::role('customer')->get();
+        $customers = CustomerInfo::all();
 
         foreach ($customers as $customer) {
             Estimate::create([

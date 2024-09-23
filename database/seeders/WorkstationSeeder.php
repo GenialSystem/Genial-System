@@ -28,6 +28,7 @@ class WorkstationSeeder extends Seeder
         for ($i = 0; $i < 20; $i++) {
             Workstation::create([
                 'customer_id' => $faker->randomElement($customerInfos), // Use CustomerInfo IDs
+                'city' => $faker->city(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

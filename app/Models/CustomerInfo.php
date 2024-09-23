@@ -22,7 +22,13 @@ class CustomerInfo extends Model
         'ragione_sociale',
         'iva',
         'pec',
+        'legal_address',
     ];
+
+    public function estimates()
+    {
+        return $this->hasMany(Estimate::class, 'customer_id');
+    }
     
     public function workstation()
     {

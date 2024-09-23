@@ -57,10 +57,10 @@ class SelectionBanner extends Component
         $this->showDeleteModal = false;
     }
 
-    public function openModal()
+    public function openCustomModal()
     {
         // Logic for opening the edit modal can be implemented here
-        $this->dispatch('openModal', $this->selectedRows);
+        $this->dispatch('openCustomModal', $this->selectedRows);
     }
 
     public function clearSelection()

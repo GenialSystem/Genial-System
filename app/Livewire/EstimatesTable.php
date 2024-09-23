@@ -41,7 +41,7 @@ class EstimatesTable extends Component
         'Carrozzeria' => 'bg-[#E68B69]',
     ];
 
-    protected $listeners = ['selectionDeleted' => 'clearSelectedRows', 'openModal' => 'showModal', 'openCustomModal' => 'showCustomModal', 'closeEditModal' => 'closeEditModal'];
+    protected $listeners = ['selectionDeleted' => 'clearSelectedRows', 'openCustomModal' => 'showModal', 'openCustomModal' => 'showCustomModal', 'closeEditModal' => 'closeEditModal'];
 
     protected $queryString = ['searchTerm', 'selectedState'];
 

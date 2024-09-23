@@ -100,10 +100,10 @@
                         <span id="sdi-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
                     <div>
-                        <label for="address" class="block text-sm font-medium">Indirizzo Sede Legale</label>
-                        <input type="text" name="address" id="address"
+                        <label for="legal_address" class="block text-sm font-medium">Indirizzo Sede Legale</label>
+                        <input type="text" name="legal_address" id="legal_address"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
-                        <span id="address-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
+                        <span id="legal_address-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
                     <div>
                         <label for="cap" class="block text-sm font-medium">Cap</label>
@@ -286,7 +286,7 @@
 
                 if (stepCounter === 1) {
                     const requiredFieldsStep1 = ['name', 'assigned_cars', 'city', 'admin_name', 'cellphone',
-                        'email', 'rag_sociale', 'iva', 'pec', 'sdi', 'address', 'cap', 'province'
+                        'email', 'rag_sociale', 'iva', 'pec', 'sdi', 'legal_address', 'cap', 'province'
                     ];
 
                     requiredFieldsStep1.forEach(field => {

@@ -11,18 +11,19 @@ use App\Models\CustomerInfo;
 use App\Models\Estimate;
 use App\Models\MechanicInfo;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 
 require __DIR__ . '/auth.php';
-
 Route::middleware('auth')->group(function () {
+    
     Route::get('/', function () {
         $workingOrdersCount = Order::where('state', 'In lavorazione')->count('id');
         $newOrdersCount = Order::where('state', 'Nuova')->count('id');
         $estimates = Estimate::count('id');
         $mechanics = MechanicInfo::count(); 
-        $customers = CustomerInfo::count(); 
+        $customers = CustomerInfo::count();
         return view('home', compact('workingOrdersCount', 'newOrdersCount', 'mechanics', 'customers', 'estimates'));
     })->name('home');
     Route::resource('/customers', CustomerInfoController::class);

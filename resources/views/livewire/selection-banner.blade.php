@@ -14,7 +14,7 @@
                             Elimina
                         </button>
                     @elseif ($button === 'edit')
-                        <button wire:click="openModal" class="text-[#222222] px-4 py-2 rounded">
+                        <button wire:click="openCustomModal" class="text-[#222222] px-4 py-2 rounded">
                             Modifica
                         </button>
                     @endif

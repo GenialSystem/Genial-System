@@ -34,7 +34,7 @@ class CustomerInfoController extends Controller
 
     public function store(StoreCustomerRequest $request)
     {
-
+        // dd($request);
         DB::beginTransaction(); // Start the transaction
 
         try {
@@ -45,8 +45,15 @@ class CustomerInfoController extends Controller
             $newUser = User::create([
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
-                'password' => Hash::make('password')
+                'password' => Hash::make('password'),
+                'city' => $validatedData['city'],
+                'address' => $validatedData['legal_address'],
+                'cap' => $validatedData['cap'],
+                'province' => $validatedData['province'],
+                'cellphone' => $validatedData['cellphone'],
             ]);
+
+            $newUser->assignRole('customer');
 
             $permissions = $request->except(['_token']);
 
@@ -64,16 +71,13 @@ class CustomerInfoController extends Controller
                 'assigned_cars_count' => $validatedData['assigned_cars'],
                 'queued_cars_count' => 0,
                 'finished_cars_count' => 0,
-                'city' => $validatedData['city'],
                 'admin_name' => $validatedData['admin_name'],
                 'cellphone' => $validatedData['cellphone'],
                 'rag_sociale' => $validatedData['rag_sociale'],
                 'iva' => $validatedData['iva'],
                 'pec' => $validatedData['pec'],
                 'sdi' => $validatedData['sdi'],
-                'address' => $validatedData['address'],
-                'cap' => $validatedData['cap'],
-                'province' => $validatedData['province'],
+                'legal_address' => $validatedData['legal_address'],
             ]);
             $customerInfo->save();
 
@@ -89,7 +93,7 @@ class CustomerInfoController extends Controller
             Log::error('Error creating customer info: ' . $e->getMessage());
 
             // Redirect back with error message
-            return redirect()->back()->withErrors('Qualcosa è andato storto.')->withInput();
+            return redirect()->back()->with('error', ['title' => 'Qualcosa è andato storto', 'subtitle' => $e->getMessage()]);
         }
     }
     /**
@@ -130,6 +134,11 @@ class CustomerInfoController extends Controller
             $customerInfo->user->update([
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
+                'city' => $validatedData['city'],
+                'address' => $validatedData['address'],
+                'cap' => $validatedData['cap'],
+                'province' => $validatedData['province'],
+                'cellphone' => $validatedData['cellphone'],
             ]);
 
             // Handle the permissions update
@@ -151,14 +160,12 @@ class CustomerInfoController extends Controller
                 'assigned_cars_count' => $validatedData['assigned_cars'],
                 'city' => $validatedData['city'],
                 'admin_name' => $validatedData['admin_name'],
-                'cellphone' => $validatedData['cellphone'],
                 'rag_sociale' => $validatedData['rag_sociale'],
                 'iva' => $validatedData['iva'],
+                'legal_address' => $validatedData['legal_address'],
                 'pec' => $validatedData['pec'],
                 'sdi' => $validatedData['sdi'],
-                'address' => $validatedData['address'],
-                'cap' => $validatedData['cap'],
-                'province' => $validatedData['province'],
+               
             ]);
 
             DB::commit();

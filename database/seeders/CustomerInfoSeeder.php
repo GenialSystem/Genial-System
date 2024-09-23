@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use App\Models\User;
 use App\Models\CustomerInfo;
+use Illuminate\Support\Facades\Log;
 
 class CustomerInfoSeeder extends Seeder
 {
@@ -18,14 +19,14 @@ class CustomerInfoSeeder extends Seeder
         $faker = Faker::create();
 
         // Get all users with the role "customer"
-        $customerUsers = User::role('customer')->pluck('id')->toArray();
-
+        $customerUsers = User::role('customer')->get();
+        Log::info($customerUsers);
         // Generate 20 records for customer_info table
-        for ($i = 0; $i < 20; $i++) {
+        foreach ($customerUsers as $customer) {
             CustomerInfo::create([
-                'user_id' => $faker->randomElement($customerUsers), // Random user with "customer" role
+                'user_id' => $customer->id, // Random user with "customer" role
                 'admin_name' => $faker->name,
-                'name' => $faker->name,
+                'name' =>  $customer->name,
                 'pec' => $faker->email,
                 'rag_sociale' => $faker->sentence,
                 'sdi' => $faker->sentence,

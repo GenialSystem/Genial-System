@@ -19,10 +19,10 @@ class MechanicInfoSeeder extends Seeder
         $faker = Faker::create();
 
         // Get all users with the role "mechanic"
-        $mechanicUsers = User::role('mechanic')->pluck('id')->toArray();
+        $mechanicUsersId = User::role('mechanic')->pluck('id')->toArray();
 
         // Generate records for mechanic_infos table
-        foreach ($mechanicUsers as $userId) {
+        foreach ($mechanicUsersId as $userId) {
             MechanicInfo::create([
                 'user_id' => $userId,
                 'surname' => $faker->lastName,

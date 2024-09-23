@@ -21,7 +21,7 @@ class MainOrderTable extends Component
 
     public $showModal = false;
 
-    protected $listeners = ['selectionDeleted' => 'clearSelectedRows', 'openModal' => 'showModal', 'dateFilterUpdated' => 'handleDateFilterUpdated'];
+    protected $listeners = ['selectionDeleted' => 'clearSelectedRows', 'openCustomModal' => 'showModal', 'dateFilterUpdated' => 'handleDateFilterUpdated'];
 
     public $states = [
         'Riparata' => 'bg-[#EFF7E9]',
