@@ -4,7 +4,10 @@
             wire:model.debounce.300ms.live="searchTerm" />
         <div class="flex space-x-3">
             @livewire('date-filter')
-            @livewire('mechanic-form')
+            <button wire:click="$dispatch('openModal', { component: 'mechanic-form'})"
+                class="py- px-2 bg-[#1E1B58] text-white rounded-md text-sm h-8">
+                + Crea nuovo tecnico
+            </button>
         </div>
     </div>
     <!-- bg-[#FFF9EC] bg-[#E9EFF5] bg-[#EFF7E9] text-[#FCC752] text-[#7FBC4B] text-[#5E66CC] text-[#DC0851] bg-[#FEF0F5] -->

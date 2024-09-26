@@ -29,13 +29,13 @@
                         <tr class="border-b border-gray-200 hover:bg-gray-100">
                             <td class="py-3 px-6">{{ $row->customer->name }}</td>
                             <td class="py-3 px-6">
-                                {{ $row->customer->customerInfo ? $row->customer->customerInfo->admin_name : 'N/A' }}
+                                {{ $row->customer ? $row->customer->admin_name : 'N/A' }}
                             </td>
                             <td class="py-3 px-6 relative">
-                                {{ $row->customer->city }}
+                                {{ $row->customer->user->city }}
                             </td>
 
-                            <td class="py-3 px-6">Marca</td>
+                            <td class="py-3 px-6">{{ $row->brand }}</td>
                             <td class="py-3 px-6">{{ $row->plate }}</td>
                             <td class="py-3 px-6">15</td>
                             <td class="py-3 px-6">
@@ -51,7 +51,7 @@
                             </td>
                             <td class="py-3 px-6 flex space-x-2">
                                 @livewire('show-button', ['customRoute' => 'showDoneOrder', 'modelId' => $row->id, 'modelClass' => \App\Models\Order::class], key(str()->random(10)))
-                                @livewire('edit-button', ['modelId' => $row->id, 'modelName' => 'order', 'modelClass' => \App\Models\Order::class], key(str()->random(10)))
+                                {{-- @livewire('edit-button', ['modelId' => $row->id, 'modelName' => 'order', 'modelClass' => \App\Models\Order::class], key(str()->random(10))) --}}
                             </td>
                         </tr>
                     @empty

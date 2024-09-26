@@ -29,11 +29,10 @@ class WorkStationsTable extends Component
             });
         }
 
-        $customers = CustomerInfo::all();
-        $mechanics = MechanicInfo::all();
+        
        
         return view('livewire.work-stations-table', [
-            'rows' => $query->paginate(12), 'customers' => $customers, 'mechanics' => $mechanics
+            'rows' => $query->paginate(12)
         ]);
     }
     

@@ -111,31 +111,31 @@
                 <div class="my-3">
                     <span class="text-[#808080] text-[15px]">Responsabile: </span>
                     <span class="text-[#222222] text-[15px]">
-                        {{ $order->customer->customerInfo->admin_name ?? 'N/A' }}</span>
+                        {{ $order->customer->admin_name ?? 'N/A' }}</span>
                 </div>
                 <div class="my-3">
                     <span class="text-[#808080] text-[15px]">Indirizzo email: </span>
-                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->email }}</span>
+                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->user->email }}</span>
                 </div>
                 <div class="my-3">
                     <span class="text-[#808080] text-[15px]">Cellulare: </span>
-                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->cellphone }}</span>
+                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->user->cellphone }}</span>
                 </div>
                 <div class="my-3">
                     <span class="text-[#808080] text-[15px]">Indirizzo: </span>
-                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->address }}</span>
+                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->user->address }}</span>
                 </div>
                 <div class="my-3">
                     <span class="text-[#808080] text-[15px]">Cap: </span>
-                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->cap }}</span>
+                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->user->cap }}</span>
                 </div>
                 <div class="my-3">
                     <span class="text-[#808080] text-[15px]">Provincia: </span>
-                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->province }}</span>
+                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->user->province }}</span>
                 </div>
                 <div class="my-3">
                     <span class="text-[#808080] text-[15px]">Città: </span>
-                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->city }}</span>
+                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->user->city }}</span>
                 </div>
             </div>
             <div x-show="activeTab === 'tab2'">

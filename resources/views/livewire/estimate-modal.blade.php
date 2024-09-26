@@ -39,7 +39,7 @@
             <div class="mb-4">
                 <label class="block text-sm font-medium text-[#9F9F9F] text-[13px]">Responsabile</label>
                 <div class="relative">
-                    <input wire:model='admin_name' required type="text"
+                    <input wire:model='admin_name' required type="text" disabled
                         value="{{ $customers->find($selectedCustomer)->admin_name ?? null }}"
                         class="text-transparent mt-1 block w-full pl-12 px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                     <span
@@ -63,7 +63,7 @@
         <div class="grid grid-cols-3 gap-4">
             <div class="mb-4">
                 <label class="block text-sm font-medium text-[#9F9F9F] text-[13px]">N° preventivo</label>
-                <input required type="text" value="2024"
+                <input required type="text" value="{{ $estimate->number }}"
                     class="mt-1 block w-full pointer-events-none px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
             </div>
 

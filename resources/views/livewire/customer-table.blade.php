@@ -1,11 +1,14 @@
 <div class="mt-4 bg-white p-4">
     <div class="mb-4 flex justify-between h-8">
-        <input type="text" class="p-2 border border-gray-300 rounded" placeholder="Search..."
+        <input type="text" class="p-2 border border-gray-300 rounded w-[600px]" placeholder="Cerca elemento..."
             wire:model.debounce.300ms.live="searchTerm" />
-        @livewire('date-filter')
-        <a href="{{ route('customers.create') }}"><button
-                class="py- px-2 bg-[#1E1B58] text-white rounded-md text-sm h-full">+
-                Crea nuovo cliente</button></a>
+        <div class="flex space-x-4">
+            @livewire('date-filter')
+
+            <a href="{{ route('customers.create') }}"><button
+                    class="py- px-2 bg-[#1E1B58] text-white rounded-md text-sm h-full">+
+                    Crea nuovo cliente</button></a>
+        </div>
     </div>
     <!-- bg-[#FFF9EC] bg-[#E9EFF5] bg-[#EFF7E9] text-[#FCC752] text-[#7FBC4B] text-[#5E66CC] text-[#DC0851] bg-[#FEF0F5] -->
     <div class="overflow-x-auto rounded-md">

@@ -7,8 +7,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use LivewireUI\Modal\ModalComponent;
 
-class MechanicForm extends Component
+class MechanicForm extends ModalComponent
 {
     public $mechanicId;
     public $name;
@@ -25,7 +26,6 @@ class MechanicForm extends Component
     public $branch;
     public $repaired_count;
     public $working_count;
-    public $modalVisible = false;
 
     protected $rules = [
         'cellphone' => 'required|string|max:255',
@@ -63,18 +63,6 @@ class MechanicForm extends Component
             $this->repaired_count = $mechanic->repaired_count;
             $this->working_count = $mechanic->working_count;
         }
-    }
-
-
-    public function showModal()
-    {
-        $this->resetErrorBag();
-        $this->modalVisible = true;
-    }
-
-    public function closeModal()
-    {
-        $this->modalVisible = false;
     }
 
     public function submitForm()
@@ -144,7 +132,7 @@ class MechanicForm extends Component
 
             DB::commit();
 
-            $this->closeModal();
+            $this->dispatch('closeModal');
             return redirect()->route('mechanics.index')->with('success', ['title' => 'Operazione riuscita', 'subtitle' => $this->mechanicId ? 'Il tecnico è stato aggiornato con successo.' : 'Il tecnico è stato aggiunto con successo.']);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -153,6 +141,11 @@ class MechanicForm extends Component
             return redirect()->route('mechanics.index')->with('error', ['title' => 'Errore', 'subtitle' => 'Qualcosa è andato storto. Riprova. ' . $e->getMessage()]);
            
         }
+    }
+
+    public static function modalMaxWidth(): string
+    {
+        return '3xl';
     }
 
 

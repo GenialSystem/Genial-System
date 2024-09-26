@@ -3,7 +3,7 @@
     <div class="bg-white p-4">
 
         <div class="mb-4 flex justify-between h-8">
-            <input type="text" class="p-2 border border-gray-300 rounded" placeholder="Search..."
+            <input type="text" class="p-2 border border-gray-300 rounded w-[600px]" placeholder="Cerca elemento..."
                 wire:model.debounce.300ms.live="searchTerm" />
             <div class="flex">
                 @livewire('date-filter')
@@ -14,11 +14,6 @@
                 </a>
             </div>
         </div>
-        <span>
-            @foreach ($selectedRows as $x)
-                {{ $x }}
-            @endforeach
-        </span>
         <div class="overflow-x-auto rounded-md">
             <table class="min-w-full bg-white border border-gray-200">
                 <thead class="bg-[#F5F5F5]">
@@ -48,9 +43,9 @@
                                     @if (in_array((string) $row->id, $selectedRows)) checked @endif>
                             </td>
                             <td class="py-3 px-6">{{ str_pad($row->id, 5, '0', STR_PAD_LEFT) }}</td>
-                            <td class="py-3 px-6">{{ $row->customer->name }}</td>
+                            <td class="py-3 px-6">{{ $row->customer->name ?? 'crisot' }}</td>
                             <td class="py-3 px-6">
-                                {{ $row->customerInfo ? $row->customerInfo->admin_name : 'N/A' }}
+                                {{ $row->customer ? $row->customer->admin_name : 'N/A' }}
                             </td>
                             <td class="py-3 px-6 relative" wire:key="order-{{ $row->id }}">
                                 <div x-data="{ open: false }" class="relative">
@@ -175,48 +170,5 @@
         'modelId' => $selectedRows,
         'buttons' => ['edit', 'delete', 'download'],
     ])
-
-
-    @if ($showModal)
-        <div class="fixed inset-0 bg-[#707070] bg-opacity-40 flex items-center justify-center z-50">
-            <div class="bg-white p-6 rounded-lg shadow-md w-[600px]">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-[#222222] mb-0">
-                        {{ count($selectedRows) }} Elementi selezionati
-                    </h3>
-                    <button wire:click="closeModal" class="text-gray-500 hover:text-[#9F9F9F] text-3xl">
-                        &times;
-                    </button>
-                </div>
-
-
-                <span class="text-[#222222] text-[15px]">Modifica lo stato degli elementi selezionati</span>
-                <form wire:submit.prevent="applyStateToSelectedRows" class="mt-5">
-                    <div class="mb-4">
-                        <label for="state" class="block text-[#9F9F9F] text-[13px]">Stato riparazione</label>
-                        <select id="state" wire:model="newState"
-                            class="mt-2 p-2 border border-gray-300 rounded w-full">
-                            <option value="">- Seleziona -</option>
-                            @foreach ($states as $state => $color)
-                                <option value="{{ $state }}">{{ ucfirst($state) }}</option>
-                            @endforeach
-                        </select>
-                        @error('newState')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="flex justify-end">
-
-                        <button wire:click="showModal"
-                            class="mt-3 px-2 bg-[#1E1B58] text-white rounded-md text-sm h-8">
-                            Conferma
-                        </button>
-
-                    </div>
-                </form>
-            </div>
-        </div>
-    @endif
 
 </div>

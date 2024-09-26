@@ -44,6 +44,7 @@ class OrderController extends Controller
         DB::beginTransaction();
         // dd($request);
         try {
+            // $request->validate();
             // 1. Create the order
             $order = Order::create([
                 'date' => $request->input('date'),
@@ -89,6 +90,7 @@ class OrderController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            Log::info($e->getMessage());
             DB::rollback();
             return redirect()->back()->withErrors('Error creating order: ' . $e->getMessage());
         }

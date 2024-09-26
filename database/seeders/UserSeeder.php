@@ -35,9 +35,8 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ]);
 
-            // Assign a random role from the roles array
-            $randomRole = $roles[array_rand($roles)];
-            $user->assignRole($randomRole);
+           
+            $user->assignRole(fake()->randomElement($roles));
         }
     }
 }

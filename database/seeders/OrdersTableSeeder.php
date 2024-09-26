@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\CarPart;
+use App\Models\CustomerInfo;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
@@ -15,11 +16,11 @@ class OrdersTableSeeder extends Seeder
         $faker = Faker::create();
 
         // Get users with role id 2 (customers)
-        $customers = User::role('customer')->pluck('id')->toArray();
+        $customers = CustomerInfo::all()->pluck('id')->toArray();
         // Get mechanics (users with role id for mechanics)
         $mechanics = User::role('mechanic')->pluck('id')->toArray();
          // Get all car parts for the pivot table
-         $carParts = CarPart::pluck('id')->toArray();
+        $carParts = CarPart::pluck('id')->toArray();
 
         foreach (range(1, 50) as $index) {
             // Insert order

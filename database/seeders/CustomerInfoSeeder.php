@@ -20,7 +20,6 @@ class CustomerInfoSeeder extends Seeder
 
         // Get all users with the role "customer"
         $customerUsers = User::role('customer')->get();
-        Log::info($customerUsers);
         // Generate 20 records for customer_info table
         foreach ($customerUsers as $customer) {
             CustomerInfo::create([

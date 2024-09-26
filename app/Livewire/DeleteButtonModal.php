@@ -6,36 +6,37 @@ use LivewireUI\Modal\ModalComponent;
 
 class DeleteButtonModal extends ModalComponent
 {
-
-    public $modelId;
+    public $modelIds;  // Accept an array of IDs
     public $modelClass;
-    public $modelName;
-
     public $customRedirect;
 
     public function delete()
     {
-        $model = app($this->modelClass)::find($this->modelId);
+        // Fetch the models based on the array of IDs
+        $models = app($this->modelClass)::whereIn('id', $this->modelIds)->get();
 
-        if ($model) {
-            $model->delete();
+        if ($models->count()) {
+            // Loop through each model and delete
+            foreach ($models as $model) {
+                $model->delete();
+            }
 
             session()->flash('success', [
-                'title' => 'Utente eliminato con successo.',
-                'subtitle' => 'Non sarà più visibile in questa pagina.',
+                'title' => 'Modelli eliminati con successo.',
+                'subtitle' => 'Gli elementi non saranno più visibili in questa pagina.',
             ]);
-           
 
+            // Handle the redirect logic
             if ($this->customRedirect) {
                 return redirect()->route($this->customRedirect);
             }
-            // Optional: Redirect or emit an event after deletion
-            return redirect()->route($this->modelName . '.index');
+            $this->dispatch('closeModal');
+            $this->dispatch('updateSelectionBanner');
         }
 
         session()->flash('error', [
             'title' => 'Qualcosa è andato storto.',
-            'subtitle' => 'Item not found',
+            'subtitle' => 'Nessun elemento trovato.',
         ]);
     }
 

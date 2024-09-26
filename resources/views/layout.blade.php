@@ -12,10 +12,8 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
 
     <!-- Styles -->
-    @livewireStyles
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
     <!-- Chart.js and Data Labels Plugin -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
@@ -23,25 +21,24 @@
 
 <body class="font-tome antialiased bg-[#F5F5F5]">
 
+    <div id="app">
+        <!-- Sidebar -->
+        @livewire('sidebar')
+        <!-- Main content -->
+        <div class="ml-64">
+            <!-- Navbar -->
+            @livewire('navbar')
 
-    <body class="font-sans antialiased bg-[#F5F5F5]">
-        <div id="app">
-            <!-- Sidebar -->
-            @livewire('sidebar')
-            <!-- Main content -->
-            <div class="ml-64">
-                <!-- Navbar -->
-                @livewire('navbar')
-
-                <!-- Main Content -->
-                <main class="mx-6 my-2">
-                    @livewire('result-banner')
-                    @yield('content')
-                </main>
-            </div>
+            <!-- Main Content -->
+            <main class="mx-6 my-2">
+                @livewire('result-banner')
+                @yield('content')
+            </main>
         </div>
-        @livewireScripts
-        @livewire('wire-elements-modal')
-    </body>
+    </div>
+    @livewireScripts
+    @livewire('wire-elements-modal')
+
+</body>
 
 </html>

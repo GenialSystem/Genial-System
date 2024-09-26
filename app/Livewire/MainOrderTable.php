@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Order;
+use Illuminate\Support\Facades\Log;
 
 class MainOrderTable extends Component
 {
@@ -21,7 +22,7 @@ class MainOrderTable extends Component
 
     public $showModal = false;
 
-    protected $listeners = ['selectionDeleted' => 'clearSelectedRows', 'openCustomModal' => 'showModal', 'dateFilterUpdated' => 'handleDateFilterUpdated'];
+    protected $listeners = ['selectionDeleted' => 'clearSelectedRows', 'dateFilterUpdated' => 'handleDateFilterUpdated'];
 
     public $states = [
         'Riparata' => 'bg-[#EFF7E9]',
@@ -45,49 +46,13 @@ class MainOrderTable extends Component
         $this->resetPage();
     }
 
-    public function toggleDropdown($rowId)
-    {
-        if (isset($this->dropdownOpen[$rowId])) {
-            $this->dropdownOpen[$rowId] = !$this->dropdownOpen[$rowId];
-        } else {
-            $this->dropdownOpen[$rowId] = true;
-        }
-    }
-
     public function updateState($orderId, $newState)
     {
-
         $order = Order::find($orderId);
         if ($order) {
             $order->state = $newState;
             $order->save();
         }
-
-    }
-
-    public function applyStateToSelectedRows()
-    {
-        $this->selectAll = false;
-        if (!empty($this->selectedRows) && !empty($this->newState)) {
-            Order::whereIn('id', $this->selectedRows)
-                ->update(['state' => $this->newState]);
-
-            $this->selectedRows = [];
-            $this->closeModal();
-            $this->dispatch('rowsSelected', $this->selectedRows);
-        }
-    }
-
-
-    public function showModal($selectedRows)
-    {
-        $this->selectedRows = $selectedRows;
-        $this->showModal = true; // Set to true to open the modal
-    }
-
-    public function closeModal()
-    {
-        $this->showModal = false; // Set to false to close the modal
     }
 
     public function clearSelectedRows()
@@ -128,7 +93,6 @@ class MainOrderTable extends Component
                 $q->where(function ($q) {
                     $q->where('id', 'like', "%{$this->searchTerm}%")
                         ->orWhere('state', 'like', "%{$this->searchTerm}%")
-                        ->orWhere('color', 'like', "%{$this->searchTerm}%")
                         ->orWhere('plate', 'like', "%{$this->searchTerm}%")
                         ->orWhere('price', 'like', "%{$this->searchTerm}%")
                         ->orWhereHas('customer', function ($userQuery) {
@@ -173,7 +137,6 @@ class MainOrderTable extends Component
             $query->where(function ($q) {
                 $q->where('id', 'like', "%{$this->searchTerm}%")
                     ->orWhere('state', 'like', "%{$this->searchTerm}%")
-                    ->orWhere('color', 'like', "%{$this->searchTerm}%")
                     ->orWhere('plate', 'like', "%{$this->searchTerm}%")
                     ->orWhere('price', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('customer', function ($userQuery) {

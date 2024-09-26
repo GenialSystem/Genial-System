@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('customer_infos')->onDelete('cascade');
             $table->unsignedBigInteger('customer_id');
             $table->enum('state', ['Nuova', 'Riparata', 'In lavorazione', 'Annullata']);
             $table->enum('car_size', ['Piccolo', 'Grande', 'Medio', 'Veicolo commerciale']);

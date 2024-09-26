@@ -73,7 +73,7 @@
                                     wire:click="toggleRow('{{ $row->id }}')"
                                     @if (in_array((string) $row->id, $selectedRows)) checked @endif>
                             </td>
-                            <td class="py-3 px-6">{{ $row->id }}</td>
+                            <td class="py-3 px-6">{{ $row->number }}</td>
                             <td class="py-3 px-6">{{ $row->customer->name ?? 'N/A' }}</td>
                             <td class="py-3 px-6">
                                 {{ $row->customer ? $row->customer->admin_name : 'N/A' }}
@@ -161,9 +161,9 @@
     @livewire('selection-banner', [
         'modelClass' => App\Models\Estimate::class,
         'modelId' => $selectedRows,
-        'buttons' => ['edit', 'delete', 'download'],
+        'buttons' => ['delete', 'download'],
     ])
-    @if ($showModal)
+    {{-- @if ($showModal)
         <div class="fixed inset-0 bg-[#707070] bg-opacity-40 flex items-center justify-center z-50">
             <div class="bg-white p-6 rounded-lg shadow-md w-[600px]">
                 <div class="flex items-center justify-between mb-4">
@@ -203,5 +203,5 @@
                 </form>
             </div>
         </div>
-    @endif
+    @endif --}}
 </div>

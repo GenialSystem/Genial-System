@@ -30,8 +30,8 @@
             <div class="grid grid-cols-3 gap-4 mb-4">
                 <div>
                     <label for="id" class="block text-sm font-medium">N* riparazione</label>
-                    <input required type="text" name="id" id="id"
-                        value="#{{ \App\Models\Order::latest()->first()->id ?? '' }}"
+                    <input disabled required type="text" name="id" id="id"
+                        value="#{{ \App\Models\Order::orderBy('id', 'DESC')->first()->id + 1 ?? '' }}"
                         class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                     <span id="id-error" class="text-red-500 text-xs hidden"></span>
                 </div>
@@ -58,7 +58,7 @@
                         class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <option value="" data-admin-name="">Seleziona un cliente</option>
                         @foreach ($customers as $customer)
-                            <option value="{{ $customer->user_id }}" data-admin-name="{{ $customer->admin_name }}">
+                            <option value="{{ $customer->id }}" data-admin-name="{{ $customer->admin_name }}">
                                 {{ $customer->name }}</option>
                         @endforeach
                     </select>
@@ -193,18 +193,6 @@
     document.addEventListener('DOMContentLoaded', function() {
         const customerSelect = document.getElementById('customer');
         const adminNameInput = document.getElementById('admin_name');
-
-        // Event listener for customer selection change
-        customerSelect.addEventListener('change', function() {
-            // Get the selected option
-            const selectedOption = customerSelect.options[customerSelect.selectedIndex];
-
-            // Get the admin_name from the data attribute
-            const adminName = selectedOption.getAttribute('data-admin-name');
-
-            // Set the admin_name input field
-            adminNameInput.value = adminName || ''; // If no admin_name, set to empty string
-        });
         const nextStepButton = document.getElementById('next-step');
         const prevStepButton = document.getElementById('prev-step');
         const step1 = document.getElementById('step-1');
@@ -240,20 +228,44 @@
             return valid;
         }
 
+        // New function to validate part inputs
+        function validateParts() {
+            let valid = true;
+
+            // Get all part input fields using a querySelectorAll and loop through them
+            document.querySelectorAll('input[name^="parts"]').forEach(function(partInput) {
+                const errorSpan = document.getElementById(`${partInput.id}-error`);
+                if (!partInput.value.trim()) {
+                    partInput.classList.add('border-red-500');
+                    if (errorSpan) errorSpan.classList.remove('hidden');
+                    valid = false;
+                } else {
+                    partInput.classList.remove('border-red-500');
+                    if (errorSpan) errorSpan.classList.add('hidden');
+                }
+            });
+
+            return valid;
+        }
+
+        // Event listener for customer selection change
+        customerSelect.addEventListener('change', function() {
+            const selectedOption = customerSelect.options[customerSelect.selectedIndex];
+            const adminName = selectedOption.getAttribute('data-admin-name');
+            adminNameInput.value = adminName || ''; // If no admin_name, set to empty string
+        });
+
         // Handle Next Step
         nextStepButton.addEventListener('click', function(event) {
             let valid = true;
 
             if (stepCounter === 1) {
-                // Step 1 validation
                 const requiredFieldsStep1 = ['earn_mechanic_percentage', 'date', 'customer', 'mechanic',
                     'admin_name', 'brand', 'plate', 'price'
                 ];
-
                 valid = validateFields(requiredFieldsStep1);
 
                 if (valid) {
-                    // Move to Step 2
                     stepIndicators[1].classList.replace('bg-[#E0E0E0]', 'bg-[#1E1B58]');
                     stepIndicators[1].classList.replace('text-[#9F9F9F]', 'text-white');
                     stepTexts[0].classList.replace('text-[#9F9F9F]', 'text-[#1E1B58]');
@@ -263,15 +275,10 @@
                     stepCounter++;
                 }
             } else if (stepCounter === 2) {
-                // Step 2 validation
-                const requiredFieldsStep2 = ['replacements',
-                    'other_field2'
-                ]; // Add the fields for Step 2 here
-
-                valid = validateFields(requiredFieldsStep2);
+                const requiredFieldsStep2 = ['replacements', 'car_size']; // Ricambi field
+                valid = validateParts() && validateFields(requiredFieldsStep2);
 
                 if (valid) {
-                    // Move to Step 3
                     stepIndicators[2].classList.replace('bg-[#E0E0E0]', 'bg-[#1E1B58]');
                     stepIndicators[2].classList.replace('text-[#9F9F9F]', 'text-white');
                     stepTexts[1].classList.replace('text-[#9F9F9F]', 'text-[#1E1B58]');
@@ -287,7 +294,6 @@
         // Handle Previous Step
         prevStepButton.addEventListener('click', function(event) {
             if (stepCounter === 2) {
-                // Move back to Step 1
                 stepIndicators[1].classList.replace('bg-[#1E1B58]', 'bg-[#E0E0E0]');
                 stepIndicators[1].classList.replace('text-white', 'text-[#9F9F9F]');
                 stepTexts[0].classList.replace('text-[#1E1B58]', 'text-[#9F9F9F]');
@@ -296,7 +302,6 @@
                 prevStepButton.classList.add('hidden');
                 stepCounter--;
             } else if (stepCounter === 3) {
-                // Move back to Step 2
                 stepIndicators[2].classList.replace('bg-[#1E1B58]', 'bg-[#E0E0E0]');
                 stepIndicators[2].classList.replace('text-white', 'text-[#9F9F9F]');
                 stepTexts[1].classList.replace('text-[#1E1B58]', 'text-[#9F9F9F]');

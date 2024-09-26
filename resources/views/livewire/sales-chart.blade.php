@@ -71,7 +71,7 @@
             endMonth.innerHTML += monthOptions;
 
             dateInputSalesChart.addEventListener('click', function() {
-                calendarModalSalesChart.classList.toggle('hidden');
+                calendarModalSalesChart.classList.remove('hidden');
             });
 
             applyPeriod.addEventListener('click', function() {

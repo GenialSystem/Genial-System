@@ -31,15 +31,15 @@ class Order extends Model
 
     public function customer()
     {
-        return $this->belongsTo(User::class, 'customer_id');
+        return $this->belongsTo(CustomerInfo::class, 'customer_id');
     }
 
-    // In the Order model (Order.php)
-    public function customerInfo()
-    {
-        // Access customer info through the customer (User model)
-        return $this->hasOneThrough(CustomerInfo::class, User::class, 'id', 'user_id', 'customer_id', 'id');
-    }
+    
+    // public function customerInfo()
+    // {
+    //     // Access customer info through the customer (User model)
+    //     return $this->hasOneThrough(CustomerInfo::class, User::class, 'id', 'user_id', 'customer_id', 'id');
+    // }
 
 
     // An order has many mechanics
