@@ -41,10 +41,9 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
+      
         DB::beginTransaction();
-        // dd($request);
         try {
-            // $request->validate();
             // 1. Create the order
             $order = Order::create([
                 'date' => $request->input('date'),
@@ -56,46 +55,70 @@ class OrderController extends Controller
                 'brand' => $request->input('brand'),
                 'price' => $request->input('price'),
                 'car_size' => $request->input('car_size'),
-                'aluminium' => $request->input('aluminium') == 'on' ? true : false,
+                'aluminium' => $request->input('aluminium') == 'on',
                 'assembly_disassembly' => false,
                 'damage_diameter' => '25 - 50mm',
                 'replacements' => $request->input('replacements'),
                 'notes' => $request->input('replacements')
             ]);
-            
-            // 2. Attach mechanics (assuming a pivot table exists for this relation)
+    
+            // 2. Attach mechanics
             $order->mechanics()->attach($request->input('mechanic'));
-            
-            // 3. Attach car parts damage to pivot table `order_car_part`
+    
+            // 3. Attach car parts damage
             foreach ($request->input('parts') as $part) {
                 $carPart = CarPart::where('name', $part['name'])->first();
-            
                 if ($carPart) {
-                    // Attach the part to the order using the correct field names
                     $order->carParts()->attach($carPart->id, [
-                        'damage_count' => $part['damage_count'], 
-                        'paint_prep' => false,  // Correct field name
-                        'replacement' => false // Correct field name
+                        'damage_count' => $part['damage_count'],
+                        'paint_prep' => false,
+                        'replacement' => false
                     ]);
                 }
             }
-            
-
-
+    
+            // 4. Store normal images
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    // Store image in "orders/{order_id}/normal" directory
+                    $imagePath = $image->storeAs("orders/{$order->id}/normal", $image->getClientOriginalName(), 'public');
+    
+                    // Create a record in order_images table
+                    $order->images()->create([
+                        'image_path' => $imagePath,
+                        'disassembly' => false // Mark as normal image
+                    ]);
+                }
+            }
+    
+            // 5. Store disassembly images
+            if ($request->hasFile('images-disassembly')) {
+                foreach ($request->file('images-disassembly') as $image) {
+                    // Store image in "orders/{order_id}/disassembly" directory
+                    $imagePath = $image->storeAs("orders/{$order->id}/disassembly", $image->getClientOriginalName(), 'public');
+    
+                    // Create a record in order_images table with disassembly flag
+                    $order->images()->create([
+                        'image_path' => $imagePath,
+                        'disassembly' => true // Mark as disassembly image
+                    ]);
+                }
+            }
+    
             DB::commit();
-
+    
             return redirect()->route('orders.index')->with('success', [
                 'title' => 'Nuova riparazione creata',
                 'subtitle' => 'La riparazione da te creata è ora inserita nella sezione delle riparazioni',
             ]);
-
+    
         } catch (\Exception $e) {
-            Log::info($e->getMessage());
             DB::rollback();
+            Log::error($e->getMessage());
             return redirect()->back()->withErrors('Error creating order: ' . $e->getMessage());
         }
-      return response()->json($order);
     }
+    
 
     /**
      * Display the specified resource.

@@ -24,6 +24,16 @@ class Order extends Model
         'earn_mechanic_percentage'
     ];
 
+    public function images()
+    {
+        return $this->hasMany(OrderImage::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(OrderFile::class);
+    }
+
     public function carParts()
     {
         return $this->belongsToMany(CarPart::class, 'order_car_part')->withPivot('damage_count', 'paint_prep', 'replacement');

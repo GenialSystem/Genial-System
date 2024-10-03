@@ -14,7 +14,7 @@
 
                 <div class="mb-4 relative">
                     <label
-                        class="block text-sm font-medium text-[#9F9F9F] text-[13px]">{{ $role === 'customer' ? Cliente : 'Tecnico' }}</label>
+                        class="block text-sm font-medium text-[#9F9F9F] text-[13px]">{{ $role === 'customer' ? 'Cliente' : 'Tecnico' }}</label>
 
                     <div class="relative">
                         <!-- Customer Select Dropdown -->

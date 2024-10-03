@@ -321,12 +321,108 @@
 
             </div>
             <div x-show="activeTab === 'tab2'" class="p-4">
-                <!--  Tab 2 -->
-                Tab 2
+                <div class="mb-4 justify-end flex">
+                    <button
+                        class="px-2 flex items-center justify-center bg-[#EBF5F3] text-[#68C9BB] text-[13px] rounded-md group duration-200 hover:bg-[#68C9BB] hover:text-white mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15.559" height="20.152"
+                            viewBox="0 0 15.559 20.152" class="group-hover:fill-white">
+                            <g id="noun-pencil-3690771" transform="translate(-7.171 -0.615)">
+                                <g id="Layer_19" data-name="Layer 19" transform="translate(7.48 0.946)">
+                                    <!-- Apply fill and hover effects directly to the path -->
+                                    <path id="Tracciato_755" data-name="Tracciato 755"
+                                        d="M1.085,16.985a.43.43,0,0,0,.617.263l3.5-1.874a.43.43,0,0,0,.192-.21L9.939,4.493h0l.83-1.948a.429.429,0,0,0-.226-.563L5.977.035a.43.43,0,0,0-.564.227L.034,12.879a.431.431,0,0,0-.018.284ZM6.035.993,9.811,2.6,9.318,3.759,5.545,2.143Zm-.827,1.94L8.981,4.55,4.659,14.687l-2.892,1.55L.884,13.078Z"
+                                        transform="matrix(0.966, 0.259, -0.259, 0.966, 4.477, 0)" fill="#68C9BB"
+                                        class="group-hover:fill-white transition-colors duration-200" />
+                                </g>
+                            </g>
+                        </svg>
+                        Modifica
+                    </button>
+                    <button
+                        class="bg-[#F2F1FB] flex justify-center place-items-center px-2 duration-200 py-1 hover:bg-[#4453A5] text-[#4453A5] text-[13px] hover:text-white rounded-md group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="13.937" height="13.937"
+                            viewBox="0 0 13.937 13.937">
+                            <g id="Icon_feather-download" data-name="Icon feather-download"
+                                transform="translate(-3.75 -3.75)">
+                                <path id="Tracciato_630" data-name="Tracciato 630"
+                                    d="M16.937,22.5v2.764a1.382,1.382,0,0,1-1.382,1.382H5.882A1.382,1.382,0,0,1,4.5,25.264V22.5"
+                                    transform="translate(0 -9.709)" fill="none" stroke="#4453A5"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    class="transition-colors duration-200 group-hover:stroke-white" />
+                                <path id="Tracciato_631" data-name="Tracciato 631" d="M10.5,15l3.455,3.455L17.409,15"
+                                    transform="translate(-3.236 -5.663)" fill="none" stroke="#4453A5"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    class="transition-colors duration-200 group-hover:stroke-white" />
+                                <path id="Tracciato_632" data-name="Tracciato 632" d="M18,12.791V4.5"
+                                    transform="translate(-7.282)" fill="none" stroke="#4453A5" stroke-linecap="round"
+                                    stroke-linejoin="round" stroke-width="1.5"
+                                    class="transition-colors duration-200 group-hover:stroke-white" />
+                            </g>
+                        </svg>
+                        Scarica foto
+                    </button>
+                </div>
+                <div class="grid grid-cols-4 gap-6">
+                    @forelse ($order->images->where('disassembly', 0) as $image)
+                        <img src="{{ asset('storage/' . $image->image_path) }}" alt="Order Image"
+                            class="h-[315px] object-cover rounded-md">
+                    @empty
+                        <span>Nessuna foto presente</span>
+                    @endforelse
+
+                </div>
             </div>
             <div x-show="activeTab === 'tab3'" class="p-4">
-                <!--  Tab 3 -->
-                Tab 3
+                <div class="mb-4 justify-end flex">
+                    <button
+                        class="px-2 flex items-center justify-center bg-[#EBF5F3] text-[#68C9BB] text-[13px] rounded-md group duration-200 hover:bg-[#68C9BB] hover:text-white mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15.559" height="20.152"
+                            viewBox="0 0 15.559 20.152" class="group-hover:fill-white">
+                            <g id="noun-pencil-3690771" transform="translate(-7.171 -0.615)">
+                                <g id="Layer_19" data-name="Layer 19" transform="translate(7.48 0.946)">
+                                    <!-- Apply fill and hover effects directly to the path -->
+                                    <path id="Tracciato_755" data-name="Tracciato 755"
+                                        d="M1.085,16.985a.43.43,0,0,0,.617.263l3.5-1.874a.43.43,0,0,0,.192-.21L9.939,4.493h0l.83-1.948a.429.429,0,0,0-.226-.563L5.977.035a.43.43,0,0,0-.564.227L.034,12.879a.431.431,0,0,0-.018.284ZM6.035.993,9.811,2.6,9.318,3.759,5.545,2.143Zm-.827,1.94L8.981,4.55,4.659,14.687l-2.892,1.55L.884,13.078Z"
+                                        transform="matrix(0.966, 0.259, -0.259, 0.966, 4.477, 0)" fill="#68C9BB"
+                                        class="group-hover:fill-white transition-colors duration-200" />
+                                </g>
+                            </g>
+                        </svg>
+                        Modifica
+                    </button>
+                    <button
+                        class="bg-[#F2F1FB] flex justify-center place-items-center px-2 duration-200 py-1 hover:bg-[#4453A5] text-[#4453A5] text-[13px] hover:text-white rounded-md group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="13.937" height="13.937"
+                            viewBox="0 0 13.937 13.937">
+                            <g id="Icon_feather-download" data-name="Icon feather-download"
+                                transform="translate(-3.75 -3.75)">
+                                <path id="Tracciato_630" data-name="Tracciato 630"
+                                    d="M16.937,22.5v2.764a1.382,1.382,0,0,1-1.382,1.382H5.882A1.382,1.382,0,0,1,4.5,25.264V22.5"
+                                    transform="translate(0 -9.709)" fill="none" stroke="#4453A5"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    class="transition-colors duration-200 group-hover:stroke-white" />
+                                <path id="Tracciato_631" data-name="Tracciato 631" d="M10.5,15l3.455,3.455L17.409,15"
+                                    transform="translate(-3.236 -5.663)" fill="none" stroke="#4453A5"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    class="transition-colors duration-200 group-hover:stroke-white" />
+                                <path id="Tracciato_632" data-name="Tracciato 632" d="M18,12.791V4.5"
+                                    transform="translate(-7.282)" fill="none" stroke="#4453A5" stroke-linecap="round"
+                                    stroke-linejoin="round" stroke-width="1.5"
+                                    class="transition-colors duration-200 group-hover:stroke-white" />
+                            </g>
+                        </svg>
+                        Scarica foto
+                    </button>
+                </div>
+                <div class="grid grid-cols-4 gap-6">
+                    @forelse ($order->images->where('disassembly', 1) as $image)
+                        <img src="{{ asset('storage/' . $image->image_path) }}" alt="Order Image"
+                            class="h-[315px] object-cover rounded-md">
+                    @empty
+                        <span>Nessuna foto presente</span>
+                    @endforelse
+
+                </div>
             </div>
         </div>
     </div>

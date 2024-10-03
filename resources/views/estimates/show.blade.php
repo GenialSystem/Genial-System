@@ -19,27 +19,27 @@
                     <div>
                         <span class="text-[#808080] text-[15px]">Auto assegnate: </span>
                         <span
-                            class="text-[#222222] text-[15px]">{{ $estimate->customer->customerInfo ? $estimate->customer->customerInfo->admin_name : 'N/A' }}</span>
+                            class="text-[#222222] text-[15px]">{{ $estimate->customer ? $estimate->customer->admin_name : 'N/A' }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Indirizzo email: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->email }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->user->email }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Cellulare</span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->cellphone }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->user->cellphone }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">indirizzo: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->address }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->user->address }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Cap: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->cap }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->user->cap }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Città: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->city }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->user->city }}</span>
                     </div>
 
                     <div>
@@ -63,37 +63,36 @@
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Ragione sociale: </span>
-                        <span
-                            class="text-[#222222] text-[15px]">{{ $estimate->customer->customerInfo->rag_sociale }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->rag_sociale }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Partita IVA: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->customerInfo->iva }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->iva }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">PEC: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->customerInfo->pec }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->pec }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">SDI: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->customerInfo->sdi }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->sdi }}</span>
                     </div>
 
                     <div>
                         <span class="text-[#808080] text-[15px]">Indirizzo sede legale: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->address }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->user->address }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">CAP: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->cap }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->user->cap }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Provincia: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->province }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->user->province }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Città: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->city }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->user->city }}</span>
                     </div>
                 </div>
             </div>
@@ -130,7 +129,7 @@
             <div>
                 <span class="text-[#808080] text-[15px]">Responsabile: </span>
                 <span
-                    class="text-[#4453A5] text-[13px] bg-[#F2F1FB] font-semibold px-2.5 py-0.5 rounded-md">{{ $estimate->customer->customerInfo->admin_name }}</span>
+                    class="text-[#4453A5] text-[13px] bg-[#F2F1FB] font-semibold px-2.5 py-0.5 rounded-md">{{ $estimate->customer->admin_name }}</span>
             </div>
             <div class="border-dashed border border-[#E8E8E8] my-4"></div>
             <div class="grid grid-cols-3 gap-4">

@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('calendars', function (Blueprint $table) {
+        Schema::create('order_images', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade'); // Foreign key to orders table
+            $table->string('image_path'); // Path to the image file
+            $table->boolean('disassembly')->default(0); 
             $table->timestamps();
         });
+        
     }
 
     /**
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('calendars');
+        Schema::dropIfExists('order_images');
     }
 };

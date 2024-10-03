@@ -151,6 +151,6 @@
     @livewire('selection-banner', [
         'modelClass' => App\Models\Invoice::class,
         'modelId' => $selectedRows,
-        'buttons' => ['edit', 'delete', 'download'],
+        'buttons' => ['delete', 'download'],
     ])
 </div>

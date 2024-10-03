@@ -92,7 +92,7 @@
                     </a>
                 </li>
                 <li class="menu-item hover:bg-[#E0E0E0]">
-                    <a href="####"
+                    <a href="{{ route('calendar.index') }}"
                         class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
                         <img src="{{ asset('images/calendario menu.svg') }}" alt="">
 
@@ -100,7 +100,7 @@
                     </a>
                 </li>
                 <li class="menu-item hover:bg-[#E0E0E0]">
-                    <a href="##"
+                    <a href="{{ route('office.index') }}"
                         class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
                         <img src="{{ asset('images/office.svg') }}" alt="">
 
@@ -131,22 +131,26 @@
             <div id="dropdownMenu"
                 class="absolute top-[-20px] left-1/2 transform -translate-x-1/2 -translate-y-full mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible transition-opacity duration-200">
                 <ul class="text-[#222222] text-sm">
-                    <li><a href="#" class="block px-4 py-3 hover:text-[#4453A5] border-b border-b-[#F0F0F0]">Crea
+                    <li><a href="{{ route('customers.create') }}"
+                            class="block px-4 py-3 hover:text-[#4453A5] border-b border-b-[#F0F0F0] cursor-pointer">Crea
                             Nuovo
                             Cliente
                         </a></li>
-                    <li><a href="#" class="block px-4 py-3 hover:text-[#4453A5] border-b border-b-[#F0F0F0]">Crea
-                            Nuovo
-                            Tecnico
-                        </a></li>
-                    <li><a href="#" class="block px-4 py-3 hover:text-[#4453A5] border-b border-b-[#F0F0F0]">Crea
+                    <li wire:click="$dispatch('openModal', { component: 'mechanic-form'})"
+                        class="block px-4 py-3 hover:text-[#4453A5] border-b border-b-[#F0F0F0] cursor-pointer">Crea
+                        Nuovo
+                        Tecnico
+                    </li>
+                    <li><a href="{{ route('orders.create') }}"
+                            class="block px-4 py-3 hover:text-[#4453A5] border-b border-b-[#F0F0F0] cursor-pointer">Crea
                             Nuova
                             Riparazione
                         </a></li>
-                    <li><a href="#" class="block px-4 py-3 hover:text-[#4453A5] border-b border-b-[#F0F0F0]">Crea
-                            Nuovo
-                            Preventivo
-                        </a></li>
+                    <li wire:click="$dispatch('openModal', { component: 'estimate-modal'})"
+                        class="block px-4 py-3 hover:text-[#4453A5] border-b border-b-[#F0F0F0] cursor-pointer">Crea
+                        Nuovo
+                        Preventivo
+                    </li>
                 </ul>
             </div>
         </div>

@@ -17,3 +17,32 @@
     border-color: #ff0000; /* Customize the color */
     border-spacing: 1px; /* Adjust this value for spacing between dots */
 }
+
+.fc-scrollgrid-sync-inner {
+    @apply text-[#9F9F9F] text-[15px] font-normal;
+}
+
+.fc-daygrid-day {
+    @apply bg-white;
+}
+
+.fc-daygrid-day-number {
+    @apply bg-[#F0F0F0] w-7 h-7 text-center rounded-full m-2 text-[#222222];
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+    @apply bg-white;
+}
+
+.fc-day-today .fc-daygrid-day-number {
+    @apply bg-[#4453A5] w-7 h-7 text-center text-white;
+}
+.fc-event-title {
+    font-weight: 400 !important;
+    margin-left: 4px;
+    font-size: 14px !important;
+}
+
+.fc-daygrid-event-dot {
+    @apply mx-2;
+}

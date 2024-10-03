@@ -31,6 +31,10 @@
                             class="text-[#222222] px-4 py-2 rounded">
                             Modifica
                         </button>
+                    @elseif ($button === 'download')
+                        <button wire:key="{{ str()->random(10) }}" class="text-[#222222] px-4 py-2 rounded">
+                            Scarica
+                        </button>
                     @endif
                 @endforeach
             </div>

@@ -22,7 +22,8 @@
         </div>
         <span id="step-3-text" class="text-[#9F9F9F] text-[15px]">Foto</span>
     </div>
-    <form action="{{ route('orders.store') }}" method="POST" class="mt-4 text-[#9F9F9F] text-[13px]">
+    <form enctype="multipart/form-data" action="{{ route('orders.store') }}" method="POST"
+        class="mt-4 text-[#9F9F9F] text-[13px]">
         @csrf
         <!-- Step 1 -->
         <div id="step-1">
@@ -174,9 +175,33 @@
                 class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none"></textarea>
         </div>
 
-
         <div id="step-3" class="hidden">
-            3
+            <span class="text-[#222222] text-[15px] mb-4">Carica le foto dell'auto</span>
+            <!-- Drag and Drop Container -->
+            <div class="flex h-72 mb-8 mt-4">
+                <div id="drop-area"
+                    class="h-full border-2 border-dashed border-[#DDDDDD] bg-[#FAFAFA] w-2/3 p-10 flex flex-col place-content-center place-items-center text-center rounded-md cursor-pointer">
+                    <p class="text-[#222222] font-medium mb-2">Trascina le foto oppure selezionale dal </p>
+                    <button type="button" id="file-picker-btn" class="text-[#4453A5] underline">browse</button>
+                    <input id="images" type="file" name="images[]" multiple class="hidden">
+                </div>
+                <div id="file-preview" class="ml-4 w-1/3 h-full overflow-y-auto"></div>
+            </div>
+
+            <span id="images-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
+
+            <span class="text-[#222222] text-[15px]">Carica le foto dello smontaggio</span>
+            <div class="flex h-72 mt-4">
+                <div id="drop-area-disassembly"
+                    class="h-full border-2 border-dashed border-[#DDDDDD] bg-[#FAFAFA] w-2/3 p-10 flex flex-col place-content-center place-items-center text-center rounded-md cursor-pointer">
+                    <p class="text-[#222222] font-medium mb-2">Trascina le foto oppure selezionale dal </p>
+                    <button type="button" id="file-picker-btn-disassembly"
+                        class="text-[#4453A5] underline">browse</button>
+                    <input id="images-disassembly" type="file" name="images-disassembly[]" multiple
+                        class="hidden">
+                </div>
+                <div id="file-preview-disassembly" class="ml-4 w-1/3 h-full overflow-y-auto"></div>
+            </div>
         </div>
 
 
@@ -287,9 +312,190 @@
                     stepCounter++;
                 }
             } else if (stepCounter === 3) {
-                form.submit();
+                // const errorSpan = document.getElementById('images-error');
+
+                // if (imageInput.files.length === 0) {
+                //     imageInput.classList.add('border-red-500');
+                //     errorSpan.classList.remove('hidden');
+                //     valid = false;
+                // } else {
+                //     imageInput.classList.remove('border-red-500');
+                //     errorSpan.classList.add('hidden');
+                // }
+
+                if (valid) {
+                    form.submit();
+                }
             }
+
         });
+        // For the car photos section
+        const dropAreaCar = document.getElementById('drop-area');
+        const imageInputCar = document.getElementById('images');
+        const filePickerBtnCar = document.getElementById('file-picker-btn');
+        const filePreviewCar = document.getElementById('file-preview');
+
+        let selectedFilesCar = []; // Store selected car files here
+
+        // For the disassembly photos section
+        const dropAreaDisassembly = document.getElementById('drop-area-disassembly');
+        const imageInputDisassembly = document.getElementById('images-disassembly');
+        const filePickerBtnDisassembly = document.getElementById('file-picker-btn-disassembly');
+        const filePreviewDisassembly = document.getElementById('file-preview-disassembly');
+
+        let selectedFilesDisassembly = []; // Store selected disassembly files here
+
+        // Common function to prevent default drag behaviors
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Apply drag events to both areas
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropAreaCar.addEventListener(eventName, preventDefaults, false);
+            dropAreaDisassembly.addEventListener(eventName, preventDefaults, false);
+        });
+
+        // Highlight drop area when dragging files over it for both sections
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropAreaCar.addEventListener(eventName, () => dropAreaCar.classList.add('border-blue-500'),
+                false);
+            dropAreaDisassembly.addEventListener(eventName, () => dropAreaDisassembly.classList.add(
+                'border-blue-500'), false);
+        });
+
+        // Remove highlight when files are no longer being dragged over
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropAreaCar.addEventListener(eventName, () => dropAreaCar.classList.remove(
+                'border-blue-500'), false);
+            dropAreaDisassembly.addEventListener(eventName, () => dropAreaDisassembly.classList.remove(
+                'border-blue-500'), false);
+        });
+
+        // Handle file drop events for both sections
+        dropAreaCar.addEventListener('drop', handleDropCar, false);
+        dropAreaDisassembly.addEventListener('drop', handleDropDisassembly, false);
+
+        function handleDropCar(e) {
+            const files = [...e.dataTransfer.files];
+            addFiles(files, 'car');
+        }
+
+        function handleDropDisassembly(e) {
+            const files = [...e.dataTransfer.files];
+            addFiles(files, 'disassembly');
+        }
+
+        // Handle files selected via input (for both sections)
+        filePickerBtnCar.addEventListener('click', function() {
+            imageInputCar.click();
+        });
+
+        filePickerBtnDisassembly.addEventListener('click', function() {
+            imageInputDisassembly.click();
+        });
+
+        imageInputCar.addEventListener('change', function(e) {
+            const files = [...e.target.files];
+            addFiles(files, 'car');
+        });
+
+        imageInputDisassembly.addEventListener('change', function(e) {
+            const files = [...e.target.files];
+            addFiles(files, 'disassembly');
+        });
+
+        // Add files to the selection and update preview
+        function addFiles(files, type) {
+            if (type === 'car') {
+                selectedFilesCar = [...selectedFilesCar, ...filterNewFiles(files,
+                selectedFilesCar)]; // Append new files
+                updateFileInput('car');
+                updatePreview('car');
+            } else if (type === 'disassembly') {
+                selectedFilesDisassembly = [...selectedFilesDisassembly, ...filterNewFiles(files,
+                    selectedFilesDisassembly)]; // Append new files
+                updateFileInput('disassembly');
+                updatePreview('disassembly');
+            }
+        }
+
+        // Helper function to filter out duplicate files
+        function filterNewFiles(files, existingFiles) {
+            const existingFileNames = existingFiles.map(file => file.name);
+            return files.filter(file => !existingFileNames.includes(file
+            .name)); // Avoid duplicates based on file name
+        }
+
+        // Remove file by index and type
+        function removeFile(index, type) {
+            if (type === 'car') {
+                selectedFilesCar.splice(index, 1); // Remove file from car array
+                updateFileInput('car');
+                updatePreview('car');
+            } else if (type === 'disassembly') {
+                selectedFilesDisassembly.splice(index, 1); // Remove file from disassembly array
+                updateFileInput('disassembly');
+                updatePreview('disassembly');
+            }
+        }
+
+        // Update the input element with the currently selected files
+        function updateFileInput(type) {
+            const dataTransfer = new DataTransfer(); // Create a new DataTransfer object
+
+            if (type === 'car') {
+                selectedFilesCar.forEach(file => dataTransfer.items.add(file)); // Add car files to DataTransfer
+                imageInputCar.files = dataTransfer.files; // Update the car file input
+            } else if (type === 'disassembly') {
+                selectedFilesDisassembly.forEach(file => dataTransfer.items.add(
+                file)); // Add disassembly files to DataTransfer
+                imageInputDisassembly.files = dataTransfer.files; // Update the disassembly file input
+            }
+        }
+
+        // Update file preview for both sections
+        function updatePreview(type) {
+            const filePreview = type === 'car' ? filePreviewCar : filePreviewDisassembly;
+            const selectedFiles = type === 'car' ? selectedFilesCar : selectedFilesDisassembly;
+
+            filePreview.innerHTML = ''; // Clear previous previews
+
+            selectedFiles.forEach((file, index) => {
+                const fileElement = document.createElement('div');
+                fileElement.classList.add('flex', 'justify-between', 'items-center', 'mt-2', 'mr-4');
+
+                const fileName = document.createElement('p');
+                fileName.classList.add('text-sm', 'text-[#222222]', 'border-b', 'py-2');
+                fileName.textContent = `${file.name} (${formatFileSize(file.size)})`;
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'X';
+                removeButton.classList.add('text-red-500', 'ml-2');
+                removeButton.addEventListener('click', () => removeFile(index, type));
+
+                fileElement.appendChild(fileName);
+                fileElement.appendChild(removeButton);
+
+                filePreview.appendChild(fileElement);
+            });
+        }
+
+
+        // Helper function to format file size
+        function formatFileSize(size) {
+            const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+            let unitIndex = 0;
+
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+
+            return `${size.toFixed(2)} ${units[unitIndex]}`;
+        }
+
 
         // Handle Previous Step
         prevStepButton.addEventListener('click', function(event) {

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('customer_id');
             $table->foreign('customer_id')->references('id')->on('customer_infos')->onDelete('cascade');
             $table->enum('type', ['Preventivo combinato', 'Preventivo leva bolli', 'Carrozzeria']);
-            $table->enum('state', ['Archiviato', 'Nuovo', 'Confermato', 'Poco interessati', 'Annullato']);
+            $table->enum('state', ['Archiviato', 'Nuovo', 'Confermato', 'Poco interessati', 'Rifiutato']);
             $table->decimal('price', 10, 2);
             $table->timestamps();
         });
