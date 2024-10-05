@@ -14,7 +14,8 @@
                 <div class="px-2 space-y-4">
                     <div>
                         <span class="text-[#808080] text-[15px]">Cliente: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->name }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->user->name }}
+                            {{ $estimate->customer->user->surname }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Auto assegnate: </span>
@@ -59,7 +60,8 @@
                 <div class="px-2 space-y-4">
                     <div>
                         <span class="text-[#808080] text-[15px]">Nome Società: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->name }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $estimate->customer->user->name }}
+                            {{ $estimate->customer->user->surname }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Ragione sociale: </span>

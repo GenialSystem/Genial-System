@@ -20,6 +20,7 @@ class InvoiceModal extends ModalComponent
     public $selectedUser;
     public  $role;
     public $invoiceNumber;
+    
     public function mount($invoice = null)
     {
         $lastInvoice = Invoice::latest('id')->first();
@@ -68,13 +69,11 @@ class InvoiceModal extends ModalComponent
                 'subtitle' => 'La fattura è stato aggiunta alla gestione preventivi',
             ]);
             // dd($this->role);
-            return redirect()->route($this->role === 'customer' ? 'invoicesCustomer' : 'invoicesMechanic');
+            return redirect()->route($this->role === 'customer' ? 'invoicesCustomer' : 'invoicesMechanic')->with('success', ['title' => 'Fattura creata con successo', 'subtitle' => 'Sarà visibile in questa pagina.']);
         } catch (\Exception $e) {
-            redirect()->back();
-            session()->flash('error', [
-                'title' => 'Errore:',
-                'subtitle' => $e->getMessage(),
-            ]);
+            Log::error($e->getMessage());
+            return redirect()->route($this->role === 'customer' ? 'invoicesCustomer' : 'invoicesMechanic')->with('error', ['title' => 'Errore', 'subtitle' => $e->getMessage()]);
+
         }
     }
 

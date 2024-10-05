@@ -24,7 +24,9 @@
                         class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px] ml-6">
                         <option value="">Tecnici</option>
                         @foreach ($mechanics as $mechanic)
-                            <option value="{{ $mechanic->id }}">{{ $mechanic->name ?? 'N/A' }}</option>
+                            <option value="{{ $mechanic->id }}">
+                                {{ $mechanic->name . ' ' . $mechanic->surname ?? 'N/A' }}
+                            </option>
                         @endforeach
                     </select>
                 @else
@@ -32,7 +34,9 @@
                         class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px] ml-6">
                         <option value="">Clienti</option>
                         @foreach ($customers as $customer)
-                            <option value="{{ $customer->id }}">{{ $customer->name ?? 'N/A' }}</option>
+                            <option value="{{ $customer->id }}">
+                                {{ $customer->name . ' ' . $customer->surname ?? 'N/A' }}
+                            </option>
                         @endforeach
                     </select>
                 @endif
@@ -108,7 +112,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="py-3 px-6">{{ $row->user->name }}</td>
+                            <td class="py-3 px-6">{{ $row->user->name }} {{ $row->user->surname }}</td>
                             <td class="py-3 px-6">{{ $row->price }}€</td>
                             <td class="py-3 px-6"> {{ $row->iva }}€</td>
                             <td class="py-3 px-6 flex space-x-2">

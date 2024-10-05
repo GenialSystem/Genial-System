@@ -23,6 +23,7 @@ class StoreCustomerRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
             'assigned_cars' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'admin_name' => 'required|string|max:255',

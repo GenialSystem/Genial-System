@@ -4,7 +4,7 @@
         <h3>Upload Normal Images</h3>
 
         <!-- Drag and Drop Area for Normal Images -->
-        <div class="border border-dashed p-5" @click="$refs.normalInput.click()" style="cursor: pointer;">
+        <div class="border border-dashed p-5" @click="$refs.normalInput.click()">
             <p>Drag and drop or click to upload images</p>
             <!-- File Input -->
             <input type="file" wire:model="normalImages" multiple hidden x-ref="normalInput" />
@@ -25,12 +25,6 @@
                 Uploading...
             </div>
         @endif
-
-        @if (session()->has('normal_success'))
-            <div class="text-green-500">
-                {{ session('normal_success') }}
-            </div>
-        @endif
     </div>
 
     <!-- Disassembly Image Upload Section -->
@@ -38,7 +32,7 @@
         <h3>Upload Disassembly Images</h3>
 
         <!-- Drag and Drop Area for Disassembly Images -->
-        <div class="border border-dashed p-5" @click="$refs.disassemblyInput.click()" style="cursor: pointer;">
+        <div class="border border-dashed p-5" @click="$refs.disassemblyInput.click()">
             <p>Drag and drop or click to upload images</p>
             <!-- File Input -->
             <input type="file" wire:model="disassemblyImages" multiple hidden x-ref="disassemblyInput" />
@@ -57,12 +51,6 @@
             <!-- Upload Progress -->
             <div wire:loading wire:target="disassemblyImages">
                 Uploading...
-            </div>
-        @endif
-
-        @if (session()->has('disassembly_success'))
-            <div class="text-green-500">
-                {{ session('disassembly_success') }}
             </div>
         @endif
     </div>

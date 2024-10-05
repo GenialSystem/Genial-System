@@ -37,19 +37,19 @@
                     <span id="id-error" class="text-red-500 text-xs hidden"></span>
                 </div>
                 <div>
-                    <label for="date" class="block text-sm font-medium">Date</label>
-                    <div class="relative flex items-center">
-                        <!-- Date input field -->
-                        <input required type="date" id="date" name="date"
-                            class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none focus:ring-0"
-                            placeholder="GG/MM/AA">
+                    <label for="date" class="block text-sm font-medium mb-1">Date</label>
 
-                        <!-- Calendar icon -->
-                        <div
-                            class="absolute right-0 flex justify-center place-items-center pointer-events-none bg-[#F2F1FB] w-10 rounded-r h-full">
+                    <div class="relative flex items-center">
+
+                        <input required type="date" id="date" name="date"
+                            class="block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none focus:ring-0"
+                            placeholder="GG/MM/AA">
+                        <div class="absolute top-0 bottom-0 right-0 flex justify-center place-items-center bg-[#F2F1FB] w-10 rounded-r cursor-pointer"
+                            id="calendar-icon">
                             <img src="{{ asset('images/calendar icon.svg') }}" class="w-4 h-4" alt="calendar icon">
                         </div>
                     </div>
+
                 </div>
 
                 <div>
@@ -60,7 +60,7 @@
                         <option value="" data-admin-name="">Seleziona un cliente</option>
                         @foreach ($customers as $customer)
                             <option value="{{ $customer->id }}" data-admin-name="{{ $customer->admin_name }}">
-                                {{ $customer->name }}</option>
+                                {{ $customer->user->name . ' ' . $customer->user->surname }}</option>
                         @endforeach
                     </select>
                     <span id="customer-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
@@ -220,6 +220,12 @@
         const adminNameInput = document.getElementById('admin_name');
         const nextStepButton = document.getElementById('next-step');
         const prevStepButton = document.getElementById('prev-step');
+        const openDatePicker = document.getElementById('datePicker');
+        const dateInput = document.getElementById('date');
+        document.getElementById('calendar-icon').addEventListener('click', function() {
+            console.log('asd');
+            document.getElementById('date').showPicker();
+        });
         const step1 = document.getElementById('step-1');
         const step2 = document.getElementById('step-2');
         const step3 = document.getElementById('step-3');
@@ -410,7 +416,7 @@
         function addFiles(files, type) {
             if (type === 'car') {
                 selectedFilesCar = [...selectedFilesCar, ...filterNewFiles(files,
-                selectedFilesCar)]; // Append new files
+                    selectedFilesCar)]; // Append new files
                 updateFileInput('car');
                 updatePreview('car');
             } else if (type === 'disassembly') {
@@ -425,7 +431,7 @@
         function filterNewFiles(files, existingFiles) {
             const existingFileNames = existingFiles.map(file => file.name);
             return files.filter(file => !existingFileNames.includes(file
-            .name)); // Avoid duplicates based on file name
+                .name)); // Avoid duplicates based on file name
         }
 
         // Remove file by index and type
@@ -450,7 +456,7 @@
                 imageInputCar.files = dataTransfer.files; // Update the car file input
             } else if (type === 'disassembly') {
                 selectedFilesDisassembly.forEach(file => dataTransfer.items.add(
-                file)); // Add disassembly files to DataTransfer
+                    file)); // Add disassembly files to DataTransfer
                 imageInputDisassembly.files = dataTransfer.files; // Update the disassembly file input
             }
         }

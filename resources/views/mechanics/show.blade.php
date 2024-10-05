@@ -10,7 +10,8 @@
                     <span class="text-[15px] text-[#222222]">Dati generali</span>
                 </div>
                 <div class="flex justify-between mb-4">
-                    <div class="rounded-full w-20 h-20 bg-[#808080]"></div>
+                    <img src="{{ asset($mechanic->user->image_path ?? 'images/placeholder.png') }}" alt="profile image"
+                        class="w-20 h-20 rounded-full">
                     <div
                         class="bg-[#EDF8FB] h-10 w-6 p-1 flex items-center justify-center group hover:bg-[#66C0DB] duration-200 rounded-sm">
                         <button

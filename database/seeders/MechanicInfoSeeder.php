@@ -25,8 +25,6 @@ class MechanicInfoSeeder extends Seeder
         foreach ($mechanicUsersId as $userId) {
             MechanicInfo::create([
                 'user_id' => $userId,
-                'surname' => $faker->lastName,
-                'cdf' => $faker->sentence,
                 'branch' => $faker->company,
                 'plain_password' => $faker->password(6, 12),
                 'repaired_count' => $faker->numberBetween(1, 100),

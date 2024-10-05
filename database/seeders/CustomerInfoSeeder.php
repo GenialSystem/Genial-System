@@ -25,7 +25,6 @@ class CustomerInfoSeeder extends Seeder
             CustomerInfo::create([
                 'user_id' => $customer->id, // Random user with "customer" role
                 'admin_name' => $faker->name,
-                'name' =>  $customer->name,
                 'pec' => $faker->email,
                 'rag_sociale' => $faker->sentence,
                 'sdi' => $faker->sentence,

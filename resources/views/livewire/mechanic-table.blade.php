@@ -29,7 +29,7 @@
 
                 @forelse($rows as $row)
                     <tr wire:key="{{ str()->random(10) }}" class="border-b border-gray-200 hover:bg-gray-100">
-                        <td class="py-3 px-6">{{ $row->user->name }}</td>
+                        <td class="py-3 px-6">{{ $row->user->name }} {{ $row->user->surname }}</td>
                         <td class="py-3 px-6">{{ $row->user->email }}</td>
                         <td class="py-3 px-6">{{ $row->user->cellphone }}</td>
                         <td class="py-3 px-6">{{ $row->user->city }}</td>

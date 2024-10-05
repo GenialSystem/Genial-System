@@ -14,9 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('surname');
             $table->string('plain_password');
-            $table->string('cdf');
             $table->string('branch');
             $table->integer('repaired_count')->default(0);
             $table->integer('working_count')->default(0);

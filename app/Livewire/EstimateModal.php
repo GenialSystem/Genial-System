@@ -18,10 +18,16 @@ class EstimateModal extends ModalComponent
     public $state;
     public $customers;
     public $selectedCustomer;
+    public $estimateNumber;
+
     // public $number;
 
     public function mount($estimate = null)
     {
+        $lastEstimate = Estimate::latest('id')->first();
+       
+        $nextEstimateNumber = ($lastEstimate ? $lastEstimate->id + 1 : 1) . '/' . now()->year;
+        $this->estimateNumber = $nextEstimateNumber;
         $this->customers = CustomerInfo::all();
         if ($estimate) {
             

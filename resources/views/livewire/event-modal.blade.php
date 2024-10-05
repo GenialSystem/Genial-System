@@ -25,10 +25,9 @@
                     <input wire:model='date' required type="date" id="date" name="date"
                         class="block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none focus:ring-0"
                         placeholder="GG/MM/AA">
-                    <div
-                        class="absolute top-0 bottom-0 right-0 flex justify-center place-items-center pointer-events-none bg-[#F2F1FB] w-10 rounded-r">
-                        <img src="{{ asset('images/calendar icon.svg') }}" class="w-4 h-4 cursor-pointer"
-                            alt="calendar icon">
+                    <div class="absolute top-0 bottom-0 right-0 flex justify-center place-items-center bg-[#F2F1FB] w-10 rounded-r cursor-pointer"
+                        id="calendar-icon">
+                        <img src="{{ asset('images/calendar icon.svg') }}" class="w-4 h-4" alt="calendar icon">
                     </div>
                 </div>
             </div>
@@ -55,7 +54,7 @@
                 <option value="">Seleziona Tecnici</option>
                 @foreach ($mechanics as $mechanic)
                     <option value="{{ $mechanic->id }}">
-                        {{ $mechanic->user->name }} {{ $mechanic->surname }}
+                        {{ $mechanic->user->name }} {{ $mechanic->user->surname }}
                     </option>
                 @endforeach
             </select>
@@ -84,7 +83,10 @@
 @assets
     <script>
         setTimeout(() => {
-
+            document.getElementById('calendar-icon').addEventListener('click', function() {
+                console.log('asd');
+                document.getElementById('date').showPicker();
+            });
             const mechanicSelect = document.getElementById('mechanic');
             const selectedMechanicsContainer = document.getElementById('selectedMechanics');
             const mechanicError = document.getElementById('mechanic-error');

@@ -43,7 +43,8 @@
                                     @if (in_array((string) $row->id, $selectedRows)) checked @endif>
                             </td>
                             <td class="py-3 px-6">{{ str_pad($row->id, 5, '0', STR_PAD_LEFT) }}</td>
-                            <td class="py-3 px-6">{{ $row->customer->name ?? 'crisot' }}</td>
+                            <td class="py-3 px-6">
+                                {{ $row->customer->user->name . ' ' . $row->customer->user->surname ?? 'N/A' }}</td>
                             <td class="py-3 px-6">
                                 {{ $row->customer ? $row->customer->admin_name : 'N/A' }}
                             </td>
@@ -82,15 +83,15 @@
                                 @if ($row->mechanics->isNotEmpty())
                                     <div class="flex -space-x-4">
                                         @foreach ($row->mechanics as $mechanic)
-                                            <span
-                                                class="inline-block w-8 h-8 bg-red-300 rounded-full border border-black">
-                                            </span>
+                                            <img class="inline-block w-8 h-8  rounded-full border border-black"
+                                                src="{{ asset($mechanic->image_path ?? 'images/placeholder.png') }}"
+                                                alt="profile image">
                                         @endforeach
                                     </div>
                                     <div
                                         class="absolute right-0 top-4 mt-1 hidden group-hover:block bg-gray-700 text-white text-xs rounded-lg px-2 py-1 whitespace-nowrap z-10">
                                         @foreach ($row->mechanics as $mechanic)
-                                            {{ $mechanic->name }}<br>
+                                            {{ $mechanic->name }} {{ $mechanic->surname }}<br>
                                         @endforeach
                                     </div>
                                 @else

@@ -28,7 +28,7 @@
             <tbody class=" text-sm text-[#222222]">
                 @forelse($rows as $row)
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
-                        <td class="py-3 px-6">{{ $row->name }}</td>
+                        <td class="py-3 px-6">{{ $row->user->name }} {{ $row->user->surname }}</td>
                         <td class="py-3 px-6">{{ $row->admin_name }}</td>
                         <td class="py-3 px-6">{{ $row->user->city }}</td>
                         <td class="py-3 px-6">{{ $row->assigned_cars_count }}</td>

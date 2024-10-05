@@ -23,9 +23,11 @@ class UserSeeder extends Seeder
 
         for ($i = 0; $i < 50; $i++) {
             $user = User::create([
-                'name' => fake()->name(),
+                'name' => fake()->firstName(),
+                'surname' => fake()->lastName(),
                 'email' => fake()->unique()->safeEmail(),
                 'password' => Hash::make('password'),
+                'cdf' => fake()->sentence,
                 'city' => fake()->city,
                 'cellphone' => fake()->phoneNumber,
                 'cap' => fake()->numberBetween(9000, 10000),

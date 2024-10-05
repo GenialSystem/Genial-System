@@ -43,7 +43,7 @@ class EstimatesTableSeeder extends Seeder
      */
     private function getRandomState()
     {
-        $states = ['Archiviato', 'Nuovo', 'Confermato', 'Poco interessati', 'Annullato'];
+        $states = ['Archiviato', 'Nuovo', 'Confermato', 'Poco interessati', 'Rifiutato'];
         return $states[array_rand($states)];
     }
 }

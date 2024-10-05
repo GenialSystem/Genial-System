@@ -37,7 +37,7 @@ class CalendarController extends Controller
         });
     
         // Load mechanics and customers
-        $mechanics = MechanicInfo::take(10)->get();
+        $mechanics = MechanicInfo::all();
         $customers = CustomerInfo::all();
     
         return view('schedules.calendar', compact('mechanics', 'events', 'customers'));

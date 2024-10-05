@@ -29,6 +29,11 @@ class CustomerInfo extends Model
     {
         return $this->hasMany(Estimate::class, 'customer_id');
     }
+
+    public function docs()
+    {
+        return $this->hasMany(GeneralDoc::class, 'customer_id');
+    }
     
     public function workstation()
     {

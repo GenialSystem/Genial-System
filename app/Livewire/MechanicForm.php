@@ -50,10 +50,10 @@ class MechanicForm extends ModalComponent
             $mechanic = MechanicInfo::findOrFail($mechanicId);
 
             $this->name = $mechanic->user->name;
-            $this->surname = $mechanic->surname;
+            $this->surname = $mechanic->user->surname;
             $this->email = $mechanic->user->email;
             $this->cellphone = $mechanic->user->cellphone;
-            $this->cdf = $mechanic->cdf;
+            $this->cdf = $mechanic->user->cdf;
             $this->plain_password = $mechanic->plain_password; // Load the plain password
             $this->address = $mechanic->user->address;
             $this->cap = $mechanic->user->cap;
@@ -89,6 +89,7 @@ class MechanicForm extends ModalComponent
                 $user = $mechanicInfo->user;
                 $user->update([
                     'name' => $validatedData['name'],
+                    'surname' => $validatedData['surname'],
                     'email' => $validatedData['email'],
                     'password' => $validatedData['plain_password'] ? Hash::make($validatedData['plain_password']) : $user->password,
                     'cellphone' => $validatedData['cellphone'],
@@ -96,11 +97,10 @@ class MechanicForm extends ModalComponent
                     'city' => $validatedData['city'],
                     'province' => $validatedData['province'],
                     'cap' => $validatedData['cap'],
+                    'cdf' => $validatedData['cdf'],
                 ]);
                 
                 $mechanicInfo->update([
-                    'surname' => $validatedData['surname'],
-                    'cdf' => $validatedData['cdf'],
                     'branch' => $validatedData['branch'],
                     'repaired_count' => $validatedData['repaired_count'] ?? 0,
                     'working_count' => $validatedData['working_count'] ?? 0,
@@ -110,6 +110,7 @@ class MechanicForm extends ModalComponent
             } else {
                 $newUser = User::create([
                     'name' => $validatedData['name'],
+                    'surname' => $validatedData['surname'],
                     'email' => $validatedData['email'],
                     'password' => Hash::make($validatedData['plain_password']),
                     'cellphone' => $validatedData['cellphone'],
@@ -117,12 +118,11 @@ class MechanicForm extends ModalComponent
                     'city' => $validatedData['city'],
                     'province' => $validatedData['province'],
                     'cap' => $validatedData['cap'],
+                    'cdf' => $validatedData['cdf'],
                 ]);
 
                 MechanicInfo::create([
                     'user_id' => $newUser->id,
-                    'surname' => $validatedData['surname'],
-                    'cdf' => $validatedData['cdf'],
                     'branch' => $validatedData['branch'],
                     'repaired_count' => $validatedData['repaired_count'] ?? 0,
                     'working_count' => $validatedData['working_count'] ?? 0,

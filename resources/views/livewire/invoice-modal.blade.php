@@ -2,7 +2,7 @@
     <div class="bg-white p-6 rounded-lg shadow-md w-[1000px]">
         <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-semibold text-[#222222] mb-0">
-                {{ $invoice->id ? 'Modifica preventivo' : 'Nuovo preventivo' }}
+                {{ $invoice->id ? 'Modifica fattura' : 'Nuovo fattura' }}
             </h3>
             <button wire:click="$dispatch('closeModal')" class="text-gray-500 hover:text-[#9F9F9F] text-3xl">
                 &times;
@@ -22,7 +22,7 @@
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none appearance-none">
                             <option value="">Seleziona un cliente</option>
                             @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                <option value="{{ $user->id }}">{{ $user->name }} {{ $user->surname }}</option>
                             @endforeach
                         </select>
 
@@ -32,7 +32,7 @@
                                 style=" top: 50%; transform: translateY(-50%);">
                                 <!-- Adjusted width to fit within the select -->
                                 {{ $users->find($selectedUser)->name ?? 'N/A' }}
-
+                                {{ $users->find($selectedUser)->surname ?? 'N/A' }}
                             </span>
                         @endif
                     </div>
@@ -83,7 +83,7 @@
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-[#9F9F9F] text-[13px]">IVA</label>
-                    <input wire:model='iva' required type="text" name="iva"
+                    <input wire:model='iva' required type="number" min="0" name="iva"
                         value="{{ $invoice ? $invoice->iva : '' }}"
                         class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
 

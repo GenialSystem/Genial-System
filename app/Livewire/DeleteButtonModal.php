@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use Exception;
 use LivewireUI\Modal\ModalComponent;
 
 class DeleteButtonModal extends ModalComponent
@@ -12,33 +13,48 @@ class DeleteButtonModal extends ModalComponent
 
     public function delete()
     {
-        // Fetch the models based on the array of IDs
-        $models = app($this->modelClass)::whereIn('id', $this->modelIds)->get();
+        try {
+            $query = app($this->modelClass)::query();
 
-        if ($models->count()) {
-            // Loop through each model and delete
-            foreach ($models as $model) {
-                $model->delete();
+            if (is_array($this->modelIds)) {
+                // If it's an array, use whereIn
+                $models = $query->whereIn('id', $this->modelIds)->get();
+            } else {
+                // If it's a single integer, use where
+                $models = $query->where('id', $this->modelIds)->get();
             }
-
-            session()->flash('success', [
-                'title' => 'Modelli eliminati con successo.',
-                'subtitle' => 'Gli elementi non saranno più visibili in questa pagina.',
-            ]);
-
-            // Handle the redirect logic
-            if ($this->customRedirect) {
-                return redirect()->route($this->customRedirect);
+    
+            if ($models->count()) {
+                // Loop through each model and delete
+                foreach ($models as $model) {
+                    $model->delete();
+                }
+    
+                session()->flash('success', [
+                    'title' => 'Modelli eliminati con successo.',
+                    'subtitle' => 'Gli elementi non saranno più visibili in questa pagina.',
+                ]);
+    
+                // Handle the redirect logic
+                if ($this->customRedirect) {
+                    return redirect()->route($this->customRedirect);
+                }
+                $this->dispatch('closeModal');
+                $this->dispatch('updateSelectionBanner');
+                $this->dispatch('refreshComponent');
+            } else {
+                session()->flash('error', [
+                    'title' => 'Qualcosa è andato storto.',
+                    'subtitle' => 'Nessun elemento trovato.',
+                ]);
             }
-            $this->dispatch('closeModal');
-            $this->dispatch('updateSelectionBanner');
+        } catch (Exception $e) {
+          return back()->with('error', ['title' => 'Qualcosa è andato storto', 'subtitle' => $e->getMessage()]);
         }
-
-        session()->flash('error', [
-            'title' => 'Qualcosa è andato storto.',
-            'subtitle' => 'Nessun elemento trovato.',
-        ]);
+        // Check if modelIds is an array or a single integer
+       
     }
+
 
     public static function modalMaxWidth(): string
     {

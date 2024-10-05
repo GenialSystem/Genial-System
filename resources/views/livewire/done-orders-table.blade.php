@@ -27,7 +27,8 @@
                 <tbody class="text-sm text-[#222222]">
                     @forelse($rows as $row)
                         <tr class="border-b border-gray-200 hover:bg-gray-100">
-                            <td class="py-3 px-6">{{ $row->customer->name }}</td>
+                            <td class="py-3 px-6">{{ $row->customer->user->name }} {{ $row->customer->user->surname }}
+                            </td>
                             <td class="py-3 px-6">
                                 {{ $row->customer ? $row->customer->admin_name : 'N/A' }}
                             </td>
@@ -37,13 +38,17 @@
 
                             <td class="py-3 px-6">{{ $row->brand }}</td>
                             <td class="py-3 px-6">{{ $row->plate }}</td>
-                            <td class="py-3 px-6">15</td>
+                            <td class="py-3 px-6">
+                                {{ $row->carParts->sum('pivot.damage_count') }}
+                            </td>
                             <td class="py-3 px-6">
                                 <div class="flex place-items-center">
                                     @if ($row->mechanics->isNotEmpty())
-                                        <span
-                                            class="inline-block w-8 h-8 bg-red-300 rounded-full border border-black mr-2">
-                                        </span> {{ $row->mechanics->first()->name }}
+                                        <img class="inline-block w-8 h-8  rounded-full border border-black mr-2"
+                                            src="{{ asset($row->mechanics->first()->image_path ?? 'images/placeholder.png') }}"
+                                            alt="profile image">
+                                        {{ $row->mechanics->first()->name }}
+                                        {{ $row->mechanics->first()->surname }}
                                     @else
                                         N/A
                                     @endif

@@ -19,6 +19,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'surname',
+        'cdf',
         'email',
         'password',
         'address',
@@ -55,6 +57,16 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class, 'customer_id');
+    }
+
+    public function archives()
+    {
+        return $this->hasMany(Archive::class, 'user_id');
+    }
+
+    public function archivesCustomer()
+    {
+        return $this->hasMany(Archive::class, 'customer_id');
     }
 
     public function invoices()

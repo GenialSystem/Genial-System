@@ -2,7 +2,8 @@
 
 @section('content')
     @livewire('back-button')
-    <h4 class="text-[22px] text-[#222222] font-semibold">Cliente - {{ $customer->name }}</h4>
+    <h4 class="text-[22px] text-[#222222] font-semibold">Cliente - {{ $customer->user->name }} {{ $customer->user->surname }}
+    </h4>
 
     <div class="flex space-x-4 mt-4">
         <div class="w-1/3 space-y-4">
@@ -13,7 +14,8 @@
                 <div class="px-2 space-y-4">
                     <div>
                         <span class="text-[#808080] text-[15px]">Cliente: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $customer->name }}</span>
+                        <span class="text-[#222222] text-[15px]">{{ $customer->user->name }}
+                            {{ $customer->user->surname }}</span>
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Auto assegnate: </span>
@@ -136,24 +138,20 @@
             </div>
 
             <div x-show="activeTab === 'tab1'" class="p-4">
-                <!--  Tab 1 -->
-                Tab 1
+                @livewire('archive-section', ['archives' => $customer->user->archivesCustomer, 'customerId' => $customer->id])
             </div>
             <div x-show="activeTab === 'tab2'" class="p-4">
-                <!--  Tab 2 -->
-                Tab 2
+
+                @livewire('customer-docs', ['docs' => $customer->docs])
             </div>
             <div x-show="activeTab === 'tab3'" class="p-4">
-                <!--  Tab 3 -->
-                Tab 3
+                @livewire('customer-orders-table', ['orders' => $customer->user->orders])
             </div>
             <div x-show="activeTab === 'tab4'" class="p-4">
-                <!--  Tab 4 -->
-                Tab 4
+                @livewire('customer-estimates-table', ['estimates' => $customer->estimates])
             </div>
             <div x-show="activeTab === 'tab5'" class="p-4">
-                <!--  Tab 5 -->
-                Tab 5
+                @livewire('customer-invoices-table', ['invoices' => $customer->user->invoices])
             </div>
         </div>
 

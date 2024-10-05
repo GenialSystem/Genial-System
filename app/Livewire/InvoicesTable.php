@@ -90,7 +90,6 @@ class InvoicesTable extends Component
     {
         $query = Invoice::query();
 
-        // Apply role filter
         $query->whereHas('user.roles', function ($roleQuery) {
             $roleQuery->where('name', $this->role);
         });
@@ -101,7 +100,11 @@ class InvoicesTable extends Component
                     ->orWhere('is_closed', 'like', "%{$this->searchTerm}%")
                     ->orWhere('iva', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('user', function ($userQuery) {
-                        $userQuery->where('name', 'like', "%{$this->searchTerm}%");
+                        // Group the name and surname conditions together using a nested where
+                        $userQuery->where(function ($userSubQuery) {
+                            $userSubQuery->where('name', 'like', "%{$this->searchTerm}%")
+                                         ->orWhere('surname', 'like', "%{$this->searchTerm}%");
+                        });
                     })
                     ->orWhere('price', 'like', "%{$this->searchTerm}%");
             });

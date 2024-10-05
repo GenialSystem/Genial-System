@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Models\CustomerInfo;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -44,6 +45,8 @@ class CustomerInfoController extends Controller
             // Create a new User instance
             $newUser = User::create([
                 'name' => $validatedData['name'],
+                'surname' => $validatedData['surname'],
+                'cdf' => 'cdf',
                 'email' => $validatedData['email'],
                 'password' => Hash::make('password'),
                 'city' => $validatedData['city'],
@@ -67,7 +70,7 @@ class CustomerInfoController extends Controller
             // Create a new CustomerInfo instance
             $customerInfo = new CustomerInfo([
                 'user_id' => $newUser->id,
-                'name' => $validatedData['name'],
+                
                 'assigned_cars_count' => $validatedData['assigned_cars'],
                 'queued_cars_count' => 0,
                 'finished_cars_count' => 0,
@@ -100,9 +103,28 @@ class CustomerInfoController extends Controller
      * Display the specified resource.
      */
     public function show(CustomerInfo $customer)
-    {
-        return view('customers.show', compact('customer'));
-    }
+{
+    $orders = $customer->user->orders;
+
+    // Manually paginate the collection if it is not a query builder
+    $page = request()->get('page', 1); // Get current page or default to 1
+    $perPage = 12; // Items per page
+
+    // Use a slice of the orders collection for the current page
+    $paginatedOrders = new LengthAwarePaginator(
+        $orders->forPage($page, $perPage), // Sliced items for the current page
+        $orders->count(),                  // Total items
+        $perPage,                          // Items per page
+        $page,                             // Current page
+        ['path' => request()->url(), 'query' => request()->query()] // Pagination options
+    );
+
+    // Pass only the data to the Livewire component
+    $orderData = $paginatedOrders->getCollection(); // This gets only the orders collection
+
+    return view('customers.show', compact('customer', 'orderData', 'paginatedOrders'));
+}
+
 
 
     /**

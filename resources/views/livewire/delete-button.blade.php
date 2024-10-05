@@ -1,6 +1,6 @@
 <div class="bg-[#FEF0F5] w-6 p-1 flex items-center justify-center group hover:bg-[#DC0814] duration-200 rounded-sm">
     <button
-        wire:click="$dispatch('openModal', { component: 'delete-button-modal', arguments: { modelId: {{ $modelId }}, modelClass: '{{ addslashes($modelClass) }}', modelName: '{{ $modelName }}', customRedirect: '{{ $customRedirect }}' }})">
+        wire:click="$dispatch('openModal', { component: 'delete-button-modal', arguments: { modelIds: {{ $modelId }}, modelClass: '{{ addslashes($modelClass) }}', modelName: '{{ $modelName }}', customRedirect: '{{ $customRedirect }}' }})">
         <svg id="Raggruppa_3305" data-name="Raggruppa 3305" xmlns="http://www.w3.org/2000/svg" width="13.996" height="15.733"
             viewBox="0 0 13.996 15.733">
             <path class="group-hover:fill-white" id="Tracciato_731" data-name="Tracciato 731"

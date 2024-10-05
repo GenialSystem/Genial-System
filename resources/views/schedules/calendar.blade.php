@@ -33,14 +33,15 @@
                         <option value="">Filtra per stato</option>
                     </select>
 
-                    <select
+                    <select id="mechanic-filter"
                         class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px] ml-6">
                         <option value="">Filtra per tecnico</option>
                         @foreach ($mechanics as $mechanic)
-                            <option value="{{ $mechanic->id }}">{{ $mechanic->user->name }} {{ $mechanic->surname }}
+                            <option value="{{ $mechanic->id }}">{{ $mechanic->user->name }} {{ $mechanic->user->surname }}
                             </option>
                         @endforeach
                     </select>
+
                 </div>
                 <button onclick="Livewire.dispatch('openModal', { component: 'event-modal'})"
                     class="py-1 px-2 bg-[#1E1B58] text-white rounded-md text-sm h-full">+ Crea nuovo
@@ -97,6 +98,10 @@
                     weekday: 'long'
                 },
                 eventClassNames: ['text-[#7AA3E5]', 'bg-transparent', 'text-normal'],
+                eventDidMount: function(info) {
+                    info.el.style.backgroundColor = 'transparent'; // Customize background
+                    info.el.style.color = '#7AA3E5'; // Customize text color
+                },
                 initialView: 'dayGridMonth',
                 locale: 'it',
                 eventColor: '#378006',
@@ -112,6 +117,30 @@
         function updateCurrentMonth() {
             var currentMonth = calendar.view.title;
             document.getElementById('current-month').textContent = currentMonth;
+        }
+
+        document.getElementById('mechanic-filter').addEventListener('change', function() {
+            var selectedMechanicId = this.value;
+            filterEventsByMechanic(selectedMechanicId);
+        });
+
+        // Filter events based on the selected mechanic
+        function filterEventsByMechanic(mechanicId) {
+            // Get all events from FullCalendar
+            var allEvents = calendar.getEvents();
+
+            // Loop through the events and filter based on the mechanicId
+            allEvents.forEach(event => {
+                var hasMechanic = event.extendedProps.mechanics.some(mechanic => mechanic.id ==
+                    mechanicId);
+
+                // Show the event if the mechanic is found, hide it otherwise
+                if (mechanicId === "" || hasMechanic) {
+                    event.setProp('display', ''); // Show event
+                } else {
+                    event.setProp('display', 'none'); // Hide event
+                }
+            });
         }
 
         document.getElementById('prev-month').addEventListener('click', function() {

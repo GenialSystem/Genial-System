@@ -59,7 +59,29 @@
                         Allega
                     </button>
                 </div>
-                <div class="mt-5 h-[600px] bg-slate-400 rounded-sm"></div>
+
+                <div class="mt-5 h-[600px] rounded-sm relative overflow-hidden">
+                    <div id="carouselImages" class="flex transition-transform duration-500">
+                        @forelse ($order->images as $image)
+                            <div class="carousel-item w-full flex-shrink-0">
+                                <img src="{{ asset('/storage/' . $image->image_path) }}" alt="Order Image"
+                                    class="w-full h-full object-cover" />
+                            </div>
+                        @empty
+                            <span class="text-center">Nessuna immagine presente</span>
+                        @endforelse
+                    </div>
+
+                    <button id="prevBtn"
+                        class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white p-2 rounded-md shadow">
+                        &lt;
+                    </button>
+                    <button id="nextBtn"
+                        class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white p-2 rounded-md shadow">
+                        &gt;
+                    </button>
+                </div>
+
             </div>
         </div>
         <div x-data="{ activeTab: 'tab1' }" class="w-2/3 bg-white p-4">
@@ -106,7 +128,8 @@
                 <span class="text-[#4453A5]">Dati cliente</span>
                 <div class="my-3">
                     <span class="text-[#808080] text-[15px]">Cliente: </span>
-                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->name }}</span>
+                    <span class="text-[#222222] text-[15px]"> {{ $order->customer->user->name }}
+                        {{ $order->customer->user->surname }}</span>
                 </div>
                 <div class="my-3">
                     <span class="text-[#808080] text-[15px]">Responsabile: </span>
@@ -177,7 +200,8 @@
                         <div class="flex justify-between my-3">
                             <div>
                                 <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                                <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->name }}</span>
+                                <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->name }}
+                                    {{ $order->mechanics[0]->surname }}</span>
                             </div>
                             <a href="{{ route('mechanics.show', $order->mechanics[0]->pivot->mechanic_id) }}"
                                 class="text-[#4453A5]">Vai
@@ -252,7 +276,8 @@
 
                     <div class="w-2/5 ml-4 border-l px-4 py-6">
                         <div class="flex space-x-4 justify-end mb-11">
-                            <button id="openModalBtn"
+                            <button
+                                onclick="Livewire.dispatch('openModal', { component: 'order-edit-modal', arguments:{'order':{{ $order }}} })"
                                 class="px-2 flex items-center justify-center bg-[#EBF5F3] text-[#68C9BB] text-[13px] rounded-md group duration-200 hover:bg-[#68C9BB] hover:text-white">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="15.559" height="20.152"
                                     viewBox="0 0 15.559 20.152" class="group-hover:fill-white">
@@ -396,172 +421,28 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <div id="modal"
-        class=" overflow-auto fixed z-50 inset-0 bg-gray-600 bg-opacity-50 justify-center items-center hidden">
-        <div class="mx-auto my-20 p-6 bg-white w-[1000px] rounded-md shadow-sm relative">
-            <!-- Close button -->
-
-            <h2 class="text-lg font-semibold mb-4">Modifica commessa #{{ $order->id }}</h2>
-
-            <!-- Form -->
-            <form id="updateOrderForm" action="{{ route('orders.update', $order->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-
-                <span class="text-[#222222] text-[15px] mt-4">Inserire il numero di bolli presenti sulla
-                    vettura.</span>
-                <div class="grid grid-cols-3 gap-4 my-6">
-                    @foreach ($parts as $index => $part)
-                        <div>
-                            <label for="part_{{ $index }}"
-                                class="block text-sm text-[13px] text-[#9F9F9F]">{{ $part->name }}</label>
-                            <input required type="number" min="0"
-                                value="{{ $order->carParts->where('name', $part->name)->first()->pivot->damage_count ?? 0 }}"
-                                name="parts[{{ $index }}][damage_count]" id="part_{{ $index }}"
-                                class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
-                            <!-- Store only the name, not the entire object -->
-                            <input type="hidden" name="parts[{{ $index }}][name]" value="{{ $part->name }}">
-                            <span id="part_{{ $index }}-error" class="text-red-500 text-xs hidden"></span>
-                        </div>
-                    @endforeach
-                    <div>
-                        <label for="car_size" class="block text-sm text-[13px] text-[#9F9F9F]">Dimensioni
-                            veicolo</label>
-                        <select name="car_size" id="car_size"
-                            class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
-                            <option value="">- Seleziona -</option>
-                            @foreach ($car_sizes as $car_size)
-                                <option value="{{ $car_size }}"
-                                    {{ $car_size == $order->car_size ? 'selected' : '' }}>
-                                    {{ $car_size }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <span id="car_size-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
-                    </div>
-
-                    <div class="flex place-items-center">
-                        <input {{ $order->aluminium ? 'checked' : '' }} type="checkbox" name="aluminium"
-                            class="border border-[#D6D6D6] checked:bg-[#7FBC4B] text-[#7FBC4B] focus:ring-0 rounded-sm"><span
-                            class="text-[15px] text-[#222222] ml-2">Alluminio</span>
-                        <span id="aluminium-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
-                    </div>
-                </div>
-
-                <label class="block text-sm text-[13px] text-[#9F9F9F]" for="replacements">Ricambi</label>
-                <textarea name="replacements" id="replacements" cols="20" rows="5"
-                    class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">{{ $order->replacements }}</textarea>
-                <span id="replacements-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
-
-                <!-- Notes Textarea value="" -->
-                <label class="block text-sm text-[13px] text-[#9F9F9F] mt-4" for="notes">Appunti</label>
-                <textarea name="notes" id="notes" cols="10" rows="5"
-                    class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">{{ $order->notes }}</textarea>
-                <span id="notes-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
-
-                <div class="text-end h-8 mt-10">
-                    <button type="button" id="closeModalBtn"
-                        class="mr-4 py-2 px-4 bg-[#E8E8E8] text-[#222222] rounded-md text-sm">Annulla</button>
-                    <button type="button" id="submitBtn"
-                        class="py-2 px-4 bg-[#1E1B58] text-white rounded-md text-sm">Conferma</button>
-                </div>
-            </form>
-        </div>
-    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const openModalBtn = document.getElementById('openModalBtn');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const submitBtn = document.getElementById('submitBtn');
-            const modal = document.getElementById('modal');
-            const form = document.getElementById('updateOrderForm');
+            const carouselImages = document.getElementById('carouselImages');
+            const images = carouselImages.children; // Get all images in the carousel
+            let currentIndex = 0;
 
-            // Show the modal
-            if (openModalBtn) {
-                openModalBtn.addEventListener('click', function() {
-                    modal.classList.remove('hidden');
-                });
+            function updateCarousel() {
+                const offset = -currentIndex * 100; // Calculate offset based on index
+                carouselImages.style.transform = `translateX(${offset}%)`; // Move carousel
             }
 
-            // Hide the modal and reset the form
-            closeModalBtn.addEventListener('click', function() {
-                modal.classList.add('hidden');
-                clearErrorMessages(); // Clear error messages
-                // Commented out form.reset() to prevent resetting form values
-                // form.reset(); 
+            document.getElementById('prevBtn').addEventListener('click', function() {
+                currentIndex = (currentIndex > 0) ? currentIndex - 1 : images.length -
+                    1; // Go to previous image or loop to last
+                updateCarousel();
             });
 
-            // Handle form submission
-            submitBtn.addEventListener('click', function() {
-                console.log('Form submit initiated.');
-                let valid = validateForm();
-                if (valid) {
-                    // Only submit the form if validation passes
-                    form.submit(); // This will submit the form as normal
-                } else {
-                    console.log("Validation failed");
-                    modal.classList.remove('hidden'); // Ensure modal is visible if needed
-                }
+            document.getElementById('nextBtn').addEventListener('click', function() {
+                currentIndex = (currentIndex < images.length - 1) ? currentIndex + 1 :
+                    0; // Go to next image or loop to first
+                updateCarousel();
             });
-
-            // Validation function
-            function validateForm() {
-                let valid = true;
-                clearErrorMessages(); // Clear previous error messages
-
-                // Validate car size
-                const carSize = document.getElementById('car_size').value;
-                console.log('Car size:', carSize); // Log current value
-                if (!carSize) {
-                    showError('car_size-error', 'Campo obbligatorio.');
-                    valid = false;
-                }
-
-                // Validate part inputs (damage count)
-                document.querySelectorAll('input[type="number"]').forEach(input => {
-                    console.log(`Damage count for ${input.id}:`, input.value); // Log current value
-                    if (input.value === '' || input.value < 0) {
-                        const errorId = input.id + '-error';
-                        showError(errorId, 'Il numero deve essere maggiore o uguale a 0.');
-                        valid = false;
-                    }
-                });
-
-                // Validate replacements textarea
-                const replacements = document.getElementById('replacements');
-                if (!replacements.value.trim()) {
-                    showError('replacements-error', 'Campo obbligatorio.');
-                    valid = false;
-                }
-
-                // Validate notes textarea
-                const notes = document.getElementById('notes');
-                console.log('Notes textarea:', notes.value); // Log current value
-                if (!notes.value.trim()) {
-                    showError('notes-error', 'Campo obbligatorio.');
-                    valid = false;
-                }
-
-                return valid; // If no validation errors, return true
-            }
-
-            // Show error messages
-            function showError(id, message) {
-                const errorElement = document.getElementById(id);
-                if (errorElement) {
-                    errorElement.textContent = message;
-                    errorElement.classList.remove('hidden');
-                }
-            }
-
-            // Clear error messages
-            function clearErrorMessages() {
-                document.querySelectorAll('.text-red-500').forEach(errorElement => {
-                    errorElement.textContent = '';
-                    errorElement.classList.add('hidden');
-                });
-            }
         });
     </script>
 @endsection

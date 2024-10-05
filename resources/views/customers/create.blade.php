@@ -28,10 +28,16 @@
                 <!-- Row 1 -->
                 <div class="grid grid-cols-3 gap-4 mb-4">
                     <div class="">
-                        <label for="name" class="block text-sm font-medium">Cliente</label>
+                        <label for="name" class="block text-sm font-medium">Nome</label>
                         <input type="text" name="name" id="name"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <span id="name-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
+                    </div>
+                    <div class="">
+                        <label for="surname" class="block text-sm font-medium">Cognome</label>
+                        <input type="text" name="surname" id="surname"
+                            class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
+                        <span id="surname-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
                     <div>
                         <label for="assigned_cars" class="block text-sm font-medium">Auto assegnate</label>
@@ -285,7 +291,8 @@
                 let valid = true;
 
                 if (stepCounter === 1) {
-                    const requiredFieldsStep1 = ['name', 'assigned_cars', 'city', 'admin_name', 'cellphone',
+                    const requiredFieldsStep1 = ['name', 'surname', 'assigned_cars', 'city', 'admin_name',
+                        'cellphone',
                         'email', 'rag_sociale', 'iva', 'pec', 'sdi', 'legal_address', 'cap', 'province'
                     ];
 

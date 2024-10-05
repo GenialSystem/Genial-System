@@ -12,7 +12,7 @@ class MechanicTable extends Component
     use WithPagination;
     public $dateFilter = '';
     public $searchTerm = '';
-    protected $listeners = ['dateFilterUpdated' => 'handleDateFilterUpdated'];
+    protected $listeners = ['dateFilterUpdated' => 'handleDateFilterUpdated','refreshComponent' => '$refresh'];
 
     public function handleDateFilterUpdated($dateFilter)
     {
@@ -36,12 +36,12 @@ class MechanicTable extends Component
                         $userQuery->where(function ($userSubQuery) {
                             $userSubQuery->where('name', 'like', "%{$this->searchTerm}%")
                                 ->orWhere('email', 'like', "%{$this->searchTerm}%")
+                                ->orWhere('surname', 'like', "%{$this->searchTerm}%")
                                 ->orWhere('city', 'like', "%{$this->searchTerm}%")
                                 ->orWhere('cellphone', 'like', "%{$this->searchTerm}%");
                         });
                     })
                     ->orWhere('repaired_count', 'like', "%{$this->searchTerm}%")
-                    ->orWhere('surname', 'like', "%{$this->searchTerm}%")
                     ->orWhere('working_count', 'like', "%{$this->searchTerm}%");
             });
         }

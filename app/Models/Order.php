@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Order extends Model
 {
@@ -68,5 +69,21 @@ class Order extends Model
     {
         $formattedValue = str_replace(['.', ','], ['', '.'], $value);
         $this->attributes['price'] = number_format($formattedValue, 2, '.', '');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Use the 'creating' or 'created' event
+        static::deleting(function ($order) {
+            // Define the folder path for the order (assuming it's `/orders/{id}`)
+            $folderPath = 'public/orders/' . $order->id;
+    
+            if (Storage::exists($folderPath)) {
+                Storage::deleteDirectory($folderPath);  // Delete the folder and all its contents
+            }
+    
+        });
     }
 }

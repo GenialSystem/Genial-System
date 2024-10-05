@@ -123,6 +123,10 @@
                 required: true,
                 maxLength: 255
             },
+            surname: {
+                required: true,
+                maxLength: 255
+            },
             email: {
                 required: true,
                 type: 'email'

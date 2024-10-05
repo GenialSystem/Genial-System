@@ -162,6 +162,7 @@ class OrderController extends Controller
                 'aluminium' => $request->aluminium == 'on' ? true : false,
                 'replacements' => $request->replacements,
                 'notes' => $request->notes,
+                'damage_diameter' => $request->damage_diameter,
             ]);
             // dd($order);
             // 3. Sync car parts damage to the pivot table `order_car_part`

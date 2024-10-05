@@ -21,7 +21,7 @@ class EstimatesTable extends Component
         'Confermato' => 'bg-[#EFF7E9]',
         'Nuovo' => 'bg-[#FFF9EC]',
         'Poco interessati' => 'bg-[#FCEEEE]',
-        'Annullato' => 'bg-[#FEF0F5]',
+        'Rifiutato' => 'bg-[#FEF0F5]',
         'Archiviato' => 'bg-[#EBF5F3]',
     ];
 
@@ -29,7 +29,7 @@ class EstimatesTable extends Component
         'Confermato' => 'text-[#7FBC4B]',
         'Nuovo' => 'text-[#FCC752]',
         'Poco interessati' => 'text-[#E57A7A]',
-        'Annullato' => 'text-[#DC0851]',
+        'Rifiutato' => 'text-[#DC0851]',
         'Archiviato' => 'text-[#68C9BB]',
     ];
     public $newState = '';
@@ -182,10 +182,10 @@ class EstimatesTable extends Component
                     ->orWhere('state', 'like', "%{$this->searchTerm}%")
                     ->orWhere('type', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('customer', function ($userQuery) {
-                        $userQuery->where('name', 'like', "%{$this->searchTerm}%")
-                            ->orWhereHas('customerInfo', function ($infoQuery) {
-                                $infoQuery->where('city', 'like', "%{$this->searchTerm}%")
-                                    ->orWhere('admin_name', 'like', "%{$this->searchTerm}%");
+                        $userQuery->where('id', 'like', "%{$this->searchTerm}%")
+                            ->orWhereHas('user', function ($infoQuery) {
+                                $infoQuery->where('name', 'like', "%{$this->searchTerm}%")
+                                ->orWhere('surname', 'like', "%{$this->searchTerm}%");
                             });
                     })
                     ->orWhere('price', 'like', "%{$this->searchTerm}%");

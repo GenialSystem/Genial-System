@@ -18,13 +18,22 @@
                         mechanic
                     @endif --}}
                     <div>
-                        <span class="text-[#808080] text-[15px]">Cliente: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $invoice->user->name }}</span>
+                        <span class="text-[#808080] text-[15px]">
+                            @if ($invoice->user->hasRole('customer'))
+                                Cliente:
+                            @else
+                                Tecnico:
+                            @endif
+                        </span>
+                        <span class="text-[#222222] text-[15px]">{{ $invoice->user->name }}
+                            {{ $invoice->user->surname }}</span>
                     </div>
-                    <div>
-                        <span class="text-[#808080] text-[15px]">Referente: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $invoice->user->customerInfo->admin_name }}</span>
-                    </div>
+                    @if ($invoice->user->hasRole('customer'))
+                        <div>
+                            <span class="text-[#808080] text-[15px]">Referente: </span>
+                            <span class="text-[#222222] text-[15px]">{{ $invoice->user->customerInfo->admin_name }}</span>
+                        </div>
+                    @endif
                     <div>
                         <span class="text-[#808080] text-[15px]">Indirizzo Email:</span>
                         <span class="text-[#222222] text-[15px]">{{ $invoice->user->email }}</span>
@@ -53,31 +62,35 @@
                         fatturazione</span>
                 </div>
                 <div class="px-2 space-y-4">
-                    <div>
-                        <span class="text-[#808080] text-[15px]">Nome azienda: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $invoice->user->name }}</span>
-                    </div>
-                    <div>
-                        <span class="text-[#808080] text-[15px]">Ragione sociale: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $invoice->user->customerInfo->rag_sociale }}</span>
-                    </div>
-                    <div>
-                        <span class="text-[#808080] text-[15px]">Partita IVA: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $invoice->user->customerInfo->iva }}</span>
-                    </div>
-                    <div>
-                        <span class="text-[#808080] text-[15px]">PEC: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $invoice->user->customerInfo->pec }}</span>
-                    </div>
-                    <div>
-                        <span class="text-[#808080] text-[15px]">SDI: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $invoice->user->customerInfo->sdi }}</span>
-                    </div>
+                    @if ($invoice->user->hasRole('customer'))
+                        <div>
+                            <span class="text-[#808080] text-[15px]">Nome azienda: </span>
+                            <span class="text-[#222222] text-[15px]">{{ $invoice->user->name }}
+                                {{ $invoice->user->surname }}</span>
+                        </div>
+                        <div>
+                            <span class="text-[#808080] text-[15px]">Ragione sociale: </span>
+                            <span class="text-[#222222] text-[15px]">{{ $invoice->user->customerInfo->rag_sociale }}</span>
+                        </div>
+                        <div>
+                            <span class="text-[#808080] text-[15px]">Partita IVA: </span>
+                            <span class="text-[#222222] text-[15px]">{{ $invoice->user->customerInfo->iva }}</span>
+                        </div>
+                        <div>
+                            <span class="text-[#808080] text-[15px]">PEC: </span>
+                            <span class="text-[#222222] text-[15px]">{{ $invoice->user->customerInfo->pec }}</span>
+                        </div>
+                        <div>
+                            <span class="text-[#808080] text-[15px]">SDI: </span>
+                            <span class="text-[#222222] text-[15px]">{{ $invoice->user->customerInfo->sdi }}</span>
+                        </div>
 
-                    <div>
-                        <span class="text-[#808080] text-[15px]">Indirizzo sede legale: </span>
-                        <span class="text-[#222222] text-[15px]">{{ $invoice->user->customerInfo->legal_address }}</span>
-                    </div>
+                        <div>
+                            <span class="text-[#808080] text-[15px]">Indirizzo sede legale: </span>
+                            <span
+                                class="text-[#222222] text-[15px]">{{ $invoice->user->customerInfo->legal_address }}</span>
+                        </div>
+                    @endif
                     <div>
                         <span class="text-[#808080] text-[15px]">Cap: </span>
                         <span class="text-[#222222] text-[15px]">{{ $invoice->user->cap }}</span>

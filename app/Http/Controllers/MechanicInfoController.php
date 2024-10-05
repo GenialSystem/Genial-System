@@ -35,12 +35,13 @@ class MechanicInfoController extends Controller
     {
         DB::beginTransaction(); // Start the transaction
 
+        dd($request);
         try {
             $validatedData = $request->validated();
-
             // Create a new User instance
             $newUser = User::create([
                 'name' => $validatedData['name'],
+                'surname' => $validatedData['surname'],
                 'email' => $validatedData['email'],
                 'password' => Hash::make('password'),
             ]);

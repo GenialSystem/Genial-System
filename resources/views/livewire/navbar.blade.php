@@ -15,22 +15,25 @@
         </div>
 
         <div class=" w-8 h-8 bg-[#F0F0F0] rounded-full flex items-center place-content-center">
-            <img src="{{asset('images/chat icon.svg')}}" alt="Notifications" class="cursor-pointer hover:text-primary">
+            <img src="{{ asset('images/chat icon.svg') }}" alt="Notifications"
+                class="cursor-pointer hover:text-primary">
         </div>
 
         <!-- Notification Icon -->
         <div class=" w-8 h-8 bg-[#F0F0F0] rounded-full flex items-center place-content-center">
-            <img src="{{asset('images/button header notifiche.svg')}}" alt="Notifications"
+            <img src="{{ asset('images/button header notifiche.svg') }}" alt="Notifications"
                 class="cursor-pointer hover:text-primary">
         </div>
 
         <!-- Profile Image -->
         <div class="flex items-center">
-            <img src="{{asset('images/Foto profilo.jpg')}}" alt="Profile"
-                class="w-8 h-8 rounded-full cursor-pointer mr-2">
+            <img src="{{ asset(Auth::user()->image_path ?? 'images/placeholder.png') }}" alt="Profile"
+                class="w-10 h-10 rounded-full mr-2">
             <div>
-                <span class="text-secondary text-sm">{{Auth::user()->name}}</span>
-                <div class="text-xs text-[#747881]">superadmin</div>
+                <a href="{{ route('editProfile') }}">
+                    <span class="text-secondary text-sm">{{ Auth::user()->name }} {{ Auth::user()->surname }}</span>
+                </a>
+                <div class="text-xs text-[#747881]">{{ Auth::user()->roles->pluck('name')[0] ?? '' }}</div>
             </div>
         </div>
     </div>

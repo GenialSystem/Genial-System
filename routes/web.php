@@ -19,11 +19,11 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/auth.php';
 Route::middleware('auth')->group(function () {
-    
+    Route::get('edit_profile',[ProfileController::class, 'edit'])->name('editProfile');
     Route::get('/', function () {
         $workingOrdersCount = Order::where('state', 'In lavorazione')->count('id');
         $newOrdersCount = Order::where('state', 'Nuova')->count('id');
-        $estimates = Estimate::count('id');
+        $estimates = Estimate::count();
         $mechanics = MechanicInfo::count(); 
         $customers = CustomerInfo::count();
         return view('home', compact('workingOrdersCount', 'newOrdersCount', 'mechanics', 'customers', 'estimates'));

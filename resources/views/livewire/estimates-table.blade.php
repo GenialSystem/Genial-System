@@ -4,8 +4,8 @@
 
         <div class="h-8 flex justify-between">
             <div class="flex space-x-4">
-                <input type="text" class="p-2 border border-gray-300 rounded h-8" placeholder="Search..."
-                    wire:model.debounce.300ms.live="searchTerm" />
+                <input type="text" class="p-2 border border-gray-300 rounded h-8 w-[600px]"
+                    placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
 
                 <select class="border border-gray-300 rounded pl-2 pr-20 h-8 leading-none"
                     wire:model.live="selectedState">
@@ -21,7 +21,6 @@
                 class="px-2 bg-[#1E1B58] text-white rounded-md text-sm h-8">+
                 Crea
                 nuovo preventivo</button>
-
         </div>
 
         {{--
@@ -74,7 +73,8 @@
                                     @if (in_array((string) $row->id, $selectedRows)) checked @endif>
                             </td>
                             <td class="py-3 px-6">{{ $row->number }}</td>
-                            <td class="py-3 px-6">{{ $row->customer->name ?? 'N/A' }}</td>
+                            <td class="py-3 px-6">{{ $row->customer->user->name ?? 'N/A' }}
+                                {{ $row->customer->user->surname }}</td>
                             <td class="py-3 px-6">
                                 {{ $row->customer ? $row->customer->admin_name : 'N/A' }}
                             </td>
