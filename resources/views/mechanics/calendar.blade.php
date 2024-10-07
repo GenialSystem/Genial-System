@@ -8,8 +8,10 @@
     <div class="bg-white">
         <div class="flex justify-between px-4 pt-4">
             <div class="flex">
-                <button id="prev-month" class="border border-[#E8E8E8] rounded-md h-7 text-center mr-2">Prev</button>
-                <button id="next-month" class="border border-[#E8E8E8] rounded-md h-7 text-center mr-4">Next</button>
+                <button id="prev-month"
+                    class="border border-[#E8E8E8] rounded-md h-7 text-center mr-2 p-2 flex justify-center place-items-center">&lt;</button>
+                <button id="next-month"
+                    class="border border-[#E8E8E8] rounded-md h-7 text-center mr-4 p-2 flex justify-center place-items-center">&gt;</button>
                 <button id="today" class="bg-[#4453A5] text-white rounded-md h-7 text-[14px] px-2">Oggi</button>
             </div>
             <h5 id="current-month" class="text-lg font-semibold"></h5>
@@ -29,10 +31,10 @@
                     <input type="text" class="border border-gray-300 rounded mr-6 h-8 w-[600px]"
                         placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
 
-                    <select
+                    {{-- <select
                         class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px]">
                         <option value="">Filtra per stato</option>
-                    </select>
+                    </select> --}}
                 </div>
 
             </div>
@@ -90,7 +92,6 @@
                 },
                 initialView: 'dayGridMonth',
                 locale: 'it',
-                eventColor: '#378006',
                 events: @json($events), // Make sure this contains events from backend
                 headerToolbar: false, // Disable default header with buttons
             });

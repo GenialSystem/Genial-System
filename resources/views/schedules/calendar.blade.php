@@ -30,10 +30,10 @@
                     <input type="text" class="border border-gray-300 rounded mr-6 h-8 w-[600px]"
                         placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
 
-                    <select
+                    {{-- <select
                         class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px]">
                         <option value="">Filtra per stato</option>
-                    </select>
+                    </select> --}}
 
                     <select id="mechanic-filter"
                         class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px] ml-6">

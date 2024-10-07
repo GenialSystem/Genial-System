@@ -137,4 +137,11 @@
             </div>
         </div>
     </div>
+
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit" class="py-2 px-4 bg-[#1E1B58] text-white rounded-md text-sm mt-10" wire:loading.remove>
+            Logout
+        </button>
+    </form>
 </div>
