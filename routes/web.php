@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
         $customers = CustomerInfo::count();
         return view('home', compact('workingOrdersCount', 'newOrdersCount', 'mechanics', 'customers', 'estimates'));
     })->name('home');
+    Route::get('/mechanic-calendar/{mechanic}', [MechanicInfoController::class, 'calendar'])->name('mechanic-calendar');
     Route::resource('/customers', CustomerInfoController::class);
     Route::resource('/office', OfficeController::class);
     Route::resource('/calendar', CalendarController::class);

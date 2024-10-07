@@ -56,15 +56,12 @@ class EstimateModal extends ModalComponent
                     'price' => $this->price,
                 ]);
             } else {
-                // Create a new estimate
                 Estimate::create([
                     'customer_id' => $this->selectedCustomer,
                     'type' => $this->newType,
                     'price' => $this->price,
                     'state' => 'Nuovo'
-                    
                 ]);
-              
             }
     
             session()->flash('success', [

@@ -44,14 +44,15 @@ class DoneOrdersTable extends Component
             $query->where(function ($q) {
                 $q->where('id', 'like', "%{$this->searchTerm}%")
                     ->orWhere('state', 'like', "%{$this->searchTerm}%")
-                    ->orWhere('color', 'like', "%{$this->searchTerm}%")
                     ->orWhere('plate', 'like', "%{$this->searchTerm}%")
                     ->orWhere('price', 'like', "%{$this->searchTerm}%")
+                    ->orWhere('brand', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('customer', function ($userQuery) {
-                        $userQuery->where('name', 'like', "%{$this->searchTerm}%")
-                            ->orWhereHas('customerInfo', function ($infoQuery) {
+                        $userQuery->where('admin_name', 'like', "%{$this->searchTerm}%")
+                            ->orWhereHas('user', function ($infoQuery) {
                                 $infoQuery->where('city', 'like', "%{$this->searchTerm}%")
-                                    ->orWhere('admin_name', 'like', "%{$this->searchTerm}%");
+                                ->orWhere('name', 'like', "%{$this->searchTerm}%")
+                                ->orWhere('surname', 'like', "%{$this->searchTerm}%");
                             });
                     })
                     ->orWhereHas('mechanics', function ($mechanicQuery) {
@@ -62,7 +63,7 @@ class DoneOrdersTable extends Component
 
 
         return view('livewire.done-orders-table', [
-            'rows' => $query->paginate(8),
+            'rows' => $query->paginate(12),
         ]);
     }
 }

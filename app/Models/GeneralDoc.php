@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class GeneralDoc extends Model
 {
     use HasFactory;
+    
+    protected $fillable = ['user_id', 'name', 'file_path'];
 
-    public function customer()
+    public function user()
     {
-        return $this->belongsTo(CustomerInfo::class);
+        return $this->belongsTo(User::class);
     }
 }

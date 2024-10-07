@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMechanicInfoRequest;
+use App\Models\CustomerInfo;
 use App\Models\MechanicInfo;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -88,6 +89,31 @@ class MechanicInfoController extends Controller
     {
         return view('mechanics.show', compact('mechanic'));
     }
+
+    public function calendar(MechanicInfo $mechanic)
+    {
+        // Load the mechanic's events with the pivot data (confirmed, client_name)
+        $events = $mechanic->events()->withPivot('confirmed', 'client_name')->get()->map(function($event) use ($mechanic) {
+            return [
+                'id' => $event->id,
+                'title' => $event->name,
+                'start' => $event->date . 'T' . $event->start_time,
+                'end' => $event->date . 'T' . $event->end_time,
+                'mechanics' => [
+                    [
+                        'id' => $mechanic->id,
+                        'surname' => $mechanic->surname,
+                        'confirmed' => $event->pivot->confirmed,  // Get confirmed status from pivot
+                        'client_name' => $event->pivot->client_name,  // Get client_name from pivot
+                    ]
+                ],
+            ];
+        });
+        $customers = CustomerInfo::with('user')->get();
+      
+        return view('mechanics.calendar', compact('mechanic', 'events', 'customers'));
+    }
+    
 
     /**
      * Show the form for editing the specified resource.

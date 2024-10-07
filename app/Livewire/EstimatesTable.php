@@ -182,7 +182,7 @@ class EstimatesTable extends Component
                     ->orWhere('state', 'like', "%{$this->searchTerm}%")
                     ->orWhere('type', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('customer', function ($userQuery) {
-                        $userQuery->where('id', 'like', "%{$this->searchTerm}%")
+                        $userQuery->where('id', 'like', "%{$this->searchTerm}%")->orWhere('admin_name', 'like', "%{$this->searchTerm}%")
                             ->orWhereHas('user', function ($infoQuery) {
                                 $infoQuery->where('name', 'like', "%{$this->searchTerm}%")
                                 ->orWhere('surname', 'like', "%{$this->searchTerm}%");

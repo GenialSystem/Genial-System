@@ -7,8 +7,8 @@
             <!-- Search Input -->
             <div>
 
-                <input type="text" class="border border-gray-300 rounded mr-6 h-8 w-[600px]" placeholder="Search..."
-                    wire:model.debounce.300ms.live="searchTerm" />
+                <input type="text" class="border border-gray-300 rounded mr-6 h-8 w-[600px]"
+                    placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
 
                 <!-- is_closed Filter Dropdown -->
                 <select wire:model.live="selectedIsClosed"

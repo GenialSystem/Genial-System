@@ -31,10 +31,17 @@
                 <!-- Row 1 -->
                 <div class="grid grid-cols-3 gap-4 mb-4">
                     <div>
-                        <label for="name" class="block text-sm font-medium">Cliente</label>
-                        <input type="text" name="name" id="name" value="{{ old('name', $customer->name) }}"
+                        <label for="name" class="block text-sm font-medium">Nome</label>
+                        <input type="text" name="name" id="name" value="{{ old('name', $customer->user->name) }}"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <span id="name-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
+                    </div>
+                    <div>
+                        <label for="surname" class="block text-sm font-medium">Cognome</label>
+                        <input type="text" name="surname" id="surname"
+                            value="{{ old('surname', $customer->user->surname) }}"
+                            class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
+                        <span id="surname-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
                     <div>
                         <label for="assigned_cars" class="block text-sm font-medium">Auto assegnate</label>
@@ -45,7 +52,7 @@
                     </div>
                     <div>
                         <label for="city" class="block text-sm font-medium">Città</label>
-                        <input type="text" name="city" id="city" value="{{ old('city', $customer->city) }}"
+                        <input type="text" name="city" id="city" value="{{ old('city', $customer->user->city) }}"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <span id="city-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
@@ -63,7 +70,7 @@
                     <div>
                         <label for="cellphone" class="block text-sm font-medium">Cellulare</label>
                         <input type="text" name="cellphone" id="cellphone"
-                            value="{{ old('cellphone', $customer->cellphone) }}"
+                            value="{{ old('cellphone', $customer->user->cellphone) }}"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <span id="cellphone-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
@@ -108,15 +115,16 @@
                         <span id="sdi-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
                     <div>
-                        <label for="address" class="block text-sm font-medium">Indirizzo Sede Legale</label>
-                        <input type="text" name="address" id="address"
-                            value="{{ old('address', $customer->address) }}"
+                        <label for="legal_address" class="block text-sm font-medium">Indirizzo Sede Legale</label>
+                        <input type="text" name="legal_address" id="legal_address"
+                            value="{{ old('legal_address', $customer->legal_address) }}"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
-                        <span id="address-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
+                        <span id="legal_address-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
                     <div>
                         <label for="cap" class="block text-sm font-medium">Cap</label>
-                        <input type="number" name="cap" id="cap" value="{{ old('cap', $customer->cap) }}"
+                        <input type="number" name="cap" id="cap"
+                            value="{{ old('cap', $customer->user->cap) }}"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <span id="cap-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
@@ -127,7 +135,7 @@
                     <div>
                         <label for="province" class="block text-sm font-medium">Provincia</label>
                         <input type="text" name="province" id="province"
-                            value="{{ old('province', $customer->province) }}"
+                            value="{{ old('province', $customer->user->province) }}"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <span id="province-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
@@ -339,8 +347,9 @@
                 let valid = true;
 
                 if (stepCounter === 1) {
-                    const requiredFieldsStep1 = ['name', 'assigned_cars', 'city', 'admin_name', 'cellphone',
-                        'email', 'rag_sociale', 'iva', 'pec', 'sdi', 'address', 'cap', 'province'
+                    const requiredFieldsStep1 = ['name', 'surname', 'assigned_cars', 'city', 'admin_name',
+                        'cellphone',
+                        'email', 'rag_sociale', 'iva', 'pec', 'sdi', 'legal_address', 'cap', 'province'
                     ];
 
                     requiredFieldsStep1.forEach(field => {

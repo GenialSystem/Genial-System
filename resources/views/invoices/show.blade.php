@@ -2,7 +2,7 @@
 
 @section('content')
     @livewire('back-button')
-    <h4 class="text-[22px] text-[#222222] font-semibold mb-4">Dettaglio preventivo - {{ $invoice->id }}</h4>
+    <h4 class="text-[22px] text-[#222222] font-semibold mb-4">Dettaglio fattura - {{ $invoice->number }}</h4>
     <div class="flex space-x-4">
         <div class="w-1/3 space-y-4">
             <div class="bg-white p-4 rounded-sm">
@@ -150,7 +150,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-[#9F9F9F] text-[13px]">Guadagno Tecnico</label>
+                    <label class="block text-sm font-medium text-[#9F9F9F] text-[13px]">IVA</label>
                     <input type="text" value="{{ $invoice->iva }} €"
                         class="mt-1 block w-full pointer-events-none px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
 

@@ -19,9 +19,10 @@
 
                 @forelse($mechanics as $row)
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
-                        <td class="py-3 px-6 flex place-items-center"> <span
-                                class="inline-block w-8 h-8 bg-red-300 rounded-full border border-black mr-3">
-                            </span>{{ $row->user->name }} {{ $row->user->surname }}</td>
+                        <td class="py-3 px-6 flex place-items-center"> <img
+                                src="{{ asset($mechanic->user->image_path ?? 'images/placeholder.png') }}"
+                                alt="profile image" class="w-8 h-8 rounded-full mr-2">{{ $row->user->name }}
+                            {{ $row->user->surname }}</td>
                         <td class="py-3 px-6">Postazione lavoro</td>
                         <td class="py-3 px-6 text-center">{{ $row->working_count }}</td>
                         <td class="py-3 px-6 text-center">10h</td>

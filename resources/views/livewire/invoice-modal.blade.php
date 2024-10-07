@@ -83,7 +83,7 @@
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-[#9F9F9F] text-[13px]">IVA</label>
-                    <input wire:model='iva' required type="number" min="0" name="iva"
+                    <input wire:model='iva' required type="number" min="0" step="0.01" name="iva"
                         value="{{ $invoice ? $invoice->iva : '' }}"
                         class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
 

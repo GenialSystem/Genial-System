@@ -10,6 +10,11 @@
             <input type="file" wire:model="normalImages" multiple hidden x-ref="normalInput" />
         </div>
 
+        <!-- Show Validation Error for Normal Images -->
+        @error('normalImages')
+            <span class="text-red-500">{{ $message }}</span>
+        @enderror
+
         <!-- Show Preview/Uploaded Images -->
         @if ($normalImages)
             <div class="mt-2">
@@ -38,6 +43,11 @@
             <input type="file" wire:model="disassemblyImages" multiple hidden x-ref="disassemblyInput" />
         </div>
 
+        <!-- Show Validation Error for Disassembly Images -->
+        @error('disassemblyImages')
+            <span class="text-red-500">{{ $message }}</span>
+        @enderror
+
         <!-- Show Preview/Uploaded Images -->
         @if ($disassemblyImages)
             <div class="mt-2">
@@ -54,4 +64,4 @@
             </div>
         @endif
     </div>
-</div
+</div>

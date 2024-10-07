@@ -25,24 +25,24 @@ class CalendarController extends Controller
                 'title' => $event->name,
                 'start' => $event->date . 'T' . $event->start_time,
                 'end' => $event->date . 'T' . $event->end_time,
+                'date' => $event->date, // Ensure date is included
                 'mechanics' => $event->mechanics->map(function($mechanic) {
                     return [
                         'id' => $mechanic->id,
                         'surname' => $mechanic->surname,
-                        'confirmed' => $mechanic->pivot->confirmed,  // Get confirmed status from pivot
-                        'client_name' => $mechanic->pivot->client_name,  // Get client_name from pivot
+                        'confirmed' => $mechanic->pivot->confirmed,
+                        'client_name' => $mechanic->pivot->client_name,
                     ];
                 }),
             ];
         });
-    
-        // Load mechanics and customers
+
         $mechanics = MechanicInfo::all();
-        $customers = CustomerInfo::all();
-    
+        $customers = CustomerInfo::with('user')->get();
+
         return view('schedules.calendar', compact('mechanics', 'events', 'customers'));
     }
-    
+
    
     
     public function updateCustomer(Request $request)
@@ -53,17 +53,15 @@ class CalendarController extends Controller
             'event_id' => 'required|exists:events,id', // Ensure event_id exists in events table
             'customer_id' => 'required|exists:customer_infos,id', // Ensure customer_id exists in customers table
         ]);
-    
         // Find the customer's name based on the customer_id
         $customer = CustomerInfo::find($request->customer_id);
-        
         if ($customer) {
             // Update the event_mechanic pivot table
             $updated = DB::table('event_mechanic')
                 ->where('mechanic_id', $request->mechanic_id)
                 ->where('event_id', $request->event_id)
                 ->update([
-                    'client_name' => $customer->name, // Update the client_name field with the customer's name
+                    'client_name' => $customer->user->name . ' ' . $customer->user->surname, // Update the client_name field with the customer's name
                     'confirmed' => true, // Optionally set confirmed to true if necessary
                     'updated_at' => now(), // Update timestamp
                 ]);

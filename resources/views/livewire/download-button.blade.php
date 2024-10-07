@@ -1,5 +1,5 @@
 <div class="bg-[#FCEEF2] w-6 p-1 flex items-center justify-center group hover:bg-[#E57A97] duration-200 rounded-sm">
-    <button wire:click="download" class="flex items-center justify-center">
+    <button class="flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="13.937" height="13.937" viewBox="0 0 13.937 13.937">
             <g id="Icon_feather-download" data-name="Icon feather-download" transform="translate(-3.75 -3.75)">
                 <path id="Tracciato_630" data-name="Tracciato 630"

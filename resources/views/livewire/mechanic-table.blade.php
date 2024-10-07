@@ -51,6 +51,31 @@
 
                         <td class="py-3 px-6 flex space-x-2">
                             @livewire('show-button', ['modelId' => $row->id, 'modelClass' => \App\Models\MechanicInfo::class], key(str()->random(10)))
+                            <div
+                                class="bg-[#FFF9EC] w-6 p-1 flex items-center justify-center group hover:bg-[#FFCD5D] duration-200 rounded-sm">
+                                <a href="{{ route('mechanic-calendar', $row) }}">
+
+                                    <button>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="11.598" height="12.755"
+                                            viewBox="0 0 11.598 12.755">
+                                            <g id="calendar_icon" data-name="calendar icon"
+                                                transform="translate(0.6 0.6)">
+                                                <path class="transition-colors duration-200 group-hover:stroke-white"
+                                                    id="Tracciato_101" data-name="Tracciato 101"
+                                                    d="M5.655,6h8.088A1.155,1.155,0,0,1,14.9,7.155v8.088A1.155,1.155,0,0,1,13.743,16.4H5.655A1.155,1.155,0,0,1,4.5,15.243V7.155A1.155,1.155,0,0,1,5.655,6Z"
+                                                    transform="translate(-4.5 -4.844)" fill="none" stroke="#222"
+                                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" />
+                                                <path class="transition-colors duration-200 group-hover:stroke-white"
+                                                    id="Tracciato_102" data-name="Tracciato 102"
+                                                    d="M12.01,3V5.311M7.388,3V5.311M4.5,7.622H14.9"
+                                                    transform="translate(-4.5 -3)" fill="none" stroke="#222"
+                                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" />
+                                            </g>
+                                        </svg>
+
+                                    </button>
+                                </a>
+                            </div>
 
                             @livewire('delete-button', ['modelId' => $row->id, 'modelName' => 'mechanics', 'modelClass' => \App\Models\MechanicInfo::class], key(str()->random(10)))
                         </td>

@@ -21,8 +21,9 @@ class ArchiveSection extends Component
     public function archiveAdded($archiveId)
     {
         $archive = Archive::find($archiveId);
+        // dd($archive);
         if ($archive) {
-            $this->archives->push($archive[0]);
+            $this->archives->push($archive);
         }
     }
     

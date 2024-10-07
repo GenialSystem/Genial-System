@@ -42,7 +42,7 @@
                                     wire:click="toggleRow('{{ $row->id }}')"
                                     @if (in_array((string) $row->id, $selectedRows)) checked @endif>
                             </td>
-                            <td class="py-3 px-6">{{ str_pad($row->id, 5, '0', STR_PAD_LEFT) }}</td>
+                            <td class="py-3 px-6">#{{ str_pad($row->id, 5, '0', STR_PAD_LEFT) }}</td>
                             <td class="py-3 px-6">
                                 {{ $row->customer->user->name . ' ' . $row->customer->user->surname ?? 'N/A' }}</td>
                             <td class="py-3 px-6">

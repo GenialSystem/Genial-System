@@ -13,44 +13,74 @@ class OrderImageUpload extends Component
     public $orderId;
     public $normalImages = [];
     public $disassemblyImages = [];
+    
+    // Define the total upload size limit (in bytes)
+    private $maxTotalSize = 10 * 1024 * 1024; // 10MB in bytes
 
     protected $rules = [
         'normalImages.*' => 'image|max:2048', // Max 2MB per image
         'disassemblyImages.*' => 'image|max:2048', // Max 2MB per image
     ];
 
+    // Method to check total size
+    private function validateTotalSize($images)
+    {
+        $totalSize = 0;
+        foreach ($images as $image) {
+            $totalSize += $image->getSize();
+        }
+
+        // Check if total size exceeds 10MB
+        if ($totalSize > $this->maxTotalSize) {
+            return false;
+        }
+        return true;
+    }
+
     public function updatedNormalImages()
     {
-        // Validate the images
+        // Validate each image individually
         $this->validate();
 
-        // Process each image
+        // Check total size of the images
+        if (!$this->validateTotalSize($this->normalImages)) {
+            $this->addError('normalImages', 'The total size of normal images cannot exceed 10MB.');
+            return;
+        }
+
+        // Process and store each image
         foreach ($this->normalImages as $image) {
             // Store the image in /orders/{order->id}/normal
             $path = $image->storeAs('orders/' . $this->orderId . '/normal', $image->getClientOriginalName());
 
-            // Create a record in the database
+            // Save the image record in the database
             OrderImage::create([
                 'order_id' => $this->orderId,
                 'image_path' => $path,
             ]);
         }
-        // Reset the updateded images and provide success feedback
+
+        // Reset the uploaded images and provide success feedback
         $this->normalImages = [];
-        session()->flash('normal_success', 'Normal images updateded successfully!');
     }
 
     public function updatedDisassemblyImages()
     {
-        // Validate the images
+        // Validate each image individually
         $this->validate();
 
-        // Process each image
+        // Check total size of the images
+        if (!$this->validateTotalSize($this->disassemblyImages)) {
+            $this->addError('disassemblyImages', 'The total size of disassembly images cannot exceed 10MB.');
+            return;
+        }
+
+        // Process and store each image
         foreach ($this->disassemblyImages as $image) {
             // Store the image in /orders/{order->id}/disassembly
             $path = $image->storeAs('orders/' . $this->orderId . '/disassembly', $image->getClientOriginalName());
 
-            // Create a record in the database
+            // Save the image record in the database, marking it as a disassembly image
             OrderImage::create([
                 'order_id' => $this->orderId,
                 'image_path' => $path,
@@ -60,7 +90,6 @@ class OrderImageUpload extends Component
 
         // Reset the uploaded images and provide success feedback
         $this->disassemblyImages = [];
-        session()->flash('disassembly_success', 'Disassembly images uploaded successfully!');
     }
 
     public function render()

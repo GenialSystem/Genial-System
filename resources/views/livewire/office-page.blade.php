@@ -43,8 +43,10 @@
                         <div
                             class="bg-[#F5F5F5] h-3/4 flex flex-col justify-center place-items-center text-3xl relative">
                             <div class="absolute top-0 right-2" x-data="{ open: false }">
-                                <button @click="open = !open" class="bg-white text-lg">
-                                    &#8230; </button>
+                                <div @click="open = !open"
+                                    class="bg-white text-lg cursor-pointer flex justify-center place-items-center mt-2">
+                                    <span class="pb-1">&#8230;</span>
+                                </div>
 
                                 <!-- Dropdown menu -->
                                 <div x-show="open" @click.away="open = false"

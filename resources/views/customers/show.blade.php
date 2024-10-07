@@ -93,7 +93,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white p-4 rounded-sm">
+            {{-- <div class="bg-white p-4 rounded-sm">
                 <div class="p-1 bg-[#F2F1FB] mb-4">
                     <span class="text-[15px] text-[#222222]">Prossimo appuntamento</span>
                 </div>
@@ -102,7 +102,7 @@
                     <a href="#"><button class="px-2 bg-[#1E1B58] text-white rounded-md text-sm h-full">+
                             Aggiungi appuntamento</button></a>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div x-data="{ activeTab: 'tab1' }" class="w-2/3 bg-white p-4">
             <div class="flex space-x-4 mb-4">
@@ -141,8 +141,7 @@
                 @livewire('archive-section', ['archives' => $customer->user->archivesCustomer, 'customerId' => $customer->id])
             </div>
             <div x-show="activeTab === 'tab2'" class="p-4">
-
-                @livewire('customer-docs', ['docs' => $customer->docs])
+                @livewire('general-docs', ['docs' => $customer->user->docs, 'userId' => $customer->user->id])
             </div>
             <div x-show="activeTab === 'tab3'" class="p-4">
                 @livewire('customer-orders-table', ['orders' => $customer->user->orders])

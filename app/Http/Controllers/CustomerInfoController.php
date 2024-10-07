@@ -70,12 +70,10 @@ class CustomerInfoController extends Controller
             // Create a new CustomerInfo instance
             $customerInfo = new CustomerInfo([
                 'user_id' => $newUser->id,
-                
                 'assigned_cars_count' => $validatedData['assigned_cars'],
                 'queued_cars_count' => 0,
                 'finished_cars_count' => 0,
                 'admin_name' => $validatedData['admin_name'],
-                'cellphone' => $validatedData['cellphone'],
                 'rag_sociale' => $validatedData['rag_sociale'],
                 'iva' => $validatedData['iva'],
                 'pec' => $validatedData['pec'],
@@ -103,27 +101,27 @@ class CustomerInfoController extends Controller
      * Display the specified resource.
      */
     public function show(CustomerInfo $customer)
-{
-    $orders = $customer->user->orders;
+    {
+        $orders = $customer->user->orders;
 
-    // Manually paginate the collection if it is not a query builder
-    $page = request()->get('page', 1); // Get current page or default to 1
-    $perPage = 12; // Items per page
+        // Manually paginate the collection if it is not a query builder
+        $page = request()->get('page', 1); // Get current page or default to 1
+        $perPage = 12; // Items per page
 
-    // Use a slice of the orders collection for the current page
-    $paginatedOrders = new LengthAwarePaginator(
-        $orders->forPage($page, $perPage), // Sliced items for the current page
-        $orders->count(),                  // Total items
-        $perPage,                          // Items per page
-        $page,                             // Current page
-        ['path' => request()->url(), 'query' => request()->query()] // Pagination options
-    );
+        // Use a slice of the orders collection for the current page
+        $paginatedOrders = new LengthAwarePaginator(
+            $orders->forPage($page, $perPage), // Sliced items for the current page
+            $orders->count(),                  // Total items
+            $perPage,                          // Items per page
+            $page,                             // Current page
+            ['path' => request()->url(), 'query' => request()->query()] // Pagination options
+        );
 
-    // Pass only the data to the Livewire component
-    $orderData = $paginatedOrders->getCollection(); // This gets only the orders collection
+        // Pass only the data to the Livewire component
+        $orderData = $paginatedOrders->getCollection(); // This gets only the orders collection
 
-    return view('customers.show', compact('customer', 'orderData', 'paginatedOrders'));
-}
+        return view('customers.show', compact('customer', 'orderData', 'paginatedOrders'));
+    }
 
 
 
@@ -155,9 +153,10 @@ class CustomerInfoController extends Controller
             // Update the related User instance
             $customerInfo->user->update([
                 'name' => $validatedData['name'],
+                'surname' => $validatedData['surname'],
                 'email' => $validatedData['email'],
                 'city' => $validatedData['city'],
-                'address' => $validatedData['address'],
+                'address' => $validatedData['legal_address'],
                 'cap' => $validatedData['cap'],
                 'province' => $validatedData['province'],
                 'cellphone' => $validatedData['cellphone'],
@@ -178,7 +177,6 @@ class CustomerInfoController extends Controller
 
             // Update the CustomerInfo instance
             $customerInfo->update([
-                'name' => $validatedData['name'],
                 'assigned_cars_count' => $validatedData['assigned_cars'],
                 'city' => $validatedData['city'],
                 'admin_name' => $validatedData['admin_name'],
@@ -187,7 +185,6 @@ class CustomerInfoController extends Controller
                 'legal_address' => $validatedData['legal_address'],
                 'pec' => $validatedData['pec'],
                 'sdi' => $validatedData['sdi'],
-               
             ]);
 
             DB::commit();

@@ -139,12 +139,10 @@ class MainOrderTable extends Component
                     ->orWhere('state', 'like', "%{$this->searchTerm}%")
                     ->orWhere('plate', 'like', "%{$this->searchTerm}%")
                     ->orWhere('price', 'like', "%{$this->searchTerm}%")
-                    ->orWhereHas('customer', function ($userQuery) {
-                        $userQuery->where('name', 'like', "%{$this->searchTerm}%")
-                            ->orWhereHas('customerInfo', function ($infoQuery) {
-                                $infoQuery->where('city', 'like', "%{$this->searchTerm}%")
-                                    ->orWhere('admin_name', 'like', "%{$this->searchTerm}%");
-                            });
+                    ->orWhereHas('customer', function ($customerQuery) {
+                        $customerQuery->where('admin_name', 'like', "%{$this->searchTerm}%")->orWhereHas('user', function ($userQuery) {
+                            $userQuery->where('name', 'like', "%{$this->searchTerm}%")->orWhere('surname', 'like', "%{$this->searchTerm}%" );
+                        });
                     })
                     ->orWhereHas('mechanics', function ($mechanicQuery) {
                         $mechanicQuery->where('name', 'like', "%{$this->searchTerm}%");

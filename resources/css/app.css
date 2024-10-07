@@ -41,8 +41,17 @@
     font-weight: 400 !important;
     margin-left: 4px;
     font-size: 14px !important;
+    color: #4453a5;
+}
+
+.fc-event-main-frame {
+    @apply border-[#4453A5];
+}
+
+.fc-event-time {
+    color: #4453a5;
 }
 
 .fc-daygrid-event-dot {
-    @apply mx-2;
+    @apply mx-2 text-[#222222];
 }

@@ -7,10 +7,8 @@
     <div class="bg-white">
         <div class="flex justify-between px-4 pt-4">
             <div class="flex">
-                <button id="prev-month"
-                    class="border border-[#E8E8E8] rounded-md h-7 text-center mr-2 p-2 flex justify-center place-items-center">&lt;</button>
-                <button id="next-month"
-                    class="border border-[#E8E8E8] rounded-md h-7 text-center mr-4 p-2 flex justify-center place-items-center">&gt;</button>
+                <button id="prev-month" class="border border-[#E8E8E8] rounded-md h-7 text-center mr-2">Prev</button>
+                <button id="next-month" class="border border-[#E8E8E8] rounded-md h-7 text-center mr-4">Next</button>
                 <button id="today" class="bg-[#4453A5] text-white rounded-md h-7 text-[14px] px-2">Oggi</button>
             </div>
             <h5 id="current-month" class="text-lg font-semibold"></h5>
@@ -35,19 +33,7 @@
                         <option value="">Filtra per stato</option>
                     </select>
 
-                    <select id="mechanic-filter"
-                        class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px] ml-6">
-                        <option value="">Filtra per tecnico</option>
-                        @foreach ($mechanics as $mechanic)
-                            <option value="{{ $mechanic->id }}">{{ $mechanic->user->name }} {{ $mechanic->user->surname }}
-                            </option>
-                        @endforeach
-                    </select>
-
                 </div>
-                <button onclick="Livewire.dispatch('openModal', { component: 'event-modal'})"
-                    class="py-1 px-2 bg-[#1E1B58] text-white rounded-md text-sm h-full">+ Crea nuovo
-                    evento</button>
             </div>
             <div class="p-4" id="calendar"></div>
         </div>
@@ -65,11 +51,7 @@
                             <th class="text-center px-2 text-[#4453A5] bg-[#F2F1FB] text-[15px] font-normal w-32">
                                 Giorno
                             </th>
-                            @foreach ($mechanics as $mechanic)
-                                <th class="text-start px-2 bg-[#F5F5F5] text-[15px] text-[#808080] font-normal w-64">
-                                    {{ $mechanic->user->name . ' ' . $mechanic->user->surname }}
-                                </th>
-                            @endforeach
+
                         </tr>
                     </thead>
                     <tbody class="text-start">
@@ -89,8 +71,7 @@
         console.log(csrfToken);
 
         function createCalendar() {
-            calendar = new Calendar(calendarEl, {
-                plugins: [DayGridPlugin],
+            calendar = new FullCalendar.Calendar(calendarEl, {
                 dayMaxEventRows: true,
                 views: {
                     timeGrid: {
@@ -107,6 +88,7 @@
                 },
                 initialView: 'dayGridMonth',
                 locale: 'it',
+                eventColor: '#378006',
                 events: @json($events), // Make sure this contains events from backend
                 headerToolbar: false, // Disable default header with buttons
             });
@@ -142,16 +124,8 @@
                 } else {
                     event.setProp('display', 'none'); // Hide event
                 }
-
-                // Reapply the custom styles for the event
-                var eventElement = event.el; // Get the DOM element for the event
-                if (eventElement) {
-                    eventElement.style.backgroundColor = '#222222'; // Reapply background
-                    eventElement.style.color = '#7AA3E5'; // Reapply text color
-                }
             });
         }
-
 
         document.getElementById('prev-month').addEventListener('click', function() {
             calendar.prev();
@@ -196,46 +170,50 @@
             // Get all the days in the current month
             let daysInMonth = getDaysInMonth(currentYear, currentMonth);
 
-            // Use JSON-encoded events directly from Laravel
-            var events = @json($events); // Assuming this is correctly outputting your events
+            // Get events for the current view
+            var events = calendar.getEvents(); // Events already loaded in the calendar
             var mechanics = @json($mechanics); // Mechanics passed from backend
 
-            // Create a mapping of events by date
             var eventsByDate = {};
             events.forEach(event => {
-                var eventDate = event.date; // Use the date directly from the event
-                console.log(eventDate);
+                var eventDate = event.start.toISOString().split('T')[
+                    0]; // Convert event date to YYYY-MM-DD
                 if (!eventsByDate[eventDate]) eventsByDate[eventDate] = [];
                 eventsByDate[eventDate].push(event);
+
             });
 
             // Iterate through all days in the month
             daysInMonth.forEach(date => {
+                // Original formatted date as YYYY-MM-DD for mechanics
                 let originalFormattedDate = date.toISOString().split('T')[
-                    0]; // Get the original date format (YYYY-MM-DD)
+                    0]; // Format date as YYYY-MM-DD
 
                 // Format date as DD/MM/YYYY for the <tr>
-                let day = String(date.getDate()).padStart(2, '0');
-                let month = String(date.getMonth() + 1).padStart(2, '0');
-                let year = date.getFullYear();
-                let formattedDate = `${day}/${month}/${year}`;
-
-                // Check if the day is a weekend and skip if so
+                let day = String(date.getDate()).padStart(2,
+                    '0'); // Get the day and pad with zero if needed
+                let month = String(date.getMonth() + 1).padStart(2,
+                    '0'); // Get the month (0-11) and add 1, then pad
+                let year = date.getFullYear(); // Get the full year
+                let formattedDate = `${day}/${month}/${year}`; // Combine to create DD/MM/YYYY
+                // Check the day of the week in Italian
                 let dayOfWeek = date.toLocaleDateString('it-IT', {
                     weekday: 'long'
                 });
-                if (dayOfWeek === "sabato" || dayOfWeek === "domenica") {
-                    return; // Skip weekends
-                }
 
+                // If the day is "sabato" or "domenica", skip adding the row
+                if (dayOfWeek === "sabato" || dayOfWeek === "domenica") {
+                    return; // Skip to the next iteration
+                }
                 let tr = document.createElement('tr');
 
-                // Add appropriate class for Fridays
                 if (dayOfWeek === "venerdì") {
                     tr.classList.add('border-dashed', 'border', 'border-b-[#2626B4FF]');
                 } else {
                     tr.classList.add('border-b', 'border-b-[#E4E4F7]');
                 }
+
+                // Function to create and style <td> elements
                 const createCell = (content, cellClasses = ['border-x']) => {
                     let td = document.createElement('td');
                     td.textContent = content;
@@ -247,31 +225,39 @@
 
                     return td;
                 };
-                // Create and append cells
-                tr.appendChild(createCell(formattedDate, ['border', 'border-dashed',
-                    'border-r-[#4453A5]', 'border-b-[#4453A5]', 'px-2', 'py-4',
+
+                // Add Date cell with DD/MM/YYYY format, applying multiple classes
+                tr.appendChild(createCell(formattedDate, ['border', // This class applies a border
+                    'border-dashed', // This class defines the border style as dashed
+                    'border-r-[#4453A5]', // This sets the border color
+                    'border-b-[#4453A5]', // This sets the border color
+                    'px-2',
+                    'py-4',
                     'bg-[#F2F1FB]'
                 ]));
+
+                // Add Day of the week cell, applying the same multiple classes
                 tr.appendChild(createCell(date.toLocaleDateString('it-IT', {
                     weekday: 'long'
-                }), ['bg-[#F2F1FB]', 'px-2', 'text-center']));
+                }), ['bg-[#F2F1FB]', 'px-2', 'text-center'])); // Same classes for the weekday cell
 
-                // Check for mechanic events and populate cells
+                // Add mechanic availability or empty cells
                 mechanics.forEach(mechanic => {
                     let mechanicEvents = eventsByDate[originalFormattedDate] || [];
+
+                    // Check if mechanic event exists for the mechanic
                     let mechanicEvent = mechanicEvents.find(event => {
-                        return event.mechanics && event.mechanics.some(m => m.id ==
-                            mechanic.id);
+                        return event.extendedProps.mechanics && event.extendedProps
+                            .mechanics.some(m => m.id == mechanic.id);
                     });
 
-                    // Create the cell for the mechanic's availability
+                    // Create the cell for mechanic's availability
                     let td = document.createElement('td');
                     td.classList.add('border-x', 'text-center', 'p-3');
 
-
                     if (mechanicEvent) {
                         // Find the mechanic's pivot data (confirmed, client_name)
-                        let mechanicPivot = mechanicEvent.mechanics.find(m => m
+                        let mechanicPivot = mechanicEvent.extendedProps.mechanics.find(m => m
                             .id == mechanic.id);
                         let confirmed = mechanicPivot.confirmed;
                         let clientName = mechanicPivot.client_name; // Get client_name
@@ -303,8 +289,7 @@
                             @json($customers).forEach(customer => {
                                 let option = document.createElement('option');
                                 option.value = customer.id;
-                                option.textContent = customer.user.name + ' ' + customer
-                                    .user.surname;
+                                option.textContent = customer.name;
                                 customerSelect.appendChild(option);
                             });
 
@@ -464,9 +449,9 @@
                 calendarBtn.classList.add('text-black');
 
                 // Fill schedule dynamically
+                updateScheduleTable();
             }
         }
-        updateScheduleTable();
 
     });
 </script>

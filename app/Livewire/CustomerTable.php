@@ -20,7 +20,7 @@ class CustomerTable extends Component
     }
 
     // Event listener to update date filter
-    protected $listeners = ['dateFilterUpdated' => 'handleDateFilterUpdated'];
+    protected $listeners = ['dateFilterUpdated' => 'handleDateFilterUpdated', 'refreshComponent' => '$refresh'];
 
     public function handleDateFilterUpdated($dateFilter)
     {
@@ -36,7 +36,6 @@ class CustomerTable extends Component
         if (!empty($this->searchTerm)) {
             $query->where(function ($q) {
                 $q->where('id', 'like', "%{$this->searchTerm}%")
-                    ->orWhere('name', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('user', function ($userQuery) {
                         // Group name and email inside an orWhere closure
                         $userQuery->where(function ($userSubQuery) {

@@ -59,6 +59,11 @@ class User extends Authenticatable
         return $this->hasMany(Order::class, 'customer_id');
     }
 
+    public function docs()
+    {
+        return $this->hasMany(GeneralDoc::class, 'user_id');
+    }
+
     public function archives()
     {
         return $this->hasMany(Archive::class, 'user_id');

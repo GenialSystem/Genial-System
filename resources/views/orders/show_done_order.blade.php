@@ -73,11 +73,11 @@
                     </div>
 
                     <button id="prevBtn"
-                        class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white p-2 rounded-md shadow">
+                        class="absolute flex justify-center place-items-center text-[#222222] w-8 h-8 top-1/2 left-4 transform -translate-y-1/2 bg-[#F0F0F0] bg-opacity-75 p-2 rounded-full shadow">
                         &lt;
                     </button>
                     <button id="nextBtn"
-                        class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white p-2 rounded-md shadow">
+                        class="absolute flex justify-center place-items-center text-[#222222] w-8 h-8 top-1/2 right-4 transform -translate-y-1/2 bg-[#F0F0F0] bg-opacity-75 p-2 rounded-full shadow">
                         &gt;
                     </button>
                 </div>
@@ -101,12 +101,12 @@
                     class="py-2 px-4 border-b-2 focus:outline-none">
                     Info riparazione
                 </button>
-                <button @click="activeTab = 'tab3'"
+                {{-- <button @click="activeTab = 'tab3'"
                     :class="activeTab === 'tab3' ? 'border-[#4453A5] text-[#4453A5]' :
                         'border-transparent text-[#9F9F9F]'"
                     class="py-2 px-4 border-b-2 focus:outline-none">
                     Documenti
-                </button>
+                </button> --}}
 
             </div>
 
@@ -414,10 +414,10 @@
                 </div>
 
             </div>
-            <div x-show="activeTab === 'tab3'" class="p-4">
+            {{-- <div x-show="activeTab === 'tab3'" class="p-4">
                 <!--  Tab 3 -->
                 Tab 3
-            </div>
+            </div> --}}
         </div>
     </div>
 

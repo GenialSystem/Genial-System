@@ -12,12 +12,12 @@
         </div>
         <span class="text-[#1E1B58] text-[15px]">Creazione riparazione</span>
         <div id="step-indicator-2"
-            class="text-sm font-medium text-[#9F9F9F] bg-[#E0E0E0] rounded-full w-8 h-8 flex items-center justify-center">
+            class="text-sm font-medium text-[#9F9F9F] bg-[#E0E0E0] rounded-full w-8 h-8 flex items-center justify-center border border-[#C3C3C3]">
             2
         </div>
         <span id="step-2-text" class="text-[#9F9F9F] text-[15px]">Scheda Tecnica</span>
         <div id="step-indicator-3"
-            class="text-sm font-medium text-[#9F9F9F] bg-[#E0E0E0] rounded-full w-8 h-8 flex items-center justify-center">
+            class="text-sm font-medium text-[#9F9F9F] bg-[#E0E0E0] rounded-full w-8 h-8 flex items-center justify-center border border-[#C3C3C3]">
             3
         </div>
         <span id="step-3-text" class="text-[#9F9F9F] text-[15px]">Foto</span>
@@ -45,7 +45,7 @@
                             class="block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none focus:ring-0"
                             placeholder="GG/MM/AA">
                         <div class="absolute top-0 bottom-0 right-0 flex justify-center place-items-center bg-[#F2F1FB] w-10 rounded-r cursor-pointer"
-                            id="calendar-icon">
+                            onclick="document.getElementById('date').showPicker();">
                             <img src="{{ asset('images/calendar icon.svg') }}" class="w-4 h-4" alt="calendar icon">
                         </div>
                     </div>
@@ -89,7 +89,8 @@
                         class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <option value="">Seleziona un tecnico</option>
                         @foreach ($mechanics as $mechanic)
-                            <option value="{{ $mechanic->id }}">{{ $mechanic->user->name }}</option>
+                            <option value="{{ $mechanic->id }}">{{ $mechanic->user->name }}
+                                {{ $mechanic->user->surname }}</option>
                         @endforeach
                     </select>
                     <span id="mechanic-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
@@ -220,12 +221,6 @@
         const adminNameInput = document.getElementById('admin_name');
         const nextStepButton = document.getElementById('next-step');
         const prevStepButton = document.getElementById('prev-step');
-        const openDatePicker = document.getElementById('datePicker');
-        const dateInput = document.getElementById('date');
-        document.getElementById('calendar-icon').addEventListener('click', function() {
-            console.log('asd');
-            document.getElementById('date').showPicker();
-        });
         const step1 = document.getElementById('step-1');
         const step2 = document.getElementById('step-2');
         const step3 = document.getElementById('step-3');
@@ -259,11 +254,9 @@
             return valid;
         }
 
-        // New function to validate part inputs
+        // Function to validate part inputs
         function validateParts() {
             let valid = true;
-
-            // Get all part input fields using a querySelectorAll and loop through them
             document.querySelectorAll('input[name^="parts"]').forEach(function(partInput) {
                 const errorSpan = document.getElementById(`${partInput.id}-error`);
                 if (!partInput.value.trim()) {
@@ -275,7 +268,6 @@
                     if (errorSpan) errorSpan.classList.add('hidden');
                 }
             });
-
             return valid;
         }
 
@@ -283,7 +275,7 @@
         customerSelect.addEventListener('change', function() {
             const selectedOption = customerSelect.options[customerSelect.selectedIndex];
             const adminName = selectedOption.getAttribute('data-admin-name');
-            adminNameInput.value = adminName || ''; // If no admin_name, set to empty string
+            adminNameInput.value = adminName || '';
         });
 
         // Handle Next Step
@@ -297,44 +289,75 @@
                 valid = validateFields(requiredFieldsStep1);
 
                 if (valid) {
-                    stepIndicators[1].classList.replace('bg-[#E0E0E0]', 'bg-[#1E1B58]');
-                    stepIndicators[1].classList.replace('text-[#9F9F9F]', 'text-white');
-                    stepTexts[0].classList.replace('text-[#9F9F9F]', 'text-[#1E1B58]');
-                    step1.classList.add('hidden');
-                    step2.classList.remove('hidden');
-                    prevStepButton.classList.remove('hidden');
+                    updateStep(1, 2);
                     stepCounter++;
                 }
             } else if (stepCounter === 2) {
-                const requiredFieldsStep2 = ['replacements', 'car_size']; // Ricambi field
+                const requiredFieldsStep2 = ['replacements', 'car_size'];
                 valid = validateParts() && validateFields(requiredFieldsStep2);
 
                 if (valid) {
-                    stepIndicators[2].classList.replace('bg-[#E0E0E0]', 'bg-[#1E1B58]');
-                    stepIndicators[2].classList.replace('text-[#9F9F9F]', 'text-white');
-                    stepTexts[1].classList.replace('text-[#9F9F9F]', 'text-[#1E1B58]');
-                    step2.classList.add('hidden');
-                    step3.classList.remove('hidden');
+                    updateStep(2, 3);
                     stepCounter++;
                 }
             } else if (stepCounter === 3) {
-                // const errorSpan = document.getElementById('images-error');
-
-                // if (imageInput.files.length === 0) {
-                //     imageInput.classList.add('border-red-500');
-                //     errorSpan.classList.remove('hidden');
-                //     valid = false;
-                // } else {
-                //     imageInput.classList.remove('border-red-500');
-                //     errorSpan.classList.add('hidden');
-                // }
-
                 if (valid) {
                     form.submit();
                 }
             }
-
         });
+
+        // Handle Previous Step
+        prevStepButton.addEventListener('click', function() {
+            if (stepCounter === 2) {
+                updateStep(2, 1, true); // Move back to Step 1
+                stepCounter--;
+            } else if (stepCounter === 3) {
+                updateStep(3, 2, true); // Move back to Step 2
+                stepCounter--;
+            }
+
+            // Hide prev button when returning to the first step
+            if (stepCounter === 1) {
+                prevStepButton.classList.add('hidden');
+            }
+        });
+
+        // Function to update steps and indicators
+        function updateStep(currentStep, nextStep, isPrev = false) {
+            // Hide current step and show next step
+            document.getElementById(`step-${currentStep}`).classList.add('hidden');
+            document.getElementById(`step-${nextStep}`).classList.remove('hidden');
+
+            if (!isPrev) {
+                // Move forward: Activate the next step and deactivate the current step
+                stepIndicators[currentStep - 1].classList.replace('bg-[#F2F1FB]', 'bg-[#1E1B58]');
+                stepIndicators[currentStep - 1].classList.replace('text-[#1E1B58]', 'text-white');
+                stepIndicators[nextStep - 1].classList.replace('bg-[#E0E0E0]', 'bg-[#F2F1FB]');
+                stepIndicators[nextStep - 1].classList.replace('border-[#C3C3C3]', 'border-[#1E1B58]');
+                stepIndicators[nextStep - 1].classList.replace('text-[#9F9F9F]', 'text-[#1E1B58]');
+                if (stepTexts[nextStep - 2]) {
+                    stepTexts[nextStep - 2].classList.replace('text-[#9F9F9F]', 'text-[#1E1B58]');
+                }
+            } else {
+                // Move backward: Deactivate current step and reactivate the previous step
+                stepIndicators[currentStep - 1].classList.replace('bg-[#1E1B58]', 'bg-[#F2F1FB]');
+                stepIndicators[currentStep - 1].classList.replace('text-white', 'text-[#1E1B58]');
+                stepIndicators[nextStep - 1].classList.replace('bg-[#F2F1FB]', 'bg-[#E0E0E0]');
+                stepIndicators[nextStep - 1].classList.replace('border-[#1E1B58]', 'border-[#C3C3C3]');
+                stepIndicators[nextStep - 1].classList.replace('text-[#1E1B58]', 'text-[#9F9F9F]');
+                if (stepTexts[currentStep - 2]) {
+                    stepTexts[currentStep - 2].classList.replace('text-[#1E1B58]', 'text-[#9F9F9F]');
+                }
+            }
+
+            // Show prev button if not on the first step
+            if (nextStep > 1) {
+                prevStepButton.classList.remove('hidden');
+            }
+        }
+
+
         // For the car photos section
         const dropAreaCar = document.getElementById('drop-area');
         const imageInputCar = document.getElementById('images');

@@ -39,6 +39,7 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
             let chart;
             const ctx = document.getElementById('salesChart').getContext('2d');
             const dateInputSalesChart = document.getElementById('dateInputSalesChart');
@@ -99,6 +100,8 @@
                         const salesData = receivedData.salesData;
                         const periods = receivedData.periods;
 
+                        const maxPrice = receivedData.maxPrice; // Retrieve max price from the backend
+
                         const monthLabels = Object.keys(salesData).map(month => {
                             const [year, monthNumber] = month.split('-');
                             return `${monthNames[monthNumber]} ${year}`;
@@ -115,8 +118,9 @@
                             borderWidth: 1.5
                         }));
 
-                        updateChart(periods, datasets);
-                        updateSalesSummary(monthLabels, salesData)
+                        updateChart(periods, datasets,
+                            maxPrice); // Pass maxPrice to the updateChart function
+                        updateSalesSummary(monthLabels, salesData);
                     } else {
                         console.error('Unexpected data format received from Livewire:', receivedData);
                     }
@@ -125,10 +129,14 @@
                 }
             });
 
-            function updateChart(periods, datasets) {
+
+            function updateChart(periods, datasets, maxPrice) {
                 if (chart) {
                     chart.destroy();
                 }
+
+                // Calculate a step size that is reasonable based on the max price
+                const stepSize = Math.ceil(maxPrice / 4);
 
                 chart = new Chart(ctx, {
                     type: 'line',
@@ -151,9 +159,9 @@
                             },
                             y: {
                                 min: 0,
-                                max: 100000,
+                                max: maxPrice, // Slightly higher than maxPrice for better readability
                                 ticks: {
-                                    stepSize: 25000,
+                                    stepSize: stepSize, // Dynamically set step size
                                     callback: function(value) {
                                         return (value / 1000) + 'k';
                                     }
@@ -181,6 +189,7 @@
                     }
                 });
             }
+
 
             function updateSalesSummary(monthLabels, salesData) {
                 salesSummaryDiv.innerHTML = ''; // Clear existing spans
