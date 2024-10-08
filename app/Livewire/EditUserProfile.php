@@ -46,7 +46,7 @@ class EditUserProfile extends Component
         $this->city = $this->user->city;
         $this->province = $this->user->province;
         $this->profileImageUrl = $this->user->image_path;
-        $this->password = $this->user->password; // Do not show the password by default
+        // $this->password = $this->user->password; // Do not show the password by default
     }
 
     public function toggleEdit()
@@ -111,10 +111,10 @@ class EditUserProfile extends Component
             $this->user->image_path = 'storage/' . $imagePath;
         }
 
-        // Handle password update (if provided)
-        if ($this->password) {
-            $this->user->password = bcrypt($this->password);
-        }
+        // // Handle password update (if provided)
+        // if ($this->password) {
+        //     $this->user->password = bcrypt($this->password);
+        // }
 
         // Save changes to the database
         $this->user->save();

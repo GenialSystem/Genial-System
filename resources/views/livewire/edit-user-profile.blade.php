@@ -120,12 +120,12 @@
                                 class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none"
                                 @disabled(!$isEditing) /> <!-- Editable based on $isEditing -->
                         </div>
-                        <div>
+                        {{-- <div>
                             <label for="password" class="block text-sm text-[#9F9F9F] text-[13px]">Password</label>
                             <input type="password" wire:model='password' name="password" id="password"
                                 class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none"
                                 @disabled(!$isEditing) /> <!-- Editable based on $isEditing -->
-                        </div>
+                        </div> --}}
                     </div>
                 </form>
             </div>
