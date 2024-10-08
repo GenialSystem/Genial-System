@@ -15,13 +15,9 @@ class MechanicInfoSeeder extends Seeder
      */
     public function run(): void
     {
-        // Initialize Faker
         $faker = Faker::create();
-
-        // Get all users with the role "mechanic"
         $mechanicUsersId = User::role('mechanic')->pluck('id')->toArray();
 
-        // Generate records for mechanic_infos table
         foreach ($mechanicUsersId as $userId) {
             MechanicInfo::create([
                 'user_id' => $userId,

@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             $this->call(WorkstationSeeder::class);
             $this->call(EstimatesTableSeeder::class);
             $this->call(InvoiceSeeder::class);
+            $this->call(EventSeeder::class);
 
             DB::commit();  // Commit the transaction if all seeders pass
         } catch (Throwable $e) {

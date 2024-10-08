@@ -15,15 +15,12 @@ class CustomerInfoSeeder extends Seeder
      */
     public function run(): void
     {
-        // Initialize Faker
         $faker = Faker::create();
-
-        // Get all users with the role "customer"
         $customerUsers = User::role('customer')->get();
-        // Generate 20 records for customer_info table
+      
         foreach ($customerUsers as $customer) {
             CustomerInfo::create([
-                'user_id' => $customer->id, // Random user with "customer" role
+                'user_id' => $customer->id,
                 'admin_name' => $faker->name,
                 'pec' => $faker->email,
                 'rag_sociale' => $faker->sentence,

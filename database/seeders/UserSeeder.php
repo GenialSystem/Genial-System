@@ -15,14 +15,34 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        // Define roles
         $roles = ['admin', 'mechanic', 'customer'];
 
+        // Create roles
         foreach ($roles as $role) {
             Role::create(['name' => $role]);
         }
 
-        for ($i = 0; $i < 50; $i++) {
-            $user = User::create([
+        // Create 1 admin
+        $admin = User::create([
+            'name' => fake()->firstName(),
+            'surname' => fake()->lastName(),
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+            'cdf' => fake()->sentence,
+            'city' => fake()->city,
+            'cellphone' => fake()->phoneNumber,
+            'cap' => fake()->numberBetween(9000, 10000),
+            'address' => fake()->streetAddress,
+            'province' => fake()->citySuffix,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        $admin->assignRole('admin');  // Assign admin role
+
+        // Create 15 mechanics
+        for ($i = 0; $i < 15; $i++) {
+            $mechanic = User::create([
                 'name' => fake()->firstName(),
                 'surname' => fake()->lastName(),
                 'email' => fake()->unique()->safeEmail(),
@@ -36,9 +56,27 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+            $mechanic->assignRole('mechanic');  // Assign mechanic role
+        }
 
-           
-            $user->assignRole(fake()->randomElement($roles));
+        // Create 15 customers
+        for ($i = 0; $i < 15; $i++) {
+            $customer = User::create([
+                'name' => fake()->firstName(),
+                'surname' => fake()->lastName(),
+                'email' => fake()->unique()->safeEmail(),
+                'password' => Hash::make('password'),
+                'cdf' => fake()->sentence,
+                'city' => fake()->city,
+                'cellphone' => fake()->phoneNumber,
+                'cap' => fake()->numberBetween(9000, 10000),
+                'address' => fake()->streetAddress,
+                'province' => fake()->citySuffix,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            $customer->assignRole('customer');  // Assign customer role
         }
     }
+
 }
