@@ -44,7 +44,7 @@
                             <td class="py-3 px-6">
                                 <div class="flex place-items-center">
                                     @if ($row->mechanics->isNotEmpty())
-                                        <img class="inline-block w-8 h-8  rounded-full border border-black mr-2"
+                                        <img class="inline-block w-8 h-8  rounded-full border mr-2"
                                             src="{{ asset($row->mechanics->first()->image_path ?? 'images/placeholder.png') }}"
                                             alt="profile image">
                                         {{ $row->mechanics->first()->name }}

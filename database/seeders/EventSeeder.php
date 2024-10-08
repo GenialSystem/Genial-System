@@ -44,7 +44,7 @@ class EventSeeder extends Seeder
                       // Randomly decide if the client_name should be null or assigned a name
                       if (rand(0, 1)) {
                           $customer = $customers->random();
-                          $clientName = $customer->name; // Assuming `name` is the customer's name field
+                          $clientName = $customer->name . ' ' . $customer->surname; // Assuming `name` is the customer's name field
                       }
                   }
   

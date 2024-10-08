@@ -347,7 +347,9 @@
                             @json($customers).forEach(customer => {
                                 let option = document.createElement('option');
                                 option.value = customer.id;
-                                option.textContent = customer.name;
+                                option.textContent = customer.user.name + ' ' + customer
+                                    .user
+                                    .surname;
                                 customerSelect.appendChild(option);
                             });
                         }

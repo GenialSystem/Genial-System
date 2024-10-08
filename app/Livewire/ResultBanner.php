@@ -9,7 +9,7 @@ class ResultBanner extends Component
     public $title;
     public $subtitle;
     public $visible = false;
-    public $type = 'success'; // 'success' or 'error'
+    public $type; // 'success' or 'error'
 
     protected $listeners = ['showBanner'];
 
@@ -27,18 +27,17 @@ class ResultBanner extends Component
             $this->visible = true;
         }
     }
-
-    public function showBanner($title, $subtitle, $type = 'success')
+    public function showBanner($title, $subtitle, $type)
     {
         $this->title = $title;
         $this->subtitle = $subtitle;
         $this->type = $type;
-
         $this->visible = true;
-
-        // // Trigger auto-hide of the banner after 4 seconds
-        // $this->dispatch('banner-hide');
+    
+        // Emit a browser event to trigger the auto-hide on the frontend
+        $this->dispatch('banner-auto-hide');
     }
+    
 
     public function render()
     {
