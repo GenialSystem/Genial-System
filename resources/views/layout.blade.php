@@ -18,32 +18,55 @@
 
 </head>
 
+@php
+    $isCollapsed = session('sidebar.collapsed', false);
+@endphp
+
 <body class="font-tome antialiased bg-[#F5F5F5]">
     <div id="app">
-        <div class="fixed inset-0 bg-[#E8E8E8] z-50 flex items-center justify-center lg:hidden">
+        <div id="mobile-warning" class="fixed inset-0 bg-[#E8E8E8] flex z-50 items-center justify-center">
             <div class="text-[#222222] text-center p-4">
                 <h2 class="text-4xl font-semibold">La piattaforma è visualizzabile solo in versione desktop.</h2>
             </div>
         </div>
-
         <!-- Sidebar -->
-        @livewire('sidebar')
+        @livewire('sidebar', ['isCollapsed' => $isCollapsed])
         <!-- Main content -->
-        <div class="ml-64">
+        <div id="main-content" class="transition-margin duration-200 {{ $isCollapsed ? 'ml-20' : 'ml-64' }}">
             <!-- Navbar -->
             @livewire('navbar')
-
             <!-- Main Content -->
             <main class="mx-6 my-2">
                 @livewire('result-banner')
-
                 @yield('content')
             </main>
         </div>
     </div>
     @livewireScripts
     @livewire('wire-elements-modal')
-</body>
 
+    <script>
+        function checkViewport() {
+            const mobileWarning = document.getElementById('mobile-warning');
+            if (window.innerWidth < 1024) {
+                mobileWarning.classList.remove('hidden');
+            } else {
+                mobileWarning.classList.add('hidden');
+            }
+        }
+        window.addEventListener('load', checkViewport);
+        window.addEventListener('resize', checkViewport);
+
+        Livewire.on('toggleSidebar', function(event) {
+            if (event.collapsed) {
+                document.getElementById('main-content').classList.remove('ml-64');
+                document.getElementById('main-content').classList.add('ml-20');
+            } else {
+                document.getElementById('main-content').classList.add('ml-64');
+                document.getElementById('main-content').classList.remove('ml-20');
+            }
+        });
+    </script>
+</body>
 
 </html>

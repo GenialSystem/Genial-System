@@ -55,3 +55,12 @@
 .fc-daygrid-event-dot {
     @apply mx-2 text-[#222222];
 }
+
+#default-sidebar {
+    transition: transform 0.3s ease; /* Smooth transition */
+}
+
+.sidebar-collapsed {
+    transform: translateX(-100%); /* Move the sidebar off-screen */
+    transition: transform 0.5s ease; /* Smooth transition */
+}
