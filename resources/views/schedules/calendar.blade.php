@@ -25,9 +25,9 @@
         <div id="calendar-section" class="">
             <div class="border-dashed border my-5"></div>
 
-            <div class="mb-4 flex justify-between items-center h-8 px-4">
-                <div>
-                    <input type="text" class="border border-gray-300 rounded mr-6 h-8 w-[600px]"
+            <div class="mb-4 xl:flex justify-between items-center px-4 space-y-3 xl:space-y-0">
+                <div class="flex flex-col xl:flex-row space-y-3 xl:space-y-0">
+                    <input type="text" class="border border-gray-300 rounded xl:mr-6 h-8 2xl:w-[600px]"
                         placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
 
                     {{-- <select
@@ -36,7 +36,7 @@
                     </select> --}}
 
                     <select id="mechanic-filter"
-                        class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px] ml-6">
+                        class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-8 leading-none w-[225px] 2xl:ml-6">
                         <option value="">Filtra per tecnico</option>
                         @foreach ($mechanics as $mechanic)
                             <option value="{{ $mechanic->id }}">{{ $mechanic->user->name }} {{ $mechanic->user->surname }}
@@ -45,9 +45,12 @@
                     </select>
 
                 </div>
-                <button onclick="Livewire.dispatch('openModal', { component: 'event-modal'})"
-                    class="py-1 px-2 bg-[#1E1B58] text-white rounded-md text-sm h-full">+ Crea nuovo
-                    evento</button>
+                <div class="text-end">
+                    <button onclick="Livewire.dispatch('openModal', { component: 'event-modal'})"
+                        class="py-1 px-2 bg-[#1E1B58] text-white rounded-md text-sm h-8">+ Crea nuovo
+                        evento</button>
+
+                </div>
             </div>
             <div class="p-4" id="calendar"></div>
         </div>

@@ -4,7 +4,7 @@
             wire:model.debounce.300ms.live="searchTerm" />
     </div>
     <div class="overflow-x-auto rounded-md">
-        <table class="min-w-full bg-white border border-gray-200">
+        <table class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
             <thead class="bg-[#F5F5F5]">
                 <tr class="w-full text-left text-gray-600 text-sm leading-normal">
                     <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Tecnico</th>

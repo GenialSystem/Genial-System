@@ -1,7 +1,7 @@
 <div class="mt-4 bg-white p-4">
     <h3 class="text-[#222222] text-lg font-semibold mb-4">Lista riparazioni</h3>
     <div id="orders-table" class="overflow-x-auto overflow-y-scroll rounded-md">
-        <table class="min-w-full bg-white border border-gray-200">
+        <table class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
             <thead class="bg-[#F5F5F5]">
                 <tr class="w-full text-left text-gray-600 text-sm leading-normal">
                     <!-- Table Headers -->
@@ -20,7 +20,7 @@
                 @forelse($rows as $row)
                     <tr wire:key="{{ $row->id }}" class="border-b border-gray-200 hover:bg-gray-100">
                         <td class="py-3 px-6">{{ str_pad($row->id, 5, '0', STR_PAD_LEFT) }}</td>
-                        <td class="py-3 px-6">{{ $row->created_at->format('d M Y') }}</td>
+                        <td class="py-3">{{ $row->created_at->format('d M Y') }}</td>
                         <td class="py-3 px-6 relative" wire:key="order-{{ $row->id }}">
                             <div x-data="{ open: false }" class="relative">
                                 <!-- Dropdown Button -->

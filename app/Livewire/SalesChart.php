@@ -115,16 +115,26 @@ class SalesChart extends Component
         // Prepare periods and sales data in the correct format for the chart
         $periods = ["5gg", "10gg", "15gg", "20gg", "25gg", "30gg"];
         $salesData = [];
+        $maxPrice = 0; // Initialize the max price variable
 
         foreach ($this->salesData as $month => $data) {
             $salesData[$month] = array_pad($data, count($periods), 0); // Ensure all periods are included
+            
+            // Find the highest price in the data
+            $monthMax = max($data);
+            if ($monthMax > $maxPrice) {
+                $maxPrice = $monthMax;
+            }
         }
 
+        // Return the periods, sales data, and the maximum price for the frontend
         return [
             'periods' => $periods,
             'salesData' => $salesData,
+            'maxPrice' => $maxPrice // Pass the maximum price
         ];
     }
+
 
     public function render()
     {

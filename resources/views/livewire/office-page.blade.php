@@ -2,7 +2,7 @@
     <h2 class="text-2xl font-semibold">Office</h2>
     <div class="bg-white p-4 mt-4 h-screen">
         <div class="mb-6 flex justify-between h-8">
-            <input type="text" class="p-2 border border-gray-300 rounded w-[600px]" placeholder="Cerca elemento..."
+            <input type="text" class="p-2 border border-gray-300 rounded xl:w-[600px]" placeholder="Cerca elemento..."
                 wire:model.debounce.300ms.live="searchTerm" />
 
             <div class="relative z-50" x-data="{ open: false }">
@@ -36,7 +36,7 @@
             </div>
         @endif
 
-        <div class="grid grid-cols-6 gap-4 mb-6">
+        <div class="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 mb-6">
             @forelse ($items as $item)
                 <div>
                     <div class="w-full h-52 mb-6">
@@ -105,7 +105,7 @@
                     </div>
                 </div>
             @empty
-                <div class="text-start text-xl">Nessun file presente</div>
+                <div class="absolute text-xl">Nessun file presente</div>
             @endforelse
         </div>
     </div>

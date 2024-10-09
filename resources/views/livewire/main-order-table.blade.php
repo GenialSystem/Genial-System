@@ -1,21 +1,19 @@
 <div class="mt-4">
     <h3 class="text-[#222222] text-2xl font-semibold mb-4">Lista riparazioni</h3>
     <div class="bg-white p-4">
-
-        <div class="mb-4 flex justify-between h-8">
-            <input type="text" class="p-2 border border-gray-300 rounded w-[600px]" placeholder="Cerca elemento..."
-                wire:model.debounce.300ms.live="searchTerm" />
-            <div class="flex">
+        <div class="mb-4 space-y-3 2xl:space-y-0 2xl:flex justify-between">
+            <input type="text" class="p-2 border border-gray-300 rounded w-full xl:w-[600px] h-8"
+                placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
+            <div class="flex justify-between">
                 @livewire('date-filter')
                 <a href="{{ route('orders.create') }}">
-
-                    <button class="ml-4 py-1 px-2 bg-[#1E1B58] text-white rounded-md text-sm h-full">+ Crea nuova
+                    <button class="ml-4 py-1 px-2 bg-[#1E1B58] text-white rounded-md text-sm h-8">+ Crea nuova
                         riparazione</button>
                 </a>
             </div>
         </div>
         <div class="overflow-x-auto rounded-md">
-            <table class="min-w-full bg-white border border-gray-200">
+            <table class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
                 <thead class="bg-[#F5F5F5]">
                     <tr class="w-full text-left text-gray-600 text-sm leading-normal">
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">

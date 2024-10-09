@@ -2,11 +2,12 @@
     <h3 class="text-[#222222] text-2xl font-semibold mb-4">Preventivi</h3>
     <div class="bg-white p-4">
 
-        <div class="h-8 flex justify-between">
-            <div class="flex space-x-4">
-                <input type="text" class="p-2 border border-gray-300 rounded h-8 w-[600px]"
-                    placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
+        <div class="mb-4 space-y-3 2xl:space-y-0 2xl:flex justify-between">
+            <input type="text" class="p-2 border border-gray-300 rounded h-8 w-full xl:w-[600px]"
+                placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
 
+
+            <div class="flex space-x-4 justify-between">
                 <select class="border border-gray-300 rounded pl-2 pr-20 h-8 leading-none"
                     wire:model.live="selectedState">
                     <option value="">Tutti</option>
@@ -14,13 +15,11 @@
                         <option value="{{ $state }}">{{ ucfirst($state) }}</option>
                     @endforeach
                 </select>
-
+                <button wire:click="$dispatch('openModal', { component: 'estimate-modal' })"
+                    class="px-2 bg-[#1E1B58] text-white rounded-md text-sm h-8">+
+                    Crea
+                    nuovo preventivo</button>
             </div>
-
-            <button wire:click="$dispatch('openModal', { component: 'estimate-modal' })"
-                class="px-2 bg-[#1E1B58] text-white rounded-md text-sm h-8">+
-                Crea
-                nuovo preventivo</button>
         </div>
 
         {{--
@@ -42,7 +41,7 @@
         --}}
         {{-- @dd($rows[0]->customer) --}}
         <div class="overflow-x-auto rounded-md mt-4">
-            <table class="min-w-full bg-white border border-gray-200">
+            <table class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
                 <thead class="bg-[#F5F5F5]">
                     <tr class="w-full text-left text-gray-600 text-sm leading-normal">
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">
@@ -100,7 +99,7 @@
                                     </button>
                                     <!-- Dropdown Menu -->
                                     <div x-show="open" @click.away="open = false"
-                                        class="absolute w-full mt-1 bg-white rounded shadow-md z-50">
+                                        class="absolute mt-1 bg-white rounded shadow-md z-50">
                                         @foreach ($states as $state => $color)
                                             @if ($state !== $row->state)
                                                 <div wire:key="{{ str()->random(10) }}" @click="open = false"

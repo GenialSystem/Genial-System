@@ -5,8 +5,8 @@
     <h4 class="text-[22px] text-[#222222] font-semibold">Cliente - {{ $customer->user->name }} {{ $customer->user->surname }}
     </h4>
 
-    <div class="flex space-x-4 mt-4">
-        <div class="w-1/3 space-y-4">
+    <div class="2xl:flex 2xl:space-x-4 mt-4">
+        <div class="flex gap-4 2xl:block 2xl:w-1/3 2xl:space-y-4">
             <div class="bg-white p-4 rounded-sm">
                 <div class="p-1 bg-[#F2F1FB] mb-4">
                     <span class="text-[15px] text-[#222222]">Dati generali</span>
@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-4 rounded-sm">
+            <div class="bg-white p-4 rounded-sm w-full">
                 <div class="p-1 bg-[#F2F1FB] mb-4">
                     <span class="text-[15px] text-[#222222]">Dati di fatturazione</span>
                 </div>
@@ -104,7 +104,7 @@
                 </div>
             </div> --}}
         </div>
-        <div x-data="{ activeTab: 'tab1' }" class="w-2/3 bg-white p-4">
+        <div x-data="{ activeTab: 'tab1' }" class="2xl:w-2/3 mt-4 2xl:mt-0 bg-white p-4 mb-12 2xl:mb-0">
             <div class="flex space-x-4 mb-4">
                 <button @click="activeTab = 'tab1'"
                     :class="activeTab === 'tab1' ? 'border-[#4453A5] text-[#4453A5]' : 'border-[#F0F0F0] text-[#9F9F9F]'"

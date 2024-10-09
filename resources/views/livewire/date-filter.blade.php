@@ -1,4 +1,4 @@
-<div class="z-40">
+<div class="">
     <div id="dateInput"
         class="border-[#E0E0E0] border flex justify-between place-content-center h-8 w-56 rounded-md cursor-pointer">
         <span id="dateDisplay" class="ml-2 text-[#9F9F9F] flex place-items-center">{{ $dateFilter ?: 'GG/MM/AA' }}</span>

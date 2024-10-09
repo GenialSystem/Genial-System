@@ -3,9 +3,9 @@
         {{ $role == 'customer' ? 'Clienti' : 'Tecnici' }}</h3>
     <div class="bg-white p-4">
 
-        <div class="mb-4 flex justify-between items-center h-8">
+        <div class="mb-4 space-y-3 2xl:space-y-0 2xl:flex justify-between">
             <!-- Search Input -->
-            <div>
+            <div class="flex">
 
                 <input type="text" class="border border-gray-300 rounded mr-6 h-8 w-[600px]"
                     placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
@@ -51,7 +51,7 @@
         </div>
 
         <div class="overflow-x-auto rounded-md">
-            <table class="min-w-full bg-white border border-gray-200">
+            <table class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
                 <thead class="bg-[#F5F5F5]">
                     <tr class="w-full text-left text-gray-600 text-sm leading-normal">
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">

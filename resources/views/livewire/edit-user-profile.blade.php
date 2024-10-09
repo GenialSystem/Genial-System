@@ -1,9 +1,9 @@
 <div>
     <h4 class="text-[22px] text-[#222222] font-semibold mb-4">Profilo</h4>
 
-    <div class="flex space-x-4">
-        <div class="w-1/3 space-y-4">
-            <div class="bg-white p-4 rounded-sm">
+    <div class="2xl:flex 2xl:space-x-4 spacey-y-4 2xl:space-y-0">
+        <div class="flex gap-4 2xl:block 2xl:w-1/3 2xl:space-y-4">
+            <div class="bg-white p-4 rounded-sm w-full">
                 <div class="p-1 bg-[#F2F1FB] mb-4">
                     <span class="text-[15px] text-[#222222]">Dati anagrafici</span>
 
@@ -131,7 +131,7 @@
             </div>
         </div>
 
-        <div class="w-2/3 bg-white p-4 h-min">
+        <div class="2xl:w-2/3 w-full bg-white p-4 h-min">
             <div class="p-1 bg-[#F2F1FB] mb-4">
                 <span class="text-[15px] text-[#222222]">Notifiche</span>
             </div>
@@ -140,7 +140,7 @@
 
     <form action="{{ route('logout') }}" method="POST">
         @csrf
-        <button type="submit" class="py-2 px-4 bg-[#1E1B58] text-white rounded-md text-sm mt-10" wire:loading.remove>
+        <button type="submit" class="py-2 px-4 bg-red-500 text-white rounded-md text-sm mt-10" wire:loading.remove>
             Logout
         </button>
     </form>

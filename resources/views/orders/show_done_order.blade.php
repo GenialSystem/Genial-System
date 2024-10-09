@@ -5,37 +5,15 @@
     <h4 class="text-[22px] text-[#222222] font-semibold mb-4">Dettaglio veicolo</h4>
     {{-- {{ $order->user->assignedOrders }} --}}
 
-    <div class="flex space-x-4">
-        <div class="w-1/3 space-y-4">
+    <div class="2xl:flex 2xl:space-x-4 space-y-4 2xl:space-y-0">
+        <div class="2xl:w-1/3 space-y-4">
             <div class="bg-white p-4 rounded-sm">
                 <div class="p-1 bg-[#F2F1FB] mb-4">
                     <span class="text-[15px] text-[#222222]">Foto veicolo</span>
                 </div>
                 <div class="flex space-x-4">
-
+                    @livewire('download-order-photos', ['orderId' => $order->id])
                     <button
-                        class="bg-[#F2F1FB] flex justify-center place-items-center px-2 duration-200 py-1 hover:bg-[#4453A5] text-[#4453A5] text-[13px] hover:text-white rounded-md group">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="13.937" height="13.937"
-                            viewBox="0 0 13.937 13.937">
-                            <g id="Icon_feather-download" data-name="Icon feather-download"
-                                transform="translate(-3.75 -3.75)">
-                                <path id="Tracciato_630" data-name="Tracciato 630"
-                                    d="M16.937,22.5v2.764a1.382,1.382,0,0,1-1.382,1.382H5.882A1.382,1.382,0,0,1,4.5,25.264V22.5"
-                                    transform="translate(0 -9.709)" fill="none" stroke="#4453A5" stroke-linecap="round"
-                                    stroke-linejoin="round" stroke-width="1.5"
-                                    class="transition-colors duration-200 group-hover:stroke-white" />
-                                <path id="Tracciato_631" data-name="Tracciato 631" d="M10.5,15l3.455,3.455L17.409,15"
-                                    transform="translate(-3.236 -5.663)" fill="none" stroke="#4453A5"
-                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                    class="transition-colors duration-200 group-hover:stroke-white" />
-                                <path id="Tracciato_632" data-name="Tracciato 632" d="M18,12.791V4.5"
-                                    transform="translate(-7.282)" fill="none" stroke="#4453A5" stroke-linecap="round"
-                                    stroke-linejoin="round" stroke-width="1.5"
-                                    class="transition-colors duration-200 group-hover:stroke-white" />
-                            </g>
-                        </svg>
-                        Scarica foto
-                    </button><button
                         class="bg-[#F2F1FB] flex justify-center place-items-center px-2 duration-200 py-1 hover:bg-[#4453A5] text-[#4453A5] text-[13px] hover:text-white rounded-md group">
                         <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="13.937" height="13.937"
                             viewBox="0 0 13.937 13.937">
@@ -84,7 +62,7 @@
 
             </div>
         </div>
-        <div x-data="{ activeTab: 'tab1' }" class="w-2/3 bg-white p-4">
+        <div x-data="{ activeTab: 'tab1' }" class="2xl:w-2/3 bg-white p-4">
             <div class="flex space-x-4 border-b">
                 <button @click="activeTab = 'tab1'"
                     :class="activeTab === 'tab1' ? 'border-[#4453A5] text-[#4453A5]' :
@@ -162,8 +140,8 @@
                 </div>
             </div>
             <div x-show="activeTab === 'tab2'">
-                <div class="flex">
-                    <div class="w-3/5">
+                <div class="xl:flex">
+                    <div class="xl:w-3/5">
                         <div class="my-3">
                             <span class="text-[#808080] text-[15px]">N° Riparazione: </span>
                             <span class="text-[#222222] text-[15px]"> {{ $order->id }}</span>
@@ -274,7 +252,7 @@
                         </div>
                     </div>
 
-                    <div class="w-2/5 ml-4 border-l px-4 py-6">
+                    <div class="xl:w-2/5 xl:ml-4 xl:border-l px-4 py-6">
                         <div class="flex space-x-4 justify-end mb-11">
                             <button
                                 onclick="Livewire.dispatch('openModal', { component: 'order-edit-modal', arguments:{'order':{{ $order }}} })"

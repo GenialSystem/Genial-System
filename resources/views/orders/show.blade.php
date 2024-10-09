@@ -5,9 +5,9 @@
     <h4 class="text-[22px] text-[#222222] font-semibold mb-4">Dettaglio riparazione #{{ $order->id }}</h4>
     {{-- {{ $order->user->assignedOrders }} --}}
 
-    <div class="flex space-x-4">
-        <div class="w-1/3 space-y-4">
-            <div class="bg-white p-4 rounded-sm">
+    <div class="2xl:flex 2xl:space-x-4 space-y-4 2xl:space-y-0">
+        <div class="flex gap-4 2xl:block 2xl:w-1/3 2xl:space-y-4">
+            <div class="bg-white p-4 rounded-sm w-full">
                 <div class="p-1 bg-[#F2F1FB] mb-4">
                     <span class="text-[15px] text-[#222222]">Info generali riparazioni</span>
                 </div>
@@ -86,7 +86,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white p-4 rounded-sm">
+            <div class="bg-white p-4 rounded-sm w-full">
                 <div class="p-1 bg-[#F2F1FB] mb-4">
                     <span class="text-[15px] text-[#222222]">Dettagli pagamento</span>
                 </div>
@@ -117,10 +117,8 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
-        <div x-data="{ activeTab: 'tab1' }" class="w-2/3 bg-white p-4">
+        <div x-data="{ activeTab: 'tab1' }" class="2xl:w-2/3 bg-white p-4 mb-10 2xl:mb-0">
             <div class="flex space-x-4 border-b">
                 <button @click="activeTab = 'tab1'"
                     :class="activeTab === 'tab1' ? 'border-[#4453A5] text-[#4453A5]' : 'border-transparent text-[#9F9F9F]'"
@@ -144,8 +142,8 @@
             </div>
 
             <div x-show="activeTab === 'tab1'">
-                <div class="flex">
-                    <div class="w-3/5">
+                <div class="xl:flex">
+                    <div class="xl:w-3/5">
                         @livewire('car-parts-table', ['order' => $order])
                         <div class="grid grid-cols-2 gap-4 my-6">
                             <div>
@@ -184,7 +182,7 @@
                         </div>
                     </div>
 
-                    <div class="w-2/5 ml-4 border-l px-4 py-6">
+                    <div class="xl:w-2/5 xl:ml-4 xl:border-l px-4 py-6">
                         <div class="flex space-x-4 justify-end mb-11">
                             <button
                                 onclick="Livewire.dispatch('openModal', { component: 'order-edit-modal', arguments:{'order':{{ $order }}} })"
@@ -262,7 +260,8 @@
                         </div>
                         <div class="relative mx-auto w-max">
                             <!-- Image -->
-                            <img class="mx-auto my-6" src="{{ asset('images/car  top.svg') }}" alt="car image from top">
+                            <img class="mx-auto my-6 object-cover" src="{{ asset('images/car  top.svg') }}"
+                                alt="car image from top">
 
                             <!-- Circles -->
                             <div class="absolute inset-0 flex items-center justify-between w-full">
@@ -345,7 +344,7 @@
                     </button>
                     @livewire('download-order-photos', ['orderId' => $order->id])
                 </div>
-                <div class="grid grid-cols-4 gap-6">
+                <div class="grid grid-cols-2 2xl:grid-cols-4 gap-6">
                     @forelse ($order->images->where('disassembly', 0) as $image)
                         <img src="{{ asset('storage/' . $image->image_path) }}" alt="Order Image"
                             class="h-[315px] object-cover rounded-md">

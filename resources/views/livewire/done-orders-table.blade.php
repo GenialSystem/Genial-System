@@ -3,14 +3,14 @@
     <div class="bg-white p-4">
 
         <div class="mb-4">
-            <input type="text" class="p-2 border border-gray-300 rounded h-8 w-[600px]" placeholder="Cerca elemento..."
-                wire:model.debounce.300ms.live="searchTerm" />
+            <input type="text" class="p-2 border border-gray-300 rounded h-8 w-full xl:w-[600px]"
+                placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
         </div>
         <!-- text-[#DC76E0] bg-[#FFF2FF] bg-[#FCE5E8] bg-[#E7FAF4] bg-[#D6D6D6] bg-[#F5F5F5] bg-[#FAF2DD] text-[#DC0814] text-[#92D1BB] text-[#464646] text-[#9F9F9F] text-[#E8C053] -->
 
 
         <div class="overflow-x-auto rounded-md">
-            <table class="min-w-full bg-white border border-gray-200">
+            <table class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
                 <thead class="bg-[#F5F5F5]">
                     <tr class="w-full text-left text-gray-600 text-sm leading-normal">
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Cliente</th>

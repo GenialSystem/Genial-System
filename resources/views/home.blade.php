@@ -64,18 +64,17 @@
     <!-- w-1/3  w-1/5 -->
     <div class="">
         <h2 class="text-2xl font-bold mb-4">Home</h2>
-        <div class="flex w-full">
+        <div class="grid grid-cols-5 gap-4">
             @foreach ($items as $index => $item)
                 <div
-                    class="w-1/{{ count($items) }} h-24 flex bg-white p-4 rounded-md
-        shadow-[0px_0px_11px_rgba(116,116,116,0.09)]
-        @if (!$loop->first) ml-2 @endif 
-        @if (!$loop->last) mr-2 @endif">
+                    class="2xl:flex 2xl:justify-start justify-center bg-white p-4 rounded-md
+        shadow-[0px_0px_11px_rgba(116,116,116,0.09)]">
                     <!-- Content goes here -->
-                    <div class="rounded-md {{ $item['color'] }} p-4 mr-4 w-16 h-16 flex place-items-center justify-center">
+                    <div
+                        class="rounded-md {{ $item['color'] }} 2xl:mr-4 p-4 w-16 h-16 mb-5 flex place-items-center 2xl:justify-normal justify-center 2xl:m-0 mx-auto">
                         <img src="{{ asset($item['image']) }}" alt="" />
                     </div>
-                    <div class="place-content-center">
+                    <div class="place-content-center 2xl:text-start text-center">
                         <span class="font-semibold text-xl">{{ $item['title'] }}</span>
                         <br>
                         <span class="text-[#464646] text-[13px]">{{ $item['subtitle'] }}</span>
@@ -83,7 +82,7 @@
                 </div>
             @endforeach
         </div>
-        <div class="flex space-x-6">
+        <div class="2xl:flex 2xl:space-x-6">
             @livewire('order-production-chart')
 
             @livewire('sales-chart')
@@ -91,6 +90,5 @@
         @role('admin')
             @livewire('order-table', key(str()->random(10)))
         @endrole
-
     </div>
 @endsection

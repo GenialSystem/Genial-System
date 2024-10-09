@@ -36,7 +36,6 @@ class MechanicInfoController extends Controller
     {
         DB::beginTransaction(); // Start the transaction
 
-        dd($request);
         try {
             $validatedData = $request->validated();
             // Create a new User instance

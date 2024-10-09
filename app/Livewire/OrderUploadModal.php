@@ -30,16 +30,13 @@ class OrderUploadModal extends ModalComponent
 
     protected $listeners = ['fileInputUpdated'];
 
-public function fileInputUpdated()
-{
-    // Check if any files are being uploaded
-    if (count($this->images) === 0) {
-        return; // No need to proceed if there are no images
+    public function fileInputUpdated()
+    {
+        // Check if any files are being uploaded
+        if (count($this->images) === 0) {
+            return; // No need to proceed if there are no images
+        }
     }
-
-    // Optionally, you can log or debug to see the contents
-    dd($this->images);
-}
 
 
     public function uploadImages()

@@ -26,18 +26,21 @@ class ResultBanner extends Component
             $this->type = 'error';
             $this->visible = true;
         }
+        $this->dispatch('banner-auto-hide');
+
     }
+
     public function showBanner($title, $subtitle, $type)
     {
         $this->title = $title;
         $this->subtitle = $subtitle;
         $this->type = $type;
+
         $this->visible = true;
-    
-        // Emit a browser event to trigger the auto-hide on the frontend
+
+        // // Trigger auto-hide of the banner after 4 seconds
         $this->dispatch('banner-auto-hide');
     }
-    
 
     public function render()
     {

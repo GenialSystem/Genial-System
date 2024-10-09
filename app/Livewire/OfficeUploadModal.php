@@ -42,41 +42,54 @@ class OfficeUploadModal extends ModalComponent
 
     protected function handleFileUpload()
     {
-        
         if ($this->file) {
             // Default to root folder path
-            $folderPath = 'offices'; // Root path
+            $folderPath = 'offices'; // Root path by default
             $fileName = $this->file->getClientOriginalName();
-            // Check if a parent folder is selected
-            if ($this->parentFolderId) {
-                // Find the folder to get its name for the storage path
+    
+            // If parentFolderId is null or empty, treat it as root folder
+            if (empty($this->parentFolderId)) {
+                $this->parentFolderId = null; // Explicitly set to null for clarity
+                
+                // Check if a file with the same name exists in the root folder (offices)
+                $existingFileInRootFolder = Office::where('parent_id', null)
+                                                  ->where('name', $fileName)
+                                                  ->where('type', 'file')
+                                                  ->first();
+    
+                if ($existingFileInRootFolder) {
+                    // Dispatch event to show a banner instead of storing the file
+                    $this->dispatch('showBanner', 'Errore durante l\'upload', 'Un file con questo nome è già presente nella cartella principale', 'error');
+                    return; // Exit the method without storing the file
+                }
+            } else {
+                // Check if a parent folder is selected and get its name for the storage path
                 $folder = Office::find($this->parentFolderId);
                 $folderPath = 'offices/' . $folder->name; // Define the path based on the folder name
-                
+    
                 // Check if a file with the same name exists in the selected parent folder
                 $existingFileInParentFolder = Office::where('parent_id', $this->parentFolderId)
-                                                     ->where('name', $fileName)
-                                                     ->where('type', 'file')
-                                                     ->first();
+                                                    ->where('name', $fileName)
+                                                    ->where('type', 'file')
+                                                    ->first();
     
                 if ($existingFileInParentFolder) {
-                    return redirect()->route('office.index')->with('error', ['title' => 'Errore', 'subtitle' => 'è già presente un file con lo stesso nome nella cartella.']);
+                    // Dispatch event to show a banner instead of storing the file
+                    $this->dispatch('showBanner', 'Errore durante l\'upload', 'Un file con questo nome è già presente nella cartella selezionata', 'error');
+                    return; // Exit the method without storing the file
                 }
             }
     
             // Store the file with its original name in the defined folder path
             try {
                 $path = $this->file->storeAs($folderPath, $fileName);
-
-                if ($this->parentFolderId === '') {
-                    $this->parentFolderId = null;
-                }
+    
                 // Save the file entry to the database
                 Office::create([
                     'name' => $fileName,
                     'type' => 'file',
                     'path' => $path,  // Save the relative file path in the database
-                    'parent_id' => $this->parentFolderId // Assign the file to the correct folder
+                    'parent_id' => $this->parentFolderId // Assign the file to the correct folder (null for root)
                 ]);
             } catch (\Exception $e) {
                 Log::error('File upload failed: ' . $e->getMessage());
@@ -85,7 +98,6 @@ class OfficeUploadModal extends ModalComponent
         }
     }
     
-
     protected function handleFolderCreation()
     {
         $this->validate();  // Ensure folder name is valid

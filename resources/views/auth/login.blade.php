@@ -1,4 +1,9 @@
 <x-guest-layout>
+    <div class="fixed inset-0 bg-[#E8E8E8] z-50 flex items-center justify-center lg:hidden">
+        <div class="text-[#222222] text-center p-4">
+            <h2 class="text-4xl font-semibold">La piattaforma è visualizzabile solo in versione desktop.</h2>
+        </div>
+    </div>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 

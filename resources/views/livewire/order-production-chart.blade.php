@@ -1,4 +1,4 @@
-<div class="w-1/2 h-80 bg-white p-4 mt-4 rounded-md">
+<div class="2xl:w-1/2 h-80 bg-white p-4 mt-4 rounded-md">
     <div class="flex justify-between">
         <h6 class="text-[#222222] text-lg font-semibold">Panoramica produzione</h6>
         <div class="relative">

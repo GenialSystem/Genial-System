@@ -22,10 +22,8 @@ class WorkStationsTable extends Component
                 $q->where('id', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('customer', function ($customerQuery) {
                         $customerQuery->where('name', 'like', "%{$this->searchTerm}%")
-                            ->orWhere('admin_name', 'like', "%{$this->searchTerm}%")
-                        ;
-                    })
-                    ;
+                            ->orWhere('admin_name', 'like', "%{$this->searchTerm}%");
+                    });
             });
         }
 

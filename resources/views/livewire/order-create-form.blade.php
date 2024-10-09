@@ -1,4 +1,4 @@
-<div class="mx-auto p-4 bg-white w-[1000px] rounded-md shadow-sm">
+<div class="mx-auto p-4 bg-white 2xl:w-[1000px] rounded-md shadow-sm">
     @if ($errors->any())
         <div id="error-banner" class="bg-red-500 text-white text-center py-2 rounded-md my-4">
             {{ $errors->first() }}

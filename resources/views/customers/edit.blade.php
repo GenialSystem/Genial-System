@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-    <div class="mx-auto p-4 bg-white w-[1000px] rounded-md shadow-sm">
+    <div class="mx-auto p-4 bg-white 2xl:w-[1000px] rounded-md shadow-sm">
         @if ($errors->any())
             <div id="error-banner" class="bg-red-500 text-white text-center py-2 rounded-md my-4">
                 {{ $errors->first() }}
@@ -29,7 +29,7 @@
             <!-- Step 1 -->
             <div id="step-1">
                 <!-- Row 1 -->
-                <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="grid grid-cols-2 2xl:grid-cols-3 gap-4 mb-4">
                     <div>
                         <label for="name" class="block text-sm font-medium">Nome</label>
                         <input type="text" name="name" id="name" value="{{ old('name', $customer->user->name) }}"
@@ -59,7 +59,7 @@
                 </div>
 
                 <!-- Row 2 -->
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-2 2xl:grid-cols-3 gap-4">
                     <div>
                         <label for="admin_name" class="block text-sm font-medium">Responsabile</label>
                         <input type="text" name="admin_name" id="admin_name"
@@ -84,7 +84,7 @@
                 </div>
                 <div class="border-dashed border mb-2 mt-4"></div>
                 <!-- Row 3 -->
-                <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="grid grid-cols-2 2xl:grid-cols-3 gap-4 mb-4">
                     <div>
                         <label for="rag_sociale" class="block text-sm font-medium">Ragione Sociale</label>
                         <input type="text" name="rag_sociale" id="rag_sociale"
@@ -107,7 +107,7 @@
                 </div>
 
                 <!-- Row 4 -->
-                <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="grid grid-cols-2 2xl:grid-cols-3 gap-4 mb-4">
                     <div>
                         <label for="sdi" class="block text-sm font-medium">SDI</label>
                         <input type="text" name="sdi" id="sdi" value="{{ old('sdi', $customer->sdi) }}"
