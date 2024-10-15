@@ -82,7 +82,7 @@ class OfficeUploadModal extends ModalComponent
     
             // Store the file with its original name in the defined folder path
             try {
-                $path = $this->file->storeAs($folderPath, $fileName);
+                $path = $this->file->storeAs($folderPath, $fileName, 'public');
     
                 // Save the file entry to the database
                 Office::create([
@@ -156,7 +156,7 @@ class OfficeUploadModal extends ModalComponent
 
             try {
                 // Store the file with the original file name
-                $path = $this->newFolderFile->storeAs($folderPath, $this->newFolderFile->getClientOriginalName());
+                $path = $this->newFolderFile->storeAs($folderPath, $this->newFolderFile->getClientOriginalName(), 'public');
             } catch (\Exception $e) {
                 Log::error('File storage failed: ' . $e->getMessage());
                 return redirect()->route('office.index')->with('error', ['title' => 'Error', 'subtitle' => 'An error occurred during the file storage process.']);

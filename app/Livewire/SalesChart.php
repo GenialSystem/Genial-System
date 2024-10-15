@@ -61,9 +61,7 @@ class SalesChart extends Component
             $salesData[$month->format('Y-m')] = $this->getSalesDataForMonth($month);
         }
        
-        // Log the sales data for debugging
-        Log::info('Sales Data for Range:', $salesData);
-
+        
         return $salesData;
     }
 
@@ -72,10 +70,6 @@ class SalesChart extends Component
     {
         $startOfMonth = $date->startOfMonth()->format('Y-m-d');
         $endOfMonth = $date->endOfMonth()->format('Y-m-d');
-    
-        // Log start and end dates
-        Log::info('Start of Month: ' . $startOfMonth);
-        Log::info('End of Month: ' . $endOfMonth);
     
         // Fetch sales data from the orders where state is "Riparata" and group by periods (5, 10, 15, etc.)
         $salesData = Order::whereBetween('created_at', [$startOfMonth, $endOfMonth])
@@ -95,9 +89,6 @@ class SalesChart extends Component
             ->orderBy('period')
             ->pluck('total_price', 'period')
             ->toArray();
-    
-        // Log the raw sales data
-        Log::info('Sales Data for Month:', [$salesData]);
     
         // Ensure all periods (5gg, 10gg, etc.) are accounted for
         $periods = ["5gg", "10gg", "15gg", "20gg", "25gg", "30gg"];
