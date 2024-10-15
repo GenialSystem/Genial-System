@@ -2,9 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Models\MechanicInfo;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class MainOrderTable extends Component
@@ -21,6 +23,10 @@ class MainOrderTable extends Component
     public $dropdownOpen = [];
 
     public $showModal = false;
+
+    public $selectedMechanic = '';
+
+    public ?bool $isCustomer = null;
 
     protected $listeners = ['selectionDeleted' => 'clearSelectedRows', 'dateFilterUpdated' => 'handleDateFilterUpdated'];
 
@@ -133,6 +139,12 @@ class MainOrderTable extends Component
     {
         $query = Order::query();
 
+        // If the boolean flag is true, fetch orders assigned to the authenticated user (customer)
+        if ($this->isCustomer) {
+            $query->where('customer_id', Auth::user()->customerInfo->id);
+        }
+
+        // Apply search term filter
         if (!empty($this->searchTerm)) {
             $query->where(function ($q) {
                 $q->where('id', 'like', "%{$this->searchTerm}%")
@@ -140,26 +152,39 @@ class MainOrderTable extends Component
                     ->orWhere('plate', 'like', "%{$this->searchTerm}%")
                     ->orWhere('price', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('customer', function ($customerQuery) {
-                        $customerQuery->where('admin_name', 'like', "%{$this->searchTerm}%")->orWhereHas('user', function ($userQuery) {
-                            $userQuery->where('name', 'like', "%{$this->searchTerm}%")->orWhere('surname', 'like', "%{$this->searchTerm}%" );
-                        });
+                        $customerQuery->where('admin_name', 'like', "%{$this->searchTerm}%")
+                            ->orWhereHas('user', function ($userQuery) {
+                                $userQuery->where('name', 'like', "%{$this->searchTerm}%")
+                                        ->orWhere('surname', 'like', "%{$this->searchTerm}%");
+                            });
                     })
                     ->orWhereHas('mechanics', function ($mechanicQuery) {
                         $mechanicQuery->where('name', 'like', "%{$this->searchTerm}%");
                     });
             });
         }
+
         // Apply date filter
         if (!empty($this->dateFilter)) {
             $query->whereDate('created_at', '=', $this->dateFilter);
         }
 
+        // Apply mechanic filter
+        if (!empty($this->selectedMechanic)) {
+            $query->whereHas('mechanics', function ($mechanicQuery) {
+                $mechanicQuery->where('users.id', '=', $this->selectedMechanic);  // Correct column reference for mechanic ID
+            });
+        }
 
-        // Paginate the results for display
         return view('livewire.main-order-table', [
-            'rows' => $query->paginate(12),
+            'rows' => $query->paginate(12),  // Paginate results
+            'mechanics' => MechanicInfo::all(),  // Provide mechanics for the dropdown filter
         ]);
     }
 
+    public function paginationView()
+    {
+        return 'custom-pagination';
+    }
     
 }

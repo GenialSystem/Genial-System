@@ -4,7 +4,7 @@
             <input type="text" class="p-2 border border-gray-300 rounded w-[600px]" placeholder="Cerca elemento..."
                 wire:model.debounce.300ms.live="searchTerm" />
             <button
-                wire:click="$dispatch('openModal', { component: 'general-docs-modal', arguments:{'userId' : {{ $userId }}} })"
+                wire:click="$dispatch('openModal', { component: 'general-docs-modal', arguments:{'modelId' : {{ $modelId }}, 'isOrderModel': {{ $isOrderModel }}} })"
                 class="bg-[#F2F1FB] flex justify-center place-items-center px-2 duration-200 py-1 hover:bg-[#4453A5] text-[#4453A5] text-[13px] hover:text-white rounded-md group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="13.937" height="13.937"
                     viewBox="0 0 13.937 13.937">

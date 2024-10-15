@@ -165,4 +165,9 @@ class InvoicesTable extends Component
         ]);
     }
 
+    public function paginationView()
+    {
+        return 'custom-pagination';
+    }
+
 }

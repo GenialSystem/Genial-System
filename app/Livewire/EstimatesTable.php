@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Estimate;
+use App\Models\MechanicInfo;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -15,8 +17,9 @@ class EstimatesTable extends Component
     public $selectedRows = [];
     public $selectAll = false;
     public $selectedState = ''; // For state filter
-    public $showModal = false;
-    public $showCustomModal = false;
+    public $selectedType = ''; // For type filter
+    public $selectedMechanic = ''; // For mechanic filter
+
     public $states = [
         'Confermato' => 'bg-[#EFF7E9]',
         'Nuovo' => 'bg-[#FFF9EC]',
@@ -44,7 +47,8 @@ class EstimatesTable extends Component
     protected $listeners = ['selectionDeleted' => 'clearSelectedRows', 'openCustomModal' => 'showModal', 'openCustomModal' => 'showCustomModal', 'closeEditModal' => 'closeEditModal'];
 
     protected $queryString = ['searchTerm', 'selectedState'];
-
+    public $isCustomer;
+    
     public function applyStateToSelectedRows()
     {
         $this->selectAll = false;
@@ -57,33 +61,7 @@ class EstimatesTable extends Component
             $this->dispatch('rowsSelected', $this->selectedRows);
         }
     }
-    public function showModal($selectedRows)
-    {
-        $this->selectedRows = $selectedRows;
-        $this->showModal = true; // Set to true to open the modal
-    }
 
-    public function closeEditModal()
-    {
-        $this->showCustomModal = false;
-    }
-
-    public function showCustomModal(Estimate $estimate)
-    {
-        $this->selectedEstimate = $estimate;
-        $this->showCustomModal = true;
-    }
-
-    public function showCreateModal()
-    {
-        $this->showCustomModal = true;
-    }
-
-    public function closeModal()
-    {
-        $this->showModal = false; // Set to false to close the modal
-        $this->showCustomModal = false; // Set to false to close the modal
-    }
     public function updatedSearchTerm()
     {
         $this->clearSelectedRows();
@@ -172,20 +150,35 @@ class EstimatesTable extends Component
     {
         $query = Estimate::query();
 
+        if ($this->isCustomer) {
+            $query->where('customer_id', Auth::user()->customerInfo->id);
+        }
+
         if (!empty($this->selectedState)) {
             $query->where('state', $this->selectedState);
-
         }
+
+        if (!empty($this->selectedType)) {
+            $query->where('type', $this->selectedType);
+        }
+
+        if (!empty($this->selectedMechanic)) {
+            $query->where('mechanic_id', $this->selectedMechanic);
+        }
+
         if (!empty($this->searchTerm)) {
             $query->where(function ($q) {
                 $q->where('id', 'like', "%{$this->searchTerm}%")
                     ->orWhere('state', 'like', "%{$this->searchTerm}%")
+                    ->orWhere('brand', 'like', "%{$this->searchTerm}%")
+                    ->orWhere('plate', 'like', "%{$this->searchTerm}%")
                     ->orWhere('type', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('customer', function ($userQuery) {
-                        $userQuery->where('id', 'like', "%{$this->searchTerm}%")->orWhere('admin_name', 'like', "%{$this->searchTerm}%")
+                        $userQuery->where('id', 'like', "%{$this->searchTerm}%")
+                            ->orWhere('admin_name', 'like', "%{$this->searchTerm}%")
                             ->orWhereHas('user', function ($infoQuery) {
                                 $infoQuery->where('name', 'like', "%{$this->searchTerm}%")
-                                ->orWhere('surname', 'like', "%{$this->searchTerm}%");
+                                    ->orWhere('surname', 'like', "%{$this->searchTerm}%");
                             });
                     })
                     ->orWhere('price', 'like', "%{$this->searchTerm}%");
@@ -194,6 +187,13 @@ class EstimatesTable extends Component
 
         return view('livewire.estimates-table', [
             'rows' => $query->paginate(12), // Ensure pagination here
+            'mechanics' => MechanicInfo::all(), // Fetch all mechanics for the dropdown
         ]);
     }
+
+    public function paginationView()
+    {
+        return 'custom-pagination';
+    }
+
 }

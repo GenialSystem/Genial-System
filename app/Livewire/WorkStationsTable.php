@@ -19,19 +19,25 @@ class WorkStationsTable extends Component
         // Filter by search term
         if (!empty($this->searchTerm)) {
             $query->where(function ($q) {
-                $q->where('id', 'like', "%{$this->searchTerm}%")
+                $q->where('id', 'like', "%{$this->searchTerm}%")->orWhere('city', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('customer', function ($customerQuery) {
-                        $customerQuery->where('name', 'like', "%{$this->searchTerm}%")
-                            ->orWhere('admin_name', 'like', "%{$this->searchTerm}%");
+                        $customerQuery->where('admin_name', 'like', "%{$this->searchTerm}%")
+                        ->orWhereHas('user', function ($customerQuery) {
+                            $customerQuery->where('name', 'like', "%{$this->searchTerm}%")
+                            ->orWhere('surname', 'like', "%{$this->searchTerm}%");
+                               
+                        });
                     });
             });
         }
 
-        
-       
         return view('livewire.work-stations-table', [
             'rows' => $query->paginate(12)
         ]);
     }
     
+    public function paginationView()
+    {
+        return 'custom-pagination';
+    }
 }

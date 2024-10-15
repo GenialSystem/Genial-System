@@ -79,7 +79,7 @@
             </div>
             <div class="mb-4">
                 <label for="branch" class="block text-sm font-medium text-[#9F9F9F] text-[13px]">Filiale</label>
-                <input type="text" id="branch" name="branch" wire:model="branch" required
+                <input type="text" id="branch" name="branch" wire:model="branch"
                     class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                 <span id="error-branch" class="text-red-500 text-xs mt-1"></span>
             </div>

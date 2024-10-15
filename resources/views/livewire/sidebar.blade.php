@@ -99,7 +99,7 @@
             @endrole
             @role('customer')
                 <li class="menu-item hover:bg-[#E0E0E0]">
-                    <a href="###################"
+                    <a href="{{ route('orders.index') }}"
                         class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
                         <img src="{{ asset('images/commesse icona.svg') }}" alt="">
 
@@ -169,7 +169,7 @@
             @endrole
             @role('mechanic')
                 <li class="menu-item hover:bg-[#E0E0E0]">
-                    <a href="###"
+                    <a href="{{ route('calendar.index') }}"
                         class="flex items-center p-4 text-secondary group hover:text-primary rounded-lgs rounded-lg group">
                         <img src="{{ asset('images/calendario menu.svg') }}" alt="">
 

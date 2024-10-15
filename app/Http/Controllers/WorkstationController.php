@@ -31,21 +31,23 @@ class WorkstationController extends Controller
     public function store(Request $request)
     {
         DB::beginTransaction();
+        // dd($request);
         try {
             $validatedData = $request->validate([
                 'customer' => 'required|exists:customer_infos,id',
                 'city' => 'required|string|max:255',
+                'address' => 'required|string|max:255',
                 'assigned_cars' => 'required|integer|min:0',
-                'admin_name' => 'required|string|max:255',
+                // 'admin_name' => 'required|string|max:255',
                 'mechanics' => 'required|array',
                 'mechanics.*' => 'exists:mechanic_infos,id' 
             ]);
             
             $workstation = Workstation::create([
                 'customer_id' => $validatedData['customer'],
-                // 'city' => $validatedData['city'],
-                // 'assigned_cars' => $validatedData['assigned_cars'],
-                // 'admin_name' => $validatedData['admin_name'],
+                'city' => $validatedData['city'],
+                'address' => $validatedData['address'],
+                'assigned_cars_count' => $validatedData['assigned_cars']
             ]);
         
             // Attach the mechanics to the workstation
@@ -85,8 +87,44 @@ class WorkstationController extends Controller
      */
     public function update(Request $request, Workstation $workstation)
     {
-        //
+        DB::beginTransaction();
+        try {
+            // Validate the input data
+            $validatedData = $request->validate([
+                'customer' => 'required|exists:customer_infos,id',
+                'city' => 'required|string|max:255',
+                'assigned_cars' => 'required|integer|min:0',
+                // 'admin_name' => 'required|string|max:255',
+                'address' => 'required|string|max:255',
+                'mechanics' => 'required|array',
+                'mechanics.*' => 'exists:mechanic_infos,id'
+            ]);
+
+            // Update the workstation details
+            $workstation->update([
+                'customer_id' => $validatedData['customer'],
+                'address' => $validatedData['address'],
+                'city' => $validatedData['city'],
+                'assigned_cars_count' => $validatedData['assigned_cars']
+            ]);
+
+            // Sync the mechanics (remove any that are no longer attached and add the new ones)
+            $workstation->mechanics()->sync($validatedData['mechanics']);
+
+            DB::commit();
+            return redirect()->route('workstations.index')->with('success', [
+                'title' => 'Postazione aggiornata',
+                'subtitle' => 'La postazione di lavoro è stata aggiornata con successo.'
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('workstations.index')->with('error', [
+                'title' => 'Errore durante l\'aggiornamento',
+                'subtitle' => $th->getMessage()
+            ]);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.

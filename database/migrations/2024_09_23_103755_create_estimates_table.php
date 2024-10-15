@@ -13,6 +13,10 @@ return new class extends Migration {
         Schema::create('estimates', function (Blueprint $table) {
             $table->id();
             $table->string('number')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('plate')->nullable();
+            $table->unsignedBigInteger('mechanic_id')->nullable();
+            $table->foreign('mechanic_id')->references('id')->on('customer_infos')->onDelete('cascade');
             $table->unsignedBigInteger('customer_id');
             $table->foreign('customer_id')->references('id')->on('customer_infos')->onDelete('cascade');
             $table->enum('type', ['Preventivo combinato', 'Preventivo leva bolli', 'Carrozzeria']);

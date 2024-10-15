@@ -66,4 +66,9 @@ class DoneOrdersTable extends Component
             'rows' => $query->paginate(12),
         ]);
     }
+
+    public function paginationView()
+    {
+        return 'custom-pagination';
+    }
 }

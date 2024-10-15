@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade'); // Foreign key to orders table
             $table->string('file_path'); // Path to the uploaded file
+            $table->string('name'); // Path to the uploaded file
             $table->string('file_type')->nullable(); // Optional: To store the type of file (PDF, doc, etc.)
             $table->timestamps();
         });   

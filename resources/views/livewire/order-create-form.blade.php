@@ -74,7 +74,7 @@
                     <label for="admin_name" class="block text-sm font-medium">Responsabile</label>
                     <input required type="text" name="admin_name" id="admin_name"
                         class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none"
-                        readonly>
+                        disabled>
                     <span id="admin_name-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                 </div>
             </div>
@@ -85,14 +85,20 @@
                 <div>
                     <!-- Tecnico (Mechanic) Select Dropdown -->
                     <label for="mechanic" class="block text-sm font-medium">Tecnico</label>
-                    <select name="mechanic" id="mechanic"
+                    <select id="mechanicSelect"
                         class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <option value="">Seleziona un tecnico</option>
                         @foreach ($mechanics as $mechanic)
-                            <option value="{{ $mechanic->id }}">{{ $mechanic->user->name }}
+                            <option value="{{ $mechanic->user->id }}">{{ $mechanic->user->name }}
                                 {{ $mechanic->user->surname }}</option>
                         @endforeach
                     </select>
+
+                    <!-- Hidden input to store selected mechanics' IDs -->
+                    <input type="hidden" name="mechanic" id="mechanicIds" />
+
+                    <!-- Selected mechanics list -->
+
                     <span id="mechanic-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                 </div>
                 <div>
@@ -105,7 +111,9 @@
                 </div>
 
             </div>
-
+            <div id="selectedMechanics" class="my-2 flex flex-wrap gap-2">
+                <!-- JavaScript will append selected mechanics here -->
+            </div>
             <!-- Row 4 -->
             <div class="grid grid-cols-3 gap-4 mb-4">
                 <div>
@@ -141,7 +149,7 @@
                     <div>
                         <label for="part_{{ $index }}"
                             class="block text-sm font-medium">{{ $part->name }}</label>
-                        <input required type="number" min="0"
+                        <input value="0" required type="number" min="0"
                             name="parts[{{ $index }}][damage_count]" id="part_{{ $index }}"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <!-- Store only the name, not the entire object -->
@@ -293,7 +301,7 @@
                     stepCounter++;
                 }
             } else if (stepCounter === 2) {
-                const requiredFieldsStep2 = ['replacements', 'car_size'];
+                const requiredFieldsStep2 = ['replacements', 'notes', 'car_size'];
                 valid = validateParts() && validateFields(requiredFieldsStep2);
 
                 if (valid) {
@@ -355,6 +363,72 @@
             if (nextStep > 1) {
                 prevStepButton.classList.remove('hidden');
             }
+        }
+
+        const mechanicSelect = document.getElementById('mechanicSelect');
+        const mechanicIdsInput = document.getElementById('mechanicIds');
+        const selectedMechanicsDiv = document.getElementById('selectedMechanics');
+
+        // Array to keep track of selected mechanics
+        let selectedMechanics = [];
+
+        // Function to render the selected mechanics
+        function renderSelectedMechanics() {
+            // Clear the current displayed list
+            selectedMechanicsDiv.innerHTML = '';
+
+            // Loop through the selected mechanics and create span elements
+            selectedMechanics.forEach(mechanic => {
+                const mechanicSpan = document.createElement('span');
+                mechanicSpan.classList.add('w-max', 'bg-[#F2F1FB]', 'text-[#4453A5]', 'font-semibold',
+                    'rounded-md',
+                    'px-2', 'py-1.5', 'text-[13px]', 'mt-3', 'mb-6');
+
+                // Mechanic name and delete button
+                mechanicSpan.innerHTML = `
+                ${mechanic.name} ${mechanic.surname}
+                <button type="button" class="ml-2 text-[#4453A5]" onclick="removeMechanic(${mechanic.id})">&times;</button>
+            `;
+                selectedMechanicsDiv.appendChild(mechanicSpan);
+            });
+
+            // Update the hidden input with the selected mechanic IDs
+            mechanicIdsInput.value = selectedMechanics.map(mechanic => mechanic.id).join(',');
+        }
+
+        // Function to add a mechanic when selected from the dropdown
+        mechanicSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+
+            // Get mechanic details from the option element
+            const mechanicId = selectedOption.value;
+            const mechanicName = selectedOption.text.split(' ')[0];
+            const mechanicSurname = selectedOption.text.split(' ')[1];
+
+            // Check if mechanic is already selected
+            if (!selectedMechanics.some(mechanic => mechanic.id === mechanicId) && mechanicId) {
+                // Add mechanic to the selectedMechanics array
+                selectedMechanics.push({
+                    id: mechanicId,
+                    name: mechanicName,
+                    surname: mechanicSurname
+                });
+
+                // Render the updated list
+                renderSelectedMechanics();
+            }
+
+            // Reset the select dropdown
+            mechanicSelect.value = '';
+        });
+
+        // Function to remove a mechanic from the selected list
+        function removeMechanic(mechanicId) {
+            // Remove the mechanic from the selectedMechanics array
+            selectedMechanics = selectedMechanics.filter(mechanic => mechanic.id !== mechanicId);
+
+            // Re-render the list
+            renderSelectedMechanics();
         }
 
 

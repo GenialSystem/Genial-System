@@ -64,4 +64,9 @@ class CustomerTable extends Component
             'rows' => $rows,
         ]);
     }
+
+    public function paginationView()
+    {
+        return 'custom-pagination';
+    }
 }

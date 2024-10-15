@@ -15,9 +15,11 @@
             </div>
             <h5 id="current-month" class="text-lg font-semibold"></h5>
             <div class="flex">
-                <button id="calendar-btn"
-                    class="text-[#4453A5] font-semibold border-b-2 border-[#4453A5] px-2">Calendario</button>
-                <button id="schedule-btn" class="text-black px-2 ml-4">Programmazione</button>
+                @role('admin')
+                    <button id="calendar-btn"
+                        class="text-[#4453A5] font-semibold border-b-2 border-[#4453A5] px-2">Calendario</button>
+                    <button id="schedule-btn" class="text-black px-2 ml-4">Programmazione</button>
+                @endrole
             </div>
         </div>
 
@@ -34,16 +36,16 @@
                         class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px]">
                         <option value="">Filtra per stato</option>
                     </select> --}}
-
-                    <select id="mechanic-filter"
-                        class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-8 leading-none w-[225px] 2xl:ml-6">
-                        <option value="">Filtra per tecnico</option>
-                        @foreach ($mechanics as $mechanic)
-                            <option value="{{ $mechanic->id }}">{{ $mechanic->user->name }} {{ $mechanic->user->surname }}
-                            </option>
-                        @endforeach
-                    </select>
-
+                    @role('admin')
+                        <select id="mechanic-filter"
+                            class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-8 leading-none w-[225px] 2xl:ml-6">
+                            <option value="">Filtra per tecnico</option>
+                            @foreach ($mechanics as $mechanic)
+                                <option value="{{ $mechanic->id }}">{{ $mechanic->user->name }} {{ $mechanic->user->surname }}
+                                </option>
+                            @endforeach
+                        </select>
+                    @endrole
                 </div>
                 <div class="text-end">
                     <button onclick="Livewire.dispatch('openModal', { component: 'event-modal'})"
@@ -89,7 +91,8 @@
         var calendarEl = document.getElementById('calendar');
         var calendar;
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-        console.log(csrfToken);
+
+        let test;
 
         function createCalendar() {
             calendar = new Calendar(calendarEl, {
@@ -105,9 +108,16 @@
                 },
                 eventClassNames: ['text-[#7AA3E5]', 'bg-transparent', 'text-normal'],
                 eventDidMount: function(info) {
-                    info.el.style.backgroundColor = 'transparent'; // Customize background
-                    info.el.style.color = '#7AA3E5'; // Customize text color
+                    @role('mechanic')
+                        const filteredEvents = @json($events).filter(event => event
+                            .id ==
+                            info.event._def.publicId);
+
+                        createSelectElement(info.el, filteredEvents);
+                    @endrole
                 },
+
+
                 initialView: 'dayGridMonth',
                 locale: 'it',
                 events: @json($events), // Make sure this contains events from backend
@@ -124,10 +134,13 @@
             document.getElementById('current-month').textContent = currentMonth;
         }
 
-        document.getElementById('mechanic-filter').addEventListener('change', function() {
-            var selectedMechanicId = this.value;
-            filterEventsByMechanic(selectedMechanicId);
-        });
+        const mechanicSelect = document.getElementById('mechanic-filter');
+        if (mechanicSelect) {
+            mechanicSelect.addEventListener('change', function() {
+                var selectedMechanicId = this.value;
+                filterEventsByMechanic(selectedMechanicId);
+            });
+        }
 
         // Filter events based on the selected mechanic
         function filterEventsByMechanic(mechanicId) {
@@ -206,27 +219,28 @@
             // Create a mapping of events by date
             var eventsByDate = {};
             events.forEach(event => {
-                var eventDate = event.date; // Use the date directly from the event
-                console.log(eventDate);
+                // Use the raw date string from Laravel (no conversion to Date object)
+                var eventDate = event.date; // This is 'YYYY-MM-DD' directly from backend
+
                 if (!eventsByDate[eventDate]) eventsByDate[eventDate] = [];
                 eventsByDate[eventDate].push(event);
             });
 
             // Iterate through all days in the month
             daysInMonth.forEach(date => {
-                let originalFormattedDate = date.toISOString().split('T')[
-                    0]; // Get the original date format (YYYY-MM-DD)
-
-                // Format date as DD/MM/YYYY for the <tr>
                 let day = String(date.getDate()).padStart(2, '0');
                 let month = String(date.getMonth() + 1).padStart(2, '0');
                 let year = date.getFullYear();
+                let originalFormattedDate = `${year}-${month}-${day}`; // This is now 'YYYY-MM-DD'
+
+                // Format date as DD/MM/YYYY for table display
                 let formattedDate = `${day}/${month}/${year}`;
 
                 // Check if the day is a weekend and skip if so
-                let dayOfWeek = date.toLocaleDateString('it-IT', {
-                    weekday: 'long'
-                });
+                let dayOfWeek = new Date(year, date.getMonth(), date.getDate()).toLocaleDateString(
+                    'it-IT', {
+                        weekday: 'long'
+                    });
                 if (dayOfWeek === "sabato" || dayOfWeek === "domenica") {
                     return; // Skip weekends
                 }
@@ -271,13 +285,13 @@
                     let td = document.createElement('td');
                     td.classList.add('border-x', 'text-center', 'p-3');
 
-
                     if (mechanicEvent) {
                         // Find the mechanic's pivot data (confirmed, client_name)
-                        let mechanicPivot = mechanicEvent.mechanics.find(m => m
-                            .id == mechanic.id);
+                        let mechanicPivot = mechanicEvent.mechanics.find(m => m.id == mechanic
+                            .id);
                         let confirmed = mechanicPivot.confirmed;
                         let clientName = mechanicPivot.client_name; // Get client_name
+
                         // Create a select dropdown for customer selection
                         let customerSelect = document.createElement('select');
                         customerSelect.classList.add('w-full', 'border-none',
@@ -286,23 +300,16 @@
                         ); // Add basic styling
                         if (confirmed === null && clientName === null) {
                             td.textContent = '';
-
                             return;
                         }
-                        // Set the options based on the confirmed state and client_name
+
                         if (confirmed === 1) {
-                            // Mechanic is confirmed
-                            // If client_name is present, set it as the default selected option
                             let defaultOption = document.createElement('option');
-                            defaultOption.value =
-                                ''; // You can set this to something more meaningful if needed
-                            defaultOption.textContent = clientName ? clientName :
-                                'Disponibile'; // Use client_name or 'Disponibile'
-                            defaultOption.style.color = clientName ? 'black' :
-                                'green'; // Color based on availability
+                            defaultOption.value = '';
+                            defaultOption.textContent = clientName ? clientName : 'Disponibile';
+                            defaultOption.style.color = clientName ? 'black' : 'green';
                             customerSelect.appendChild(defaultOption);
 
-                            // Add an option for each customer
                             @json($customers).forEach(customer => {
                                 let option = document.createElement('option');
                                 option.value = customer.id;
@@ -311,12 +318,10 @@
                                 customerSelect.appendChild(option);
                             });
 
-                            // Handle change event to update the customer_name in the pivot table via AJAX
                             customerSelect.addEventListener('change', function() {
                                 let selectedCustomerId = this.value;
-                                console.log(mechanic.id, mechanicEvent.id,
-                                    selectedCustomerId);
-                                // Make an AJAX request to update the customer_name in the pivot table
+
+
                                 fetch('/update-customer', {
                                         method: 'POST',
                                         headers: {
@@ -333,114 +338,175 @@
                                         console.error('Error:', error);
                                     });
                             });
+
                         } else if (confirmed === 0) {
-                            // Mechanic is not available (confirmed is false)
-                            // Disable the select dropdown and set "Non disponibile" as the default text
                             let defaultOption = document.createElement('option');
-                            defaultOption.value =
-                                ''; // Optional: you can set this to something meaningful
-                            defaultOption.textContent =
-                                'Non disponibile'; // Show "Non disponibile"
+                            defaultOption.value = '';
 
-                            defaultOption.style.color = 'red'; // Change text color to red
+                            defaultOption.textContent = mechanicEvent.date;
+                            defaultOption.style.color = 'red';
                             customerSelect.appendChild(defaultOption);
-                            customerSelect.disabled = true; // Disable the select dropdown
+                            customerSelect.disabled = true;
 
-                            // Optionally, you can add an empty option to show customers
                             @json($customers).forEach(customer => {
                                 let option = document.createElement('option');
                                 option.value = customer.id;
                                 option.textContent = customer.user.name + ' ' + customer
-                                    .user
-                                    .surname;
+                                    .user.surname;
                                 customerSelect.appendChild(option);
                             });
                         }
 
-                        td.appendChild(customerSelect); // Add the select to the cell
+                        td.appendChild(customerSelect);
 
                     } else {
-                        // No event found for this mechanic on this date
                         td.textContent = '';
                     }
 
-                    // Append the cell to the row
                     tr.appendChild(td);
                 });
 
                 tableBody.appendChild(tr);
-
             });
         }
 
+        function createSelectElement(dayGridEl, mechanicEvents) {
+            mechanicEvents.forEach(mechanicEvent => {
+                let existingSelect = dayGridEl.querySelector('.mechanic-select');
+                let selectEl;
 
-        // Mechanic Availability Selection for Mechanic Role
-        @role('mechanic')
-            const dayGridElements = document.querySelectorAll('.fc-daygrid-day');
-            dayGridElements.forEach(dayGridEl => {
-                dayGridEl.classList.add('relative');
-                let selectEl = document.createElement('div');
-                selectEl.classList.add('p-2', 'mx-2', 'text-[#E4434C]', 'cursor-pointer',
-                    'bg-[#FAFAFA]');
-                selectEl.textContent = 'Seleziona';
+                if (existingSelect) {
+                    selectEl = existingSelect; // Use the existing select element if present
+                } else {
+                    // Create a new select element if it doesn't exist
+                    selectEl = document.createElement('div');
+                    selectEl.classList.add('mechanic-select', 'rounded-sm', 'px-0.5', 'mx-2',
+                        'text-[#DC0814]', 'text-[15px]', 'cursor-pointer', 'bg-[#FCF5F6]',
+                        'relative');
+                    dayGridEl.parentNode.insertBefore(selectEl, dayGridEl);
+                }
 
+                let statusText = 'Seleziona'; // Default text
+                let confirmed = null; // default state
+
+                // Ensure there is at least one mechanic in the event's mechanics array
+                if (mechanicEvent.mechanics && mechanicEvent.mechanics.length > 0) {
+                    let firstMechanic = mechanicEvent.mechanics[0];
+                    confirmed = firstMechanic.confirmed; // Get confirmed status
+
+                    // Determine status text and update select element style
+                    if (confirmed === 1) {
+                        statusText = 'Disponibile';
+                        selectEl.classList.remove('text-[#DC0814]', 'bg-[#FCF5F6]');
+                        selectEl.classList.add('text-[#7FBC4B]', 'bg-[#FAFAFA]'); // Available styles
+                    } else if (confirmed === 0) {
+                        statusText = 'Non Disponibile';
+                        selectEl.classList.remove('text-[#DC0814]', 'bg-[#FCF5F6]');
+                        selectEl.classList.add('text-[#E4434C]',
+                            'bg-[#FCF5F6]'); // Not available styles
+                    } else {
+                        selectEl.classList.add('text-[#DC0814]', 'bg-[#FCF5F6]'); // Default styling
+                    }
+                }
+
+                selectEl.textContent = statusText;
+
+                // Attach event listener for dropdown
                 selectEl.onclick = function() {
+                    // Remove any existing dropdown
                     let existingDropdown = dayGridEl.querySelector('.custom-dropdown');
                     if (existingDropdown) {
                         existingDropdown.remove();
                         return;
                     }
 
+                    // Create dropdown
                     let customDropdown = document.createElement('div');
-                    customDropdown.classList.add('custom-dropdown', 'bg-white', 'absolute',
-                        'w-full');
+                    customDropdown.classList.add('custom-dropdown', 'z-50', 'bg-white', 'w-full',
+                        'absolute', 'top-0');
 
+                    // Create "Disponibile" option
                     let available = document.createElement('div');
-                    available.classList.add('p-2', 'cursor-pointer', 'text-[#C9E2B3]');
+                    available.classList.add('cursor-pointer', 'p-2', 'text-[#7FBC4B]',
+                        'hover:bg-[#E7F4E7]');
                     available.textContent = 'Disponibile';
 
+                    // Create "Non Disponibile" option
                     let notAvailable = document.createElement('div');
-                    notAvailable.classList.add('p-2', 'cursor-pointer', 'text-[#E4434C]');
-                    notAvailable.textContent = 'Non disponibile';
+                    notAvailable.classList.add('cursor-pointer', 'p-2', 'border-y',
+                        'text-[#E4434C]', 'hover:bg-[#F7E5E5]');
+                    notAvailable.textContent = 'Non Disponibile';
 
+                    // Append options to dropdown
                     customDropdown.appendChild(available);
                     customDropdown.appendChild(notAvailable);
                     dayGridEl.appendChild(customDropdown);
 
+                    // Handle click for "Disponibile"
                     available.onclick = function() {
+                        // Set confirmed to 1 and update UI immediately
+                        updateMechanicStatus(mechanicEvent.id, 1);
                         selectEl.textContent = 'Disponibile';
-                        selectEl.classList.remove('text-[#E4434C]', 'text-[#C9E2B3]');
-                        selectEl.classList.add('text-[#C9E2B3]');
+                        selectEl.classList.remove('text-[#DC0814]', 'bg-[#FCF5F6]',
+                            'text-[#E4434C]', 'bg-[#F7E5E5]');
+                        selectEl.classList.add('text-[#7FBC4B]', 'bg-[#FAFAFA]');
                         customDropdown.remove();
-                        // Send availability to server using AJAX
                     };
 
+                    // Handle click for "Non Disponibile"
                     notAvailable.onclick = function() {
-                        selectEl.textContent = 'Non disponibile';
-                        selectEl.classList.remove('text-[#E4434C]', 'text-[#C9E2B3]');
-                        selectEl.classList.add('text-[#E4434C]');
+                        // Set confirmed to 0 and update UI immediately
+                        updateMechanicStatus(mechanicEvent.id, 0);
+                        selectEl.textContent = 'Non Disponibile';
+                        selectEl.classList.remove('text-[#DC0814]', 'bg-[#FCF5F6]',
+                            'text-[#7FBC4B]', 'bg-[#FAFAFA]');
+                        selectEl.classList.add('text-[#E4434C]', 'bg-[#F7E5E5]');
                         customDropdown.remove();
-                        // Send availability to server using AJAX
                     };
                 };
-
-                dayGridEl.appendChild(selectEl);
             });
-        @endrole
+        }
+
+
+        // Function to handle the fetch request for updating mechanic status
+        function updateMechanicStatus(eventId, confirmed) {
+            fetch('/update-mechanic-day', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        event_id: eventId,
+                        confirmed: confirmed // Set confirmed status
+                    })
+                })
+                .then(response => {
+
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+
+
 
         // View toggle between calendar and schedule
         const calendarBtn = document.getElementById('calendar-btn');
         const scheduleBtn = document.getElementById('schedule-btn');
         const calendarSection = document.getElementById('calendar-section');
         const scheduleSection = document.getElementById('schedule-section');
+        if (calendarBtn && scheduleBtn) {
 
-        calendarBtn.addEventListener('click', function() {
-            toggleView('calendar');
-        });
+            calendarBtn.addEventListener('click', function() {
+                toggleView('calendar');
+            });
 
-        scheduleBtn.addEventListener('click', function() {
-            toggleView('schedule');
-        });
+            scheduleBtn.addEventListener('click', function() {
+                toggleView('schedule');
+            });
+        }
 
         toggleView('calendar');
 
@@ -453,11 +519,14 @@
 
                 calendarSection.style.display = 'block';
                 scheduleSection.style.display = 'none';
+                if (calendarBtn && scheduleBtn) {
 
-                calendarBtn.classList.add('border-b-2', 'border-[#4453A5]', 'text-[#4453A5]', 'font-semibold');
-                scheduleBtn.classList.remove('border-b-2', 'border-[#4453A5]', 'text-[#4453A5]',
-                    'font-semibold');
-                scheduleBtn.classList.add('text-black');
+                    calendarBtn.classList.add('border-b-2', 'border-[#4453A5]', 'text-[#4453A5]',
+                        'font-semibold');
+                    scheduleBtn.classList.remove('border-b-2', 'border-[#4453A5]', 'text-[#4453A5]',
+                        'font-semibold');
+                    scheduleBtn.classList.add('text-black');
+                }
             } else {
 
                 calendarSection.style.display = 'none';

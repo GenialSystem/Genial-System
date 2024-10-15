@@ -9,7 +9,7 @@ class Workstation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['customer_id'];
+    protected $fillable = ['customer_id', 'city', 'assigned_cars_count', 'address'];
 
     public function mechanics()
     {

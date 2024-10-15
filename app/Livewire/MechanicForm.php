@@ -37,7 +37,6 @@ class MechanicForm extends ModalComponent
         'address' => 'required|string|max:255',
         'city' => 'required|string|max:255',
         'province' => 'required|string|max:255',
-        'branch' => 'required|string|max:255',
         'cap' => 'required|integer',
         'repaired_count' => 'nullable|integer',
         'working_count' => 'nullable|integer',
@@ -101,7 +100,7 @@ class MechanicForm extends ModalComponent
                 ]);
                 
                 $mechanicInfo->update([
-                    'branch' => $validatedData['branch'],
+                    'branch' => $this->branch,
                     'repaired_count' => $validatedData['repaired_count'] ?? 0,
                     'working_count' => $validatedData['working_count'] ?? 0,
                     'plain_password' => $validatedData['plain_password'] ?? $mechanicInfo->plain_password, // Update plain_password
@@ -123,7 +122,7 @@ class MechanicForm extends ModalComponent
 
                 MechanicInfo::create([
                     'user_id' => $newUser->id,
-                    'branch' => $validatedData['branch'],
+                    'branch' => $this->branch,
                     'repaired_count' => $validatedData['repaired_count'] ?? 0,
                     'working_count' => $validatedData['working_count'] ?? 0,
                     'plain_password' => $validatedData['plain_password'] ?? null, // Store plain_password

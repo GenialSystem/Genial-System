@@ -128,7 +128,7 @@
                 @livewire('show-orders-mechanic', ['orders' => $mechanic->user->assignedOrders->where('state', 'In lavorazione')])
             </div>
             <div x-show="activeTab === 'tab3'" class="p-4">
-                @livewire('general-docs', ['docs' => $mechanic->user->docs, 'userId' => $mechanic->user->id])
+                @livewire('general-docs', ['docs' => $mechanic->user->docs, 'modelId' => $mechanic->user->id, 'isOrderModel' => 0])
             </div>
         </div>
     </div>

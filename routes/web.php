@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/invoices_mechanics', [InvoiceController::class, 'indexForMechanics'])->name('invoicesMechanic');
     Route::get('/done_order/{order}', [OrderController::class, 'showDoneOrder'])->name('showDoneOrder');
     Route::post('/update-customer', [CalendarController::class, 'updateCustomer'])->name('update.customer');
+    Route::post('/update-mechanic-day', [CalendarController::class, 'updateMechanicDay'])->name('update.mechanicDay');
 
     // Dashboard
     Route::get('/dashboard', function () {

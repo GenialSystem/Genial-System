@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('customer_id');
             $table->foreign('customer_id')->references('id')->on('customer_infos')->onDelete('cascade');
+            $table->integer('assigned_cars_count')->default(0);
             $table->string('city');
+            $table->string('address');
             $table->timestamps();
 
         });

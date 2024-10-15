@@ -13,7 +13,8 @@
                         </p>
                         <p class="text-xs text-gray-500">PNG, JPG, PDF fino a 10MB</p>
                     </div>
-                    <input id="files" type="file" wire:model="files" multiple class="hidden">
+                    <input id="files" accept=".jpg,.jpeg,.png,.pdf,.svg" type="file" wire:model="files" multiple
+                        class="hidden">
                 </label>
             </div>
 

@@ -46,27 +46,28 @@
                         <span class="text-[#808080] text-[15px]">Data: </span>
                         <span class="text-[#222222] text-[15px]">{{ $order->created_at->format('d/m/Y') }}</span>
                     </div>
-                    @if ($order->customerInfo)
+                    @hasanyrole(['admin', 'mechanic'])
                         <div class="flex justify-between">
                             <div>
                                 <span class="text-[#808080] text-[15px]">Cliente: </span>
-                                <span class="text-[#222222] text-[15px]">{{ $order->customerInfo->name }}</span>
+                                <span class="text-[#222222] text-[15px]">{{ $order->customer->user->name }}
+                                    {{ $order->customer->user->surname }}</span>
                             </div>
-                            <a href="{{ route('customers.show', $order->customerInfo->id) }}" class="text-[#4453A5]">Vai
+                            <a href="{{ route('customers.show', $order->customer->id) }}" class="text-[#4453A5]">Vai
                                 all'anagrafica</a>
                         </div>
                         <div>
                             <span class="text-[#808080] text-[15px]">Responsabile: </span>
-                            <span class="text-[#222222] text-[15px]">{{ $order->customerInfo->admin_name }}</span>
+                            <span class="text-[#222222] text-[15px]">{{ $order->customer->admin_name }}</span>
                         </div>
-                    @endif
+                    @endhasanyrole
                     <div class="flex justify-between">
                         <div>
                             <span class="text-[#808080] text-[15px]">Tecnico: </span>
                             <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->name }}
                                 {{ $order->mechanics[0]->surname }}</span>
                         </div>
-                        <a href="{{ route('mechanics.show', $order->mechanics[0]->pivot->mechanic_id) }}"
+                        <a href="{{ route('mechanics.show', App\Models\MechanicInfo::where('user_id', $order->mechanics[0]->pivot->mechanic_id)->value('id')) }}"
                             class="text-[#4453A5]">Vai
                             all'anagrafica</a>
                     </div>
@@ -103,18 +104,20 @@
                             Saldato
                         </span>
                     </div>
-                    <hr class="my-3">
-                    <div>
-                        <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                        <span class="text-[#222222] text-[15px]"> {{ $order->mechanics[0]->name }}
-                            {{ $order->mechanics[0]->surname }}</span>
-                    </div>
-                    <div>
-                        <span class="text-[#808080] text-[15px]">Guadagno tecnico: </span>
-                        <span class="text-[#222222] text-[15px]">
-                            {{ number_format(($order->earn_mechanic_percentage / 100) * floatval(str_replace(['.', ','], ['', '.'], $order->price)), 2, ',', '.') }}€
-                        </span>
-                    </div>
+                    @role('admin')
+                        <hr class="my-3">
+                        <div>
+                            <span class="text-[#808080] text-[15px]">Tecnico: </span>
+                            <span class="text-[#222222] text-[15px]"> {{ $order->mechanics[0]->name }}
+                                {{ $order->mechanics[0]->surname }}</span>
+                        </div>
+                        <div>
+                            <span class="text-[#808080] text-[15px]">Guadagno tecnico: </span>
+                            <span class="text-[#222222] text-[15px]">
+                                {{ number_format(($order->earn_mechanic_percentage / 100) * floatval(str_replace(['.', ','], ['', '.'], $order->price)), 2, ',', '.') }}€
+                            </span>
+                        </div>
+                    @endrole
                 </div>
             </div>
         </div>
@@ -138,7 +141,11 @@
                     class="py-2 px-4 border-b-2 focus:outline-none">
                     Foto Smontaggio
                 </button>
-
+                <button @click="activeTab = 'tab4'"
+                    :class="activeTab === 'tab4' ? 'border-[#4453A5] text-[#4453A5]' : 'border-transparent text-[#9F9F9F]'"
+                    class="py-2 px-4 border-b-2 focus:outline-none">
+                    Documenti
+                </button>
             </div>
 
             <div x-show="activeTab === 'tab1'">
@@ -184,23 +191,25 @@
 
                     <div class="xl:w-2/5 xl:ml-4 xl:border-l px-4 py-6">
                         <div class="flex space-x-4 justify-end mb-11">
-                            <button
-                                onclick="Livewire.dispatch('openModal', { component: 'order-edit-modal', arguments:{'order':{{ $order }}} })"
-                                class="px-2 flex items-center justify-center bg-[#EBF5F3] text-[#68C9BB] text-[13px] rounded-md group duration-200 hover:bg-[#68C9BB] hover:text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="15.559" height="20.152"
-                                    viewBox="0 0 15.559 20.152" class="group-hover:fill-white">
-                                    <g id="noun-pencil-3690771" transform="translate(-7.171 -0.615)">
-                                        <g id="Layer_19" data-name="Layer 19" transform="translate(7.48 0.946)">
-                                            <!-- Apply fill and hover effects directly to the path -->
-                                            <path id="Tracciato_755" data-name="Tracciato 755"
-                                                d="M1.085,16.985a.43.43,0,0,0,.617.263l3.5-1.874a.43.43,0,0,0,.192-.21L9.939,4.493h0l.83-1.948a.429.429,0,0,0-.226-.563L5.977.035a.43.43,0,0,0-.564.227L.034,12.879a.431.431,0,0,0-.018.284ZM6.035.993,9.811,2.6,9.318,3.759,5.545,2.143Zm-.827,1.94L8.981,4.55,4.659,14.687l-2.892,1.55L.884,13.078Z"
-                                                transform="matrix(0.966, 0.259, -0.259, 0.966, 4.477, 0)" fill="#68C9BB"
-                                                class="group-hover:fill-white transition-colors duration-200" />
+                            @hasanyrole(['admin', 'mechanic'])
+                                <button
+                                    onclick="Livewire.dispatch('openModal', { component: 'order-edit-modal', arguments:{'order':{{ $order }}} })"
+                                    class="px-2 flex items-center justify-center bg-[#EBF5F3] text-[#68C9BB] text-[13px] rounded-md group duration-200 hover:bg-[#68C9BB] hover:text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15.559" height="20.152"
+                                        viewBox="0 0 15.559 20.152" class="group-hover:fill-white">
+                                        <g id="noun-pencil-3690771" transform="translate(-7.171 -0.615)">
+                                            <g id="Layer_19" data-name="Layer 19" transform="translate(7.48 0.946)">
+                                                <!-- Apply fill and hover effects directly to the path -->
+                                                <path id="Tracciato_755" data-name="Tracciato 755"
+                                                    d="M1.085,16.985a.43.43,0,0,0,.617.263l3.5-1.874a.43.43,0,0,0,.192-.21L9.939,4.493h0l.83-1.948a.429.429,0,0,0-.226-.563L5.977.035a.43.43,0,0,0-.564.227L.034,12.879a.431.431,0,0,0-.018.284ZM6.035.993,9.811,2.6,9.318,3.759,5.545,2.143Zm-.827,1.94L8.981,4.55,4.659,14.687l-2.892,1.55L.884,13.078Z"
+                                                    transform="matrix(0.966, 0.259, -0.259, 0.966, 4.477, 0)" fill="#68C9BB"
+                                                    class="group-hover:fill-white transition-colors duration-200" />
+                                            </g>
                                         </g>
-                                    </g>
-                                </svg>
-                                Modifica
-                            </button>
+                                    </svg>
+                                    Modifica
+                                </button>
+                            @endhasanyrole
                             <button
                                 class="bg-[#F2F1FB] flex justify-center place-items-center px-2 duration-200 py-1 hover:bg-[#4453A5] text-[#4453A5] text-[13px] hover:text-white rounded-md group">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="13.937" height="13.937"
@@ -325,24 +334,26 @@
             </div>
             <div x-show="activeTab === 'tab2'" class="p-4">
                 <div class="mb-4 justify-end flex">
-                    <button
-                        onclick="Livewire.dispatch('openModal', { component: 'order-upload-modal', arguments : {order:{{ $order }}, type : 'normal'} })"
-                        class="px-2 flex items-center justify-center bg-[#EBF5F3] text-[#68C9BB] text-[13px] rounded-md group duration-200 hover:bg-[#68C9BB] hover:text-white mr-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15.559" height="20.152"
-                            viewBox="0 0 15.559 20.152" class="group-hover:fill-white">
-                            <g id="noun-pencil-3690771" transform="translate(-7.171 -0.615)">
-                                <g id="Layer_19" data-name="Layer 19" transform="translate(7.48 0.946)">
-                                    <!-- Apply fill and hover effects directly to the path -->
-                                    <path id="Tracciato_755" data-name="Tracciato 755"
-                                        d="M1.085,16.985a.43.43,0,0,0,.617.263l3.5-1.874a.43.43,0,0,0,.192-.21L9.939,4.493h0l.83-1.948a.429.429,0,0,0-.226-.563L5.977.035a.43.43,0,0,0-.564.227L.034,12.879a.431.431,0,0,0-.018.284ZM6.035.993,9.811,2.6,9.318,3.759,5.545,2.143Zm-.827,1.94L8.981,4.55,4.659,14.687l-2.892,1.55L.884,13.078Z"
-                                        transform="matrix(0.966, 0.259, -0.259, 0.966, 4.477, 0)" fill="#68C9BB"
-                                        class="group-hover:fill-white transition-colors duration-200" />
+                    @hasanyrole(['admin', 'mechanic'])
+                        <button
+                            onclick="Livewire.dispatch('openModal', { component: 'order-upload-modal', arguments : {order:{{ $order }}, type : 'normal'} })"
+                            class="px-2 flex items-center justify-center bg-[#EBF5F3] text-[#68C9BB] text-[13px] rounded-md group duration-200 hover:bg-[#68C9BB] hover:text-white mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15.559" height="20.152"
+                                viewBox="0 0 15.559 20.152" class="group-hover:fill-white">
+                                <g id="noun-pencil-3690771" transform="translate(-7.171 -0.615)">
+                                    <g id="Layer_19" data-name="Layer 19" transform="translate(7.48 0.946)">
+                                        <!-- Apply fill and hover effects directly to the path -->
+                                        <path id="Tracciato_755" data-name="Tracciato 755"
+                                            d="M1.085,16.985a.43.43,0,0,0,.617.263l3.5-1.874a.43.43,0,0,0,.192-.21L9.939,4.493h0l.83-1.948a.429.429,0,0,0-.226-.563L5.977.035a.43.43,0,0,0-.564.227L.034,12.879a.431.431,0,0,0-.018.284ZM6.035.993,9.811,2.6,9.318,3.759,5.545,2.143Zm-.827,1.94L8.981,4.55,4.659,14.687l-2.892,1.55L.884,13.078Z"
+                                            transform="matrix(0.966, 0.259, -0.259, 0.966, 4.477, 0)" fill="#68C9BB"
+                                            class="group-hover:fill-white transition-colors duration-200" />
+                                    </g>
                                 </g>
-                            </g>
-                        </svg>
-                        Modifica
-                    </button>
-                    @livewire('download-order-photos', ['orderId' => $order->id])
+                            </svg>
+                            Modifica
+                        </button>
+                        @livewire('download-order-photos', ['orderId' => $order->id])
+                    @endhasanyrole
                 </div>
                 <div class="grid grid-cols-2 2xl:grid-cols-4 gap-6">
                     @forelse ($order->images->where('disassembly', 0) as $image)
@@ -356,24 +367,26 @@
             </div>
             <div x-show="activeTab === 'tab3'" class="p-4">
                 <div class="mb-4 justify-end flex">
-                    <button
-                        onclick="Livewire.dispatch('openModal', { component: 'order-upload-modal', arguments : {order:{{ $order }}, type : 'disassembly'} })"
-                        class="px-2 flex items-center justify-center bg-[#EBF5F3] text-[#68C9BB] text-[13px] rounded-md group duration-200 hover:bg-[#68C9BB] hover:text-white mr-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15.559" height="20.152"
-                            viewBox="0 0 15.559 20.152" class="group-hover:fill-white">
-                            <g id="noun-pencil-3690771" transform="translate(-7.171 -0.615)">
-                                <g id="Layer_19" data-name="Layer 19" transform="translate(7.48 0.946)">
-                                    <!-- Apply fill and hover effects directly to the path -->
-                                    <path id="Tracciato_755" data-name="Tracciato 755"
-                                        d="M1.085,16.985a.43.43,0,0,0,.617.263l3.5-1.874a.43.43,0,0,0,.192-.21L9.939,4.493h0l.83-1.948a.429.429,0,0,0-.226-.563L5.977.035a.43.43,0,0,0-.564.227L.034,12.879a.431.431,0,0,0-.018.284ZM6.035.993,9.811,2.6,9.318,3.759,5.545,2.143Zm-.827,1.94L8.981,4.55,4.659,14.687l-2.892,1.55L.884,13.078Z"
-                                        transform="matrix(0.966, 0.259, -0.259, 0.966, 4.477, 0)" fill="#68C9BB"
-                                        class="group-hover:fill-white transition-colors duration-200" />
+                    @hasanyrole(['admin', 'mechanic'])
+                        <button
+                            onclick="Livewire.dispatch('openModal', { component: 'order-upload-modal', arguments : {order:{{ $order }}, type : 'disassembly'} })"
+                            class="px-2 flex items-center justify-center bg-[#EBF5F3] text-[#68C9BB] text-[13px] rounded-md group duration-200 hover:bg-[#68C9BB] hover:text-white mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15.559" height="20.152"
+                                viewBox="0 0 15.559 20.152" class="group-hover:fill-white">
+                                <g id="noun-pencil-3690771" transform="translate(-7.171 -0.615)">
+                                    <g id="Layer_19" data-name="Layer 19" transform="translate(7.48 0.946)">
+                                        <!-- Apply fill and hover effects directly to the path -->
+                                        <path id="Tracciato_755" data-name="Tracciato 755"
+                                            d="M1.085,16.985a.43.43,0,0,0,.617.263l3.5-1.874a.43.43,0,0,0,.192-.21L9.939,4.493h0l.83-1.948a.429.429,0,0,0-.226-.563L5.977.035a.43.43,0,0,0-.564.227L.034,12.879a.431.431,0,0,0-.018.284ZM6.035.993,9.811,2.6,9.318,3.759,5.545,2.143Zm-.827,1.94L8.981,4.55,4.659,14.687l-2.892,1.55L.884,13.078Z"
+                                            transform="matrix(0.966, 0.259, -0.259, 0.966, 4.477, 0)" fill="#68C9BB"
+                                            class="group-hover:fill-white transition-colors duration-200" />
+                                    </g>
                                 </g>
-                            </g>
-                        </svg>
-                        Modifica
-                    </button>
-                    @livewire('download-order-photos', ['orderId' => $order->id])
+                            </svg>
+                            Modifica
+                        </button>
+                        @livewire('download-order-photos', ['orderId' => $order->id])
+                    @endhasanyrole
                 </div>
                 <div class="grid grid-cols-4 gap-6">
                     @forelse ($order->images->where('disassembly', 1) as $image)
@@ -384,6 +397,9 @@
                     @endforelse
 
                 </div>
+            </div>
+            <div x-show="activeTab === 'tab4'" class="p-4">
+                @livewire('general-docs', ['docs' => $order->files, 'modelId' => $order->id, 'isOrderModel' => 1])
             </div>
         </div>
     </div>

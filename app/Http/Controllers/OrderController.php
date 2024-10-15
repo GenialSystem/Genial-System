@@ -8,6 +8,7 @@ use App\Models\CarPart;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -59,11 +60,13 @@ class OrderController extends Controller
                 'assembly_disassembly' => false,
                 'damage_diameter' => '25 - 50mm',
                 'replacements' => $request->input('replacements'),
-                'notes' => $request->input('replacements')
+                'notes' => $request->input('notes')
             ]);
     
             // 2. Attach mechanics
-            $order->mechanics()->attach($request->input('mechanic'));
+            $mechanicIds = explode(',', $request->input('mechanic'));
+            // Attach mechanics to the order
+            $order->mechanics()->attach($mechanicIds);
     
             // 3. Attach car parts damage
             foreach ($request->input('parts') as $part) {
@@ -106,8 +109,9 @@ class OrderController extends Controller
             }
     
             DB::commit();
-    
-            return redirect()->route('orders.index')->with('success', [
+            $redirectRoute = Auth::user()->roles->pluck("name")->first() === 'mechanic' ? 'home' : 'orders.index'; 
+            
+            return redirect()->route($redirectRoute)->with('success', [
                 'title' => 'Nuova riparazione creata',
                 'subtitle' => 'La riparazione da te creata è ora inserita nella sezione delle riparazioni',
             ]);

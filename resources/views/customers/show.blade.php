@@ -141,7 +141,7 @@
                 @livewire('archive-section', ['archives' => $customer->user->archivesCustomer, 'customerId' => $customer->id])
             </div>
             <div x-show="activeTab === 'tab2'" class="p-4">
-                @livewire('general-docs', ['docs' => $customer->user->docs, 'userId' => $customer->user->id])
+                @livewire('general-docs', ['docs' => $customer->user->docs, 'modelId' => $customer->user->id, 'isOrderModel' => 0])
             </div>
             <div x-show="activeTab === 'tab3'" class="p-4">
                 @livewire('customer-orders-table', ['orders' => $customer->user->orders])

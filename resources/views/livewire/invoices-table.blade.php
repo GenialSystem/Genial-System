@@ -12,7 +12,7 @@
 
                 <!-- is_closed Filter Dropdown -->
                 <select wire:model.live="selectedIsClosed"
-                    class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px]">
+                    class="pr-12 border border-gray-300 rounded text-[#9F9F9F] text-sm h-full leading-none w-[225px]">
                     <option value="">Tutti</option>
                     <option value="0">Aperto</option>
                     <option value="1">Chiuso</option>
@@ -21,7 +21,7 @@
                 <!-- Customer or Mechanic Filter Dropdown -->
                 @if ($role == 'mechanic')
                     <select wire:model.live="selectedCustomerOrMechanic"
-                        class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px] ml-6">
+                        class="pr-12 border border-gray-300 rounded text-[#9F9F9F] text-sm h-full leading-none w-[225px] ml-6">
                         <option value="">Tecnici</option>
                         @foreach ($mechanics as $mechanic)
                             <option value="{{ $mechanic->id }}">
