@@ -72,6 +72,8 @@
         var calendar;
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
         console.log(csrfToken);
+        let eventElementMap = new Map();
+        const eventColorMap = new Map();
 
         function createCalendar() {
             calendar = new Calendar(calendarEl, {
@@ -87,8 +89,79 @@
                 },
                 eventClassNames: ['text-[#7AA3E5]', 'bg-transparent', 'text-normal'],
                 eventDidMount: function(info) {
-                    info.el.style.backgroundColor = 'transparent'; // Customize background
-                    info.el.style.color = '#7AA3E5'; // Customize text color
+                    eventElementMap.set(info.event.id, info.el);
+
+                    // Define the color pairs
+                    const colorPairs = [{
+                            backgroundColor: '#EDF4FF',
+                            textColor: '#7AA3E5'
+                        },
+                        {
+                            backgroundColor: '#FAF2DD',
+                            textColor: '#E8C053'
+                        },
+                        {
+                            backgroundColor: '#FFF2FF',
+                            textColor: '#DC76E0'
+                        },
+                        {
+                            backgroundColor: '#FFF0EA',
+                            textColor: '#E68B69'
+                        }
+                    ];
+
+                    // Store colors already used for the specific date to avoid duplicates
+                    if (!window.usedColorsByDate) {
+                        window.usedColorsByDate = {};
+                    }
+
+                    // Get event's date (YYYY-MM-DD format)
+                    const eventDate = new Date(info.event.start).toISOString().split('T')[0];
+
+                    // Initialize the color tracking for this date if not already done
+                    if (!window.usedColorsByDate[eventDate]) {
+                        window.usedColorsByDate[eventDate] = [];
+                    }
+
+                    // Filter available color pairs that haven't been used yet for this date
+                    const availableColorPairs = colorPairs.filter(pair => {
+                        return !window.usedColorsByDate[eventDate].includes(pair
+                            .backgroundColor);
+                    });
+
+                    // If no available pairs, reset used colors to start over (or you could choose to keep it full)
+                    if (availableColorPairs.length === 0) {
+                        window.usedColorsByDate[eventDate] = [];
+                        availableColorPairs.push(...colorPairs);
+                    }
+
+                    // Select a random color pair from available ones
+                    const selectedPair = availableColorPairs[Math.floor(Math.random() *
+                        availableColorPairs.length)];
+
+                    // Mark this color pair as used for the current date
+                    window.usedColorsByDate[eventDate].push(selectedPair.backgroundColor);
+
+                    // Set the colors for the event
+                    info.el.style.backgroundColor = selectedPair.backgroundColor;
+                    info.el.style.color = selectedPair.textColor;
+                    info.el.style.margin = '3px 8px';
+
+                    // Adjust the style for the dot element inside the event
+                    const eventDot = info.el.querySelector('.fc-daygrid-event-dot');
+                    if (new Date(info.event.start) <= new Date()) {
+                        // Apply different styles for past events
+                        info.el.style.backgroundColor = 'transparent';
+                        info.el.style.color = selectedPair.textColor;
+                        if (eventDot) {
+                            eventDot.style.borderColor = selectedPair.textColor;
+                        }
+                    } else {
+                        // Set the dot color to match the text color for future events
+                        if (eventDot) {
+                            eventDot.style.borderColor = selectedPair.textColor;
+                        }
+                    }
                 },
                 initialView: 'dayGridMonth',
                 locale: 'it',
@@ -147,29 +220,32 @@
             let currentDate = calendar.getDate();
             let currentYear = currentDate.getFullYear();
             let currentMonth = currentDate.getMonth(); // 0-indexed (0 = January, 11 = December)
-
+            let today = new Date().toLocaleDateString('en-CA'); // Format today as YYYY-MM-DD
             // Get all the days in the current month
             let daysInMonth = getDaysInMonth(currentYear, currentMonth);
 
-            // Get events for the current view
-            var events = calendar.getEvents(); // Events already loaded in the calendar
+
+            var events = @json($events); // Directly pulling events from the backend data
             var eventsByDate = {};
 
-            events.forEach(event => {
-                var eventDate = event.start.toISOString().split('T')[
-                    0]; // Convert event date to YYYY-MM-DD
+
+            events.forEach(function(event) {
+                // Convert the event 'start' date to YYYY-MM-DD format for consistent comparison
+                let eventDate = new Date(event.start).toLocaleDateString(
+                    'en-CA'); // This format ensures YYYY-MM-DD
+
                 if (!eventsByDate[eventDate]) eventsByDate[eventDate] = [];
                 eventsByDate[eventDate].push(event);
             });
+            console.log(eventsByDate);
 
-            // Organize days into weeks (Monday to Friday)
             let weeks = [];
             let week = [];
 
-            daysInMonth.forEach(date => {
+            daysInMonth.forEach(function(date) {
                 let dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
 
-                // Only include weekdays (Monday to Friday)
+
                 if (dayOfWeek >= 1 && dayOfWeek <= 5) {
                     week.push(date);
                 }
@@ -183,7 +259,7 @@
             });
 
             // Iterate through each week to create a separate table for each
-            weeks.forEach(week => {
+            weeks.forEach(function(week) {
                 let table = document.createElement('table');
                 table.classList.add('w-full', 'bg-white', 'border', 'border-gray-200', 'rounded-md',
                     'table-fixed', 'mb-4');
@@ -192,13 +268,23 @@
                 thead.classList.add('bg-[#F5F5F5]', 'text-start');
                 let headerRow = document.createElement('tr');
 
+                // Creating table headers (days of the week)
                 week.forEach(dayInWeek => {
                     let th = document.createElement('th');
-                    th.classList.add('px-2', 'text-[#808080]', 'bg-[#F5F5F5]',
-                        'text-[15px]', 'font-normal', 'p-4');
+                    th.classList.add('px-2', 'text-[#808080]', 'bg-[#F5F5F5]', 'text-[15px]',
+                        'font-normal', 'p-4');
+
                     let day = String(dayInWeek.getDate()).padStart(2, '0');
                     let month = String(dayInWeek.getMonth() + 1).padStart(2, '0');
                     let year = dayInWeek.getFullYear();
+                    let formattedDate = `${year}-${month}-${day}`;
+
+                    // Apply blue color if the day is today
+                    console.log('equal', formattedDate, today)
+                    if (formattedDate === today) {
+                        th.style.color = '#4453A5';
+                    }
+
                     th.textContent = `${day}/${month}/${year}`;
                     headerRow.appendChild(th);
                 });
@@ -211,23 +297,28 @@
 
                 week.forEach(dayInWeek => {
                     let td = document.createElement('td');
-                    td.classList.add('border', 'border-b-[#E4E4F7]', 'px-2', 'py-4',
+                    td.classList.add('border', 'border-b-[#E4E4F7]', 'px-2', 'py-2',
                         'text-center');
 
-                    let originalFormattedDate = dayInWeek.toISOString().split('T')[0];
+                    let currentDay = dayInWeek.toLocaleDateString(
+                        'en-CA'); // This format ensures YYYY-MM-DD
+
 
                     // Get mechanic events on this date
-                    let mechanicEvents = eventsByDate[originalFormattedDate] || [];
+                    let mechanicEvents = eventsByDate[currentDay] || [];
 
-                    // Check if this mechanic has any event on this day
-                    let mechanicEvent = mechanicEvents.find(event => {
-                        return event.extendedProps.mechanics && event.extendedProps
-                            .mechanics.some(m => m.id == mechanic.id);
+
+                    // Check if there's any event on this day (filtering by date now)
+                    let mechanicEvent = mechanicEvents.find(function(event) {
+                        let eventDate = new Date(event.start).toISOString().split('T')[
+                            0];
+                        return eventDate === currentDay;
                     });
 
                     if (mechanicEvent) {
-                        let mechanicPivot = mechanicEvent.extendedProps.mechanics.find(m => m
-                            .id == mechanic.id);
+                        let mechanicPivot = mechanicEvent.mechanics[
+                            0]; // Only one mechanic since it's filtered
+
                         let confirmed = mechanicPivot.confirmed;
                         let clientName = mechanicPivot.client_name;
 
@@ -236,87 +327,70 @@
                             'focus:ring-transparent', 'focus:border-transparent');
 
                         if (confirmed === null && clientName === null) {
-                            td.textContent = '';
-                            return;
-                        }
+                            td.textContent = 'N/A';
+                        } else {
+                            if (confirmed === 1) {
+                                let defaultOption = document.createElement('option');
+                                defaultOption.value = '';
+                                defaultOption.textContent = clientName ? clientName :
+                                    'Disponibile';
+                                defaultOption.style.color = clientName ? 'black' : 'green';
+                                customerSelect.appendChild(defaultOption);
 
-                        if (confirmed === 1) {
-                            let defaultOption = document.createElement('option');
-                            defaultOption.value = '';
-                            defaultOption.textContent = clientName ? clientName : 'Disponibile';
-                            defaultOption.style.color = clientName ? 'black' : 'green';
-                            customerSelect.appendChild(defaultOption);
+                                // Add customer options
+                                @json($customers).forEach(customer => {
+                                    let option = document.createElement('option');
+                                    option.value = customer.id;
+                                    option.textContent = customer.user.name + ' ' +
+                                        customer.user.surname;
+                                    customerSelect.appendChild(option);
+                                });
 
-                            // Add options for each customer
-                            @json($customers).forEach(customer => {
+                                // Handle selection change event
+                                customerSelect.addEventListener('change', function() {
+                                    let selectedCustomerId = this.value;
+                                    let eventId = mechanicEvent.id;
 
-                                let option = document.createElement('option');
-                                option.value = customer.id;
-                                option.textContent = customer.user.name + ' ' + customer
-                                    .user.surname;
-                                customerSelect.appendChild(option);
-                            });
-
-                            customerSelect.addEventListener('change', function() {
-                                let selectedCustomerId = parseInt(this.value,
-                                    10); // Ensure this is a number
-                                let mechanicId = parseInt(mechanic.id,
-                                    10); // Ensure mechanic ID is a number
-                                let eventId = parseInt(mechanicEvent.id,
-                                    10); // Ensure event ID is a number
-
-                                console.log(mechanicId, eventId,
-                                    selectedCustomerId); // Check if these are integers
-
-                                // Make an AJAX request to update the customer_name in the pivot table
-                                fetch('/update-customer', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': csrfToken,
-                                        },
-                                        body: JSON.stringify({
-                                            mechanic_id: mechanicId, // Use integer
-                                            event_id: eventId, // Use integer
-                                            customer_id: selectedCustomerId // Use integer
+                                    const mechanicId = mechanicEvent.mechanics[0].id;
+                                    // Make AJAX request to update the customer
+                                    fetch('/update-customer', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-TOKEN': csrfToken,
+                                            },
+                                            body: JSON.stringify({
+                                                mechanic_id: mechanicId,
+                                                event_id: eventId,
+                                                customer_id: selectedCustomerId
+                                            })
                                         })
-                                    })
-                                    .then(response => response
-                                        .json()) // Parse response to JSON
-                                    .then(data => {
-                                        if (data.success) {
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                console.log(
+                                                    'Customer updated successfully'
+                                                );
+                                            } else {
+                                                console.error(
+                                                    'Failed to update customer');
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                        });
+                                });
+                            } else if (confirmed === 0) {
+                                let defaultOption = document.createElement('option');
+                                defaultOption.value = '';
+                                defaultOption.textContent = 'Non disponibile';
+                                customerSelect.style.color = '#DC0851';
+                                customerSelect.appendChild(defaultOption);
+                                customerSelect.disabled = true;
+                            }
 
-                                            console.log(
-                                                'Customer updated successfully');
-                                        } else {
-                                            // Handle failure: show error message
-                                            console.error(
-                                                'Failed to update customer');
-                                        }
-                                    })
-                                    .catch(error => {
-                                        console.error('Error:', error);
-                                    });
-                            });
-
-
-                        } else if (confirmed === 0) {
-                            let defaultOption = document.createElement('option');
-                            defaultOption.value = '';
-                            defaultOption.textContent = 'Non disponibile';
-                            defaultOption.style.color = 'red';
-                            customerSelect.appendChild(defaultOption);
-                            customerSelect.disabled = true;
-
-                            @json($customers).forEach(customer => {
-                                let option = document.createElement('option');
-                                option.value = customer.id;
-                                option.textContent = customer.name;
-                                customerSelect.appendChild(option);
-                            });
+                            td.appendChild(customerSelect);
                         }
-
-                        td.appendChild(customerSelect);
                     } else {
                         td.textContent = 'N/A';
                     }
@@ -324,14 +398,13 @@
                     tr.appendChild(td);
                 });
 
+
                 tbody.appendChild(tr);
                 table.appendChild(tbody);
                 scheduleSection.appendChild(table);
             });
         }
 
-
-        // Call this function after each navigation change
         updateScheduleTable();
 
         // View toggle between calendar and schedule

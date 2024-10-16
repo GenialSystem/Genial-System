@@ -4,7 +4,7 @@
     <h4 class="text-[22px] text-[#222222] font-semibold mb-4">
         Calendario</h4>
 
-    <div class="bg-white">
+    <div class="bg-white pb-8">
         <div class="flex justify-between px-4 pt-4">
             <div class="flex">
                 <button id="prev-month"
@@ -92,7 +92,8 @@
         var calendar;
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-        let test;
+        let eventElementMap = new Map();
+        const eventColorMap = new Map();
 
         function createCalendar() {
             calendar = new Calendar(calendarEl, {
@@ -106,22 +107,100 @@
                 dayHeaderFormat: {
                     weekday: 'long'
                 },
-                eventClassNames: ['text-[#7AA3E5]', 'bg-transparent', 'text-normal'],
                 eventDidMount: function(info) {
+                    eventElementMap.set(info.event.id, info.el);
+
+                    // Define the color pairs
+                    const colorPairs = [{
+                            backgroundColor: '#EDF4FF',
+                            textColor: '#7AA3E5'
+                        },
+                        {
+                            backgroundColor: '#FAF2DD',
+                            textColor: '#E8C053'
+                        },
+                        {
+                            backgroundColor: '#FFF2FF',
+                            textColor: '#DC76E0'
+                        },
+                        {
+                            backgroundColor: '#FFF0EA',
+                            textColor: '#E68B69'
+                        }
+                    ];
+
+                    // Track colors used by date to avoid duplicates on the same day
+                    if (!window.usedColorsByDate) {
+                        window.usedColorsByDate = {};
+                    }
+
+                    // Get the event's date (YYYY-MM-DD format)
+                    const eventDate = new Date(info.event.start).toISOString().split('T')[0];
+
+                    // Initialize color tracking for the date if not present
+                    if (!window.usedColorsByDate[eventDate]) {
+                        window.usedColorsByDate[eventDate] = [];
+                    }
+
+                    // Get available color pairs that have not been used for this date
+                    const availableColorPairs = colorPairs.filter(pair => {
+                        return !window.usedColorsByDate[eventDate].includes(pair
+                            .backgroundColor);
+                    });
+
+                    // Reset the colors if all have been used for the date
+                    if (availableColorPairs.length === 0) {
+                        window.usedColorsByDate[eventDate] = [];
+                        availableColorPairs.push(...colorPairs);
+                    }
+
+                    // Select a color pair from the available ones
+                    const selectedPair = availableColorPairs[Math.floor(Math.random() *
+                        availableColorPairs.length)];
+
+                    // Mark the color pair as used for the date
+                    window.usedColorsByDate[eventDate].push(selectedPair.backgroundColor);
+
+                    // Store the color for the event if not already set
+                    if (!eventColorMap.has(info.event.id)) {
+                        eventColorMap.set(info.event.id, selectedPair);
+                    }
+
+                    // Apply the colors without affecting the element's margin or size
+                    info.el.style.backgroundColor = selectedPair.backgroundColor;
+                    info.el.style.color = selectedPair.textColor;
+
+                    // Restore the element's original margin
+                    info.el.style.margin = '3px 8px';
+
+                    // Handle event dot color (FullCalendar's dot in the day view)
+                    const eventDot = info.el.querySelector('.fc-daygrid-event-dot');
+                    if (new Date(info.event.start) <= new Date()) {
+                        // For past events
+                        info.el.style.backgroundColor =
+                            'transparent'; // Transparent for past events
+                        info.el.style.color = selectedPair.textColor; // Retain text color
+                        if (eventDot) {
+                            eventDot.style.borderColor = selectedPair.textColor;
+                        }
+                    } else {
+                        // For future events
+                        if (eventDot) {
+                            eventDot.style.borderColor = selectedPair.textColor;
+                        }
+                    }
+
+                    // Additional logic for role-specific features (mechanic)
                     @role('mechanic')
                         const filteredEvents = @json($events).filter(event => event
-                            .id ==
-                            info.event._def.publicId);
-
+                            .id == info.event._def.publicId);
                         createSelectElement(info.el, filteredEvents);
                     @endrole
                 },
-
-
                 initialView: 'dayGridMonth',
                 locale: 'it',
-                events: @json($events), // Make sure this contains events from backend
-                headerToolbar: false, // Disable default header with buttons
+                events: @json($events),
+                headerToolbar: false,
             });
             calendar.render();
             updateCurrentMonth(); // Initial month update
@@ -133,52 +212,76 @@
             var currentMonth = calendar.view.title;
             document.getElementById('current-month').textContent = currentMonth;
         }
-
+        let selectedMechanicId;
         const mechanicSelect = document.getElementById('mechanic-filter');
         if (mechanicSelect) {
             mechanicSelect.addEventListener('change', function() {
-                var selectedMechanicId = this.value;
+                selectedMechanicId = this.value;
                 filterEventsByMechanic(selectedMechanicId);
             });
         }
 
         // Filter events based on the selected mechanic
         function filterEventsByMechanic(mechanicId) {
-            // Get all events from FullCalendar
             var allEvents = calendar.getEvents();
 
-            // Loop through the events and filter based on the mechanicId
             allEvents.forEach(event => {
                 var hasMechanic = event.extendedProps.mechanics.some(mechanic => mechanic.id ==
                     mechanicId);
 
-                // Show the event if the mechanic is found, hide it otherwise
                 if (mechanicId === "" || hasMechanic) {
                     event.setProp('display', ''); // Show event
                 } else {
                     event.setProp('display', 'none'); // Hide event
                 }
 
-                // Reapply the custom styles for the event
-                var eventElement = event.el; // Get the DOM element for the event
+                var eventElement = eventElementMap.get(event.id);
+
+
                 if (eventElement) {
-                    eventElement.style.backgroundColor = '#222222'; // Reapply background
-                    eventElement.style.color = '#7AA3E5'; // Reapply text color
+                    eventElement.classList.remove('fc-h-event');
+
+                    const eventText = eventElement.querySelector('.fc-event-main-frame');
+                    if (eventText) {
+                        eventText.classList.add('flex', 'place-items-center', 'mx-2', 'rounded-smm',
+                            'px-2');
+                        const assignedPair = eventColorMap.get(event.id);
+                        if (assignedPair) {
+                            eventText.style.color = assignedPair.textColor; // Apply existing text color
+                            if (new Date(event.start) >= new Date()) {
+                                eventText.style.backgroundColor = assignedPair
+                                    .backgroundColor; // Use assigned bg color
+                            }
+                        }
+                    }
+
+                    const eventDot = eventElement.querySelector('.fc-daygrid-event-dot');
+                    if (eventDot) {
+                        eventDot.style.borderColor = eventColorMap.get(event.id)
+                            ?.textColor; // Set the dot color to match
+                    }
+                } else {
+                    console.warn('Event element not found for event:', event);
                 }
             });
         }
-
 
         document.getElementById('prev-month').addEventListener('click', function() {
             calendar.prev();
             updateCurrentMonth();
             updateScheduleTable(); // Update the schedule table when navigating months
+            if (selectedMechanicId) {
+                filterEventsByMechanic(selectedMechanicId);
+            }
         });
 
         document.getElementById('next-month').addEventListener('click', function() {
             calendar.next();
             updateCurrentMonth();
             updateScheduleTable(); // Update the schedule table when navigating months
+            if (selectedMechanicId) {
+                filterEventsByMechanic(selectedMechanicId);
+            }
         });
 
         document.getElementById('today').addEventListener('click', function() {
@@ -283,7 +386,7 @@
 
                     // Create the cell for the mechanic's availability
                     let td = document.createElement('td');
-                    td.classList.add('border-x', 'text-center', 'p-3');
+                    td.classList.add('border-x', 'text-center', 'p-2');
 
                     if (mechanicEvent) {
                         // Find the mechanic's pivot data (confirmed, client_name)
@@ -307,9 +410,19 @@
                             let defaultOption = document.createElement('option');
                             defaultOption.value = '';
                             defaultOption.textContent = clientName ? clientName : 'Disponibile';
-                            defaultOption.style.color = clientName ? 'black' : 'green';
+                            customerSelect.style.color = clientName ? 'black' : 'green';
                             customerSelect.appendChild(defaultOption);
+                            customerSelect.addEventListener('focus', function() {
+                                this.style.color =
+                                    'black'; // Change to black when focused
+                            });
 
+                            customerSelect.addEventListener('blur', function() {
+                                if (!this.value) {
+                                    this.style.color =
+                                        'green'; // Change back to green if no selection
+                                }
+                            });
                             @json($customers).forEach(customer => {
                                 let option = document.createElement('option');
                                 option.value = customer.id;
@@ -343,18 +456,11 @@
                             let defaultOption = document.createElement('option');
                             defaultOption.value = '';
 
-                            defaultOption.textContent = mechanicEvent.date;
-                            defaultOption.style.color = 'red';
+                            defaultOption.textContent = 'Non disponibile';
+                            customerSelect.style.color = '#DC0851';
                             customerSelect.appendChild(defaultOption);
                             customerSelect.disabled = true;
 
-                            @json($customers).forEach(customer => {
-                                let option = document.createElement('option');
-                                option.value = customer.id;
-                                option.textContent = customer.user.name + ' ' + customer
-                                    .user.surname;
-                                customerSelect.appendChild(option);
-                            });
                         }
 
                         td.appendChild(customerSelect);
