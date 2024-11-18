@@ -64,15 +64,19 @@
 
             <!-- Display selected mechanics -->
             <div id="selectedMechanics" class="flex flex-wrap gap-2">
+
                 @foreach ($selectedMechanics as $selected)
                     <div
                         class="w-max bg-[#F2F1FB] text-[#4453A5] font-semibold rounded-md
                      px-2 py-1.5 text-[13px] mt-2">
                         {{ $mechanics->find($selected)->user->name }} {{ $mechanics->find($selected)->user->surname }}
-                        <button type="button" wire:click="removeMechanic({{ $selected }})"
-                            class="ml-2 text-red-500">
-                            &times;
-                        </button>
+                        @if ($selected != optional(Auth::user()->mechanicInfo)->id)
+                            <button type="button" wire:click="removeMechanic({{ $selected }})"
+                                class="ml-2 text-red-500">
+                                &times;
+                            </button>
+                        @endif
+
                     </div>
                 @endforeach
             </div>
@@ -80,7 +84,7 @@
 
 
         <div class="flex place-items-center">
-            <input type="checkbox" name="aluminium"
+            <input type="checkbox" name="remind_me" wire:model='notifyMe'
                 class="border border-[#D6D6D6] checked:bg-[#7FBC4B] text-[#7FBC4B] focus:ring-0 rounded-sm"><span
                 class="text-[15px] text-[#222222] ml-2">Ricordamelo 10 minuti prima</span>
         </div>

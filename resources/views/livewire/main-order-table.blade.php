@@ -25,6 +25,7 @@
                 @endrole
             </div>
         </div>
+
         <div class="overflow-x-auto rounded-md">
             <table class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
                 <thead class="bg-[#F5F5F5]">
@@ -60,8 +61,8 @@
                                 <td class="py-3 px-6">{{ $row->created_at->format('d M Y') }}</td>
                             @endrole
                             @role('admin')
-                                <td class="py-3 px-6">
-                                    <input id="{{ rand() }}" type="checkbox"
+                                <td wire:key="{{ str()->random(10) }}" class="py-3 px-6">
+                                    <input type="checkbox"
                                         class="border border-[#D6D6D6] checked:bg-[#7FBC4B] text-[#7FBC4B] focus:ring-0 rounded-sm"
                                         wire:click="toggleRow('{{ $row->id }}')"
                                         @if (in_array((string) $row->id, $selectedRows)) checked @endif>
@@ -76,7 +77,7 @@
                             <td class="py-3 px-6 relative" wire:key="order-{{ $row->id }}">
                                 <div x-data="{ open: false }" class="relative">
                                     <!-- Dropdown Button -->
-                                    <button @click="open = !open"
+                                    <button @if (Auth::user()->hasAnyRole(['admin', 'mechanic'])) @click="open = !open" @endif
                                         class="block w-full text-left rounded {{ $states[$row->state] }} {{ $statesText[$row->state] }} text-[13px] font-semibold py-1 px-2 flex items-center justify-between">
                                         {{ ucfirst($row->state) }}
                                         <svg class="w-4 h-4 ml-2 {{ $statesText[$row->state] }}" fill="none"
@@ -125,35 +126,35 @@
                                 @endif
                             <td class="py-3 px-6">{{ $row->plate }}</td>
                             <td class="py-3 px-6">{{ $row->price }}€</td>
-
                             <td class="py-3 px-6 flex space-x-2">
                                 @livewire('show-button', ['modelId' => $row->id, 'modelClass' => \App\Models\Order::class], key(str()->random(10)))
                                 @role('admin')
-                                    <button
-                                        class="bg-[#F2F1FB] flex justify-center place-items-center px-2 duration-200 py-1 hover:bg-[#4453A5] text-[#4453A5] text-[13px] hover:text-white rounded-md group">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="13.937"
-                                            height="13.937" viewBox="0 0 13.937 13.937">
-                                            <g id="Icon_feather-download" data-name="Icon feather-download"
-                                                transform="translate(-3.75 -3.75)">
-                                                <path id="Tracciato_630" data-name="Tracciato 630"
-                                                    d="M16.937,22.5v2.764a1.382,1.382,0,0,1-1.382,1.382H5.882A1.382,1.382,0,0,1,4.5,25.264V22.5"
-                                                    transform="translate(0 -9.709)" fill="none" stroke="#4453A5"
-                                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                                    class="transition-colors duration-200 group-hover:stroke-white" />
-                                                <path id="Tracciato_631" data-name="Tracciato 631"
-                                                    d="M10.5,15l3.455,3.455L17.409,15" transform="translate(-3.236 -5.663)"
-                                                    fill="none" stroke="#4453A5" stroke-linecap="round"
-                                                    stroke-linejoin="round" stroke-width="1.5"
-                                                    class="transition-colors duration-200 group-hover:stroke-white" />
-                                                <path id="Tracciato_632" data-name="Tracciato 632" d="M18,12.791V4.5"
-                                                    transform="translate(-7.282)" fill="none" stroke="#4453A5"
-                                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                                    class="transition-colors duration-200 group-hover:stroke-white" />
-                                            </g>
-                                        </svg>
-                                        Scarica pdf
-                                    </button>
-
+                                    <a href="{{ route('downloadPDF', ['model' => 'order', 'ids' => $row->id]) }}">
+                                        <button
+                                            class="bg-[#F2F1FB] flex justify-center place-items-center px-2 duration-200 py-1 hover:bg-[#4453A5] text-[#4453A5] text-[13px] hover:text-white rounded-md group">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="13.937"
+                                                height="13.937" viewBox="0 0 13.937 13.937">
+                                                <g id="Icon_feather-download" data-name="Icon feather-download"
+                                                    transform="translate(-3.75 -3.75)">
+                                                    <path id="Tracciato_630" data-name="Tracciato 630"
+                                                        d="M16.937,22.5v2.764a1.382,1.382,0,0,1-1.382,1.382H5.882A1.382,1.382,0,0,1,4.5,25.264V22.5"
+                                                        transform="translate(0 -9.709)" fill="none" stroke="#4453A5"
+                                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                        class="transition-colors duration-200 group-hover:stroke-white" />
+                                                    <path id="Tracciato_631" data-name="Tracciato 631"
+                                                        d="M10.5,15l3.455,3.455L17.409,15"
+                                                        transform="translate(-3.236 -5.663)" fill="none" stroke="#4453A5"
+                                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                        class="transition-colors duration-200 group-hover:stroke-white" />
+                                                    <path id="Tracciato_632" data-name="Tracciato 632" d="M18,12.791V4.5"
+                                                        transform="translate(-7.282)" fill="none" stroke="#4453A5"
+                                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                        class="transition-colors duration-200 group-hover:stroke-white" />
+                                                </g>
+                                            </svg>
+                                            Scarica pdf
+                                        </button>
+                                    </a>
                                     @livewire('download-order-photos', ['orderId' => $row->id], key(str()->random(10)))
                                 @endrole
                             </td>
@@ -174,6 +175,7 @@
     @livewire('selection-banner', [
         'modelClass' => App\Models\Order::class,
         'modelId' => $selectedRows,
+        'modelName' => 'order',
         'buttons' => ['edit', 'delete', 'download'],
     ])
 

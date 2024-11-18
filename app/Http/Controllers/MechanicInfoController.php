@@ -109,7 +109,8 @@ class MechanicInfoController extends Controller
             ];
         });
         $customers = CustomerInfo::with('user')->get();
-        return view('mechanics.calendar', compact('mechanic', 'events', 'customers'));
+        $availabilities = $mechanic->availabilities;
+        return view('mechanics.calendar', compact('mechanic', 'events', 'customers', 'availabilities'));
     }
     
 

@@ -4,6 +4,11 @@ namespace App\Livewire;
 
 use App\Models\Event;
 use App\Models\MechanicInfo;
+use App\Models\User;
+use App\Notifications\EstimateRequest;
+use App\Notifications\newAppointment;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
 
@@ -12,6 +17,7 @@ class EventModal extends ModalComponent
     public Event $event; // To store the event model if updating
     public $name;
     public $date;
+    public $notifyMe;
     public $start_time;
     public $end_time;
     public $selectedMechanics = []; // Ensure this is initialized as an array
@@ -33,7 +39,10 @@ class EventModal extends ModalComponent
             // Initialize selectedMechanics as an array of mechanic IDs
             $this->selectedMechanics = $event->mechanics->pluck('id')->toArray(); 
         } else {
-            $this->selectedMechanics = []; // Initialize as empty if no event
+            $this->selectedMechanics = [];
+            if (Auth::user()->hasRole('mechanic')) {
+                $this->selectedMechanics[] = Auth::user()->mechanicInfo->id; 
+            }
         }
     }
 
@@ -69,12 +78,35 @@ class EventModal extends ModalComponent
             'date' => $this->date,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
+            'notify_me' => $this->notifyMe ?? false
         ]);
 
         // Attach the selected mechanics to the event
         if (!empty($this->selectedMechanics)) {
             $event->mechanics()->attach($this->selectedMechanics);
         }
+
+        $relativeUserIds = [];
+
+        foreach ($this->selectedMechanics as $mechanicId) {
+            $mechanic = MechanicInfo::find($mechanicId);
+            if ($mechanic && $mechanic->user) {
+                $relativeUserIds[] = $mechanic->user->id;
+            }
+        }
+        
+        $admin = User::role('admin')->get();
+        $relativeUserIds[] = $admin[0]->id;
+        
+        $creator = Auth::user()->getFullName();
+
+        $users = User::whereIn('id', $relativeUserIds)
+        ->whereHas('notificationPreferences', function ($query) {
+            $query->where('new_appointment', true);
+        })
+        ->get();
+        
+        Notification::send($users, new newAppointment($creator));
 
         return redirect()->route('calendar.index')->with('success', ['title' => 'Evento creato con successo', 'subtitle' => 'Sarà visibile sul calendario degli utenti selezionati']);
     }

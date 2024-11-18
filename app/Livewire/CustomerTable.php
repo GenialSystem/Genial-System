@@ -58,8 +58,8 @@ class CustomerTable extends Component
         }
 
         // Paginate results
+        $query->orderBy('id', 'desc');
         $rows = $query->paginate(12);
-
         return view('livewire.customer-table', [
             'rows' => $rows,
         ]);

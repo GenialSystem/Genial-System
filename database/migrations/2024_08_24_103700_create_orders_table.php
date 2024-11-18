@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->string('damage_diameter');
             $table->string('replacements');
             $table->decimal('price', 10, 2);
+            $table->foreignId('chat_id')->nullable();
             $table->date('finish_date')->nullable();
             $table->timestamps();
         });

@@ -5,13 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\CarPart;
+use App\Models\Chat;
+use App\Models\CustomerInfo;
 use App\Models\Order;
 use App\Models\User;
+use App\Notifications\OrderCreate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
+use Spatie\Browsershot\Browsershot;
 
 class OrderController extends Controller
 {
@@ -58,7 +64,7 @@ class OrderController extends Controller
                 'car_size' => $request->input('car_size'),
                 'aluminium' => $request->input('aluminium') == 'on',
                 'assembly_disassembly' => false,
-                'damage_diameter' => '25 - 50mm',
+                'damage_diameter' => $request->input('damage_diameter'),
                 'replacements' => $request->input('replacements'),
                 'notes' => $request->input('notes')
             ]);
@@ -107,10 +113,34 @@ class OrderController extends Controller
                     ]);
                 }
             }
-    
+            $chat = Chat::create([
+                'type' => 'single',
+                'order_id' => $order->id
+            ]);
+            
+            $adminUser = User::role('admin')->first();
+            
+            $customer = CustomerInfo::find($request->input('customer'));
+            
+            if ($adminUser && $customer && $customer->user) {
+                $userIds = [$adminUser->id, $customer->user->id];
+                $chat->users()->attach($userIds);
+            }
+        
             DB::commit();
             $redirectRoute = Auth::user()->roles->pluck("name")->first() === 'mechanic' ? 'home' : 'orders.index'; 
+            $mechanicIds[] = $customer->user->id;
+
+            $users = User::whereIn('id', $mechanicIds)
+            ->whereHas('notificationPreferences', function ($query) {
+                $query->where('new_order_assigned', true);
+            })
+            ->get();
             
+            $creator = Auth::user()->getFullName();
+            
+            Notification::send($users, new OrderCreate($creator));
+
             return redirect()->route($redirectRoute)->with('success', [
                 'title' => 'Nuova riparazione creata',
                 'subtitle' => 'La riparazione da te creata è ora inserita nella sezione delle riparazioni',
@@ -167,6 +197,7 @@ class OrderController extends Controller
                 'replacements' => $request->replacements,
                 'notes' => $request->notes,
                 'damage_diameter' => $request->damage_diameter,
+                'earn_mechanic_percentage' => $request->earn_mechanic_percentage,
             ]);
             // dd($order);
             // 3. Sync car parts damage to the pivot table `order_car_part`

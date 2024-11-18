@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Livewire;
 
 use App\Models\Invoice;
-use App\Models\User; // Import the User model
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -14,9 +13,9 @@ class InvoicesTable extends Component
     public $searchTerm = '';
     public $selectedRows = [];
     public $selectAll = false;
-    public $selectedState = ''; // For state filter
-    public $selectedIsClosed = ''; // For is_closed filter
-    public $selectedCustomerOrMechanic = ''; // For customer or mechanic filter
+    public $selectedState = '';
+    public $selectedIsClosed = '';
+    public $selectedCustomerOrMechanic = '';
     public $role;
 
     protected $listeners = ['selectionDeleted' => 'clearSelectedRows'];
@@ -54,22 +53,33 @@ class InvoicesTable extends Component
 
     public function updatedSelectAll($value)
     {
+        // Get the current page invoice IDs
+        $currentPageInvoiceIds = $this->getCurrentPageInvoiceIds();
+
         if ($value) {
-            $this->selectedRows = $this->getCurrentPageInvoiceIds();
+            // Select all rows from the current page
+            $this->selectedRows = array_unique(array_merge($this->selectedRows, $currentPageInvoiceIds));
         } else {
-            $this->selectedRows = [];
+            // Deselect all rows from the current page
+            $this->selectedRows = array_diff($this->selectedRows, $currentPageInvoiceIds);
         }
 
         $this->dispatch('rowsSelected', $this->selectedRows);
     }
 
+    public function updatedPage()
+    {
+        // Get the current page invoice IDs
+        $currentPageInvoiceIds = $this->getCurrentPageInvoiceIds();
+
+        // Check if selectedRows contain all current page invoice IDs
+        $this->selectAll = count(array_intersect($this->selectedRows, $currentPageInvoiceIds)) === count($currentPageInvoiceIds);
+    }
+
     protected function getCurrentPageInvoiceIds()
     {
-        $query = $this->rows();
-
-        return $query->pluck('id')
-            ->map(fn($id) => (string) $id)
-            ->toArray();
+        // Retrieve the current paginated invoices
+        return $this->rows()->pluck('id')->map(fn($id) => (string) $id)->toArray();
     }
 
     public function toggleRow($rowId)
@@ -83,6 +93,8 @@ class InvoicesTable extends Component
         }
 
         $this->selectedRows = array_values($this->selectedRows);
+
+        // Dispatch event to update the selection
         $this->dispatch('rowsSelected', $this->selectedRows);
     }
 
@@ -90,17 +102,18 @@ class InvoicesTable extends Component
     {
         $query = Invoice::query();
 
+        // Filter by role
         $query->whereHas('user.roles', function ($roleQuery) {
             $roleQuery->where('name', $this->role);
         });
 
+        // Search filtering
         if (!empty($this->searchTerm)) {
             $query->where(function ($q) {
                 $q->where('id', 'like', "%{$this->searchTerm}%")
                     ->orWhere('is_closed', 'like', "%{$this->searchTerm}%")
                     ->orWhere('iva', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('user', function ($userQuery) {
-                        // Group the name and surname conditions together using a nested where
                         $userQuery->where(function ($userSubQuery) {
                             $userSubQuery->where('name', 'like', "%{$this->searchTerm}%")
                                          ->orWhere('surname', 'like', "%{$this->searchTerm}%");
@@ -110,19 +123,24 @@ class InvoicesTable extends Component
             });
         }
 
+        // State filtering
         if (!empty($this->selectedState)) {
             $query->where('state', $this->selectedState);
         }
 
+        // Closed filtering
         if ($this->selectedIsClosed !== '') {
             $query->where('is_closed', $this->selectedIsClosed);
         }
 
+        // Customer or mechanic filtering
         if ($this->selectedCustomerOrMechanic !== '') {
             $query->where('user_id', $this->selectedCustomerOrMechanic);
         }
 
-        return $query;
+        $query->orderBy('id', 'desc');
+
+        return $query->paginate(12); // Add pagination directly here
     }
 
     public function updateIsClosed($invoiceId, $isClosed)
@@ -134,34 +152,16 @@ class InvoicesTable extends Component
             $invoice->save();
         }
 
-        // Optional: Refresh the table or perform additional actions
         $this->resetPage(); // Reset pagination if needed
         $this->clearSelectedRows(); // Clear selection if needed
     }
 
-
     public function render()
     {
-        $usersWithInvoices = User::with(['invoices', 'mechanicInfo', 'customerInfo'])
-            ->whereHas('invoices')
-            ->get();
-
-        if ($this->role == 'mechanic') {
-            $mechanics = $usersWithInvoices->filter(function($user) {
-                return $user->mechanicInfo()->exists();
-            });
-            $customers = [];
-        } else {
-            $customers = $usersWithInvoices->filter(function($user) {
-                return $user->customerInfo()->exists();
-            });
-            $mechanics = [];
-        }
-
         return view('livewire.invoices-table', [
-            'rows' => $this->rows()->paginate(12),
-            'customers' => $customers,
-            'mechanics' => $mechanics
+            'rows' => $this->rows(), // Updated to fetch paginated results
+            'customers' => User::whereHas('customerInfo')->get(),
+            'mechanics' => User::whereHas('mechanicInfo')->get(),
         ]);
     }
 
@@ -169,5 +169,4 @@ class InvoicesTable extends Component
     {
         return 'custom-pagination';
     }
-
 }

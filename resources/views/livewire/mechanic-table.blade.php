@@ -28,11 +28,21 @@
             <tbody class="text-sm text-[#222222]">
                 @forelse($rows as $row)
                     <tr wire:key="{{ str()->random(10) }}" class="border-b border-gray-200 hover:bg-gray-100">
-                        <td class="py-3 px-6">{{ $row->user->name }} {{ $row->user->surname }}</td>
+                        <td class="py-3 px-6">
+                            <div class="flex place-items-center">
+
+                                <img class="inline-block w-8 h-8  rounded-full border mr-2"
+                                    src="{{ asset($row->user->image_path ?? 'images/placeholder.png') }}"
+                                    alt="profile image">
+                                {{ $row->user->name }}
+                                {{ $row->user->surname }}
+
+                            </div>
+                        </td>
                         <td class="py-3 px-6">{{ $row->user->email }}</td>
                         <td class="py-3 px-6">{{ $row->user->cellphone }}</td>
                         <td class="py-3 px-6">{{ $row->user->city }}</td>
-                        <td class="py-3 px-6">
+                        <td class="py-3 px-6 text-center">
                             <div
                                 class="w-8 h-8 rounded-full bg-[#68C9BB] text-lg text-white text-center place-content-center">
                                 {{ $row->repaired_count }}

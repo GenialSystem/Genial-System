@@ -24,7 +24,7 @@
                         <td class="py-3 px-6 relative" wire:key="order-{{ $row->id }}">
                             <div x-data="{ open: false }" class="relative">
                                 <!-- Dropdown Button -->
-                                <button @click="open = !open"
+                                <button @if (Auth::user()->hasRole('admin')) @click="open = !open" @endif
                                     class="block w-full text-left rounded {{ $states[$row->state] }} {{ $statesText[$row->state] }} text-[13px] font-semibold py-1 px-2 flex items-center justify-between">
                                     {{ ucfirst($row->state) }}
                                     <svg class="w-4 h-4 ml-2 {{ $statesText[$row->state] }}" fill="none"
@@ -74,7 +74,9 @@
                         <td class="py-3 px-6">{{ $row->price }}€</td>
                         <td class="py-3 px-6 flex space-x-2">
                             @livewire('show-button', ['modelId' => $row->id, 'modelClass' => \App\Models\Order::class], key(str()->random(10)))
-                            @livewire('delete-button', ['modelId' => $row->id, 'modelName' => 'orders', 'modelClass' => \App\Models\Order::class], key(str()->random(10)))
+                            @role('admin')
+                                @livewire('delete-button', ['modelId' => $row->id, 'modelName' => 'orders', 'modelClass' => \App\Models\Order::class], key(str()->random(10)))
+                            @endrole
                         </td>
                     </tr>
                 @empty

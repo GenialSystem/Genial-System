@@ -14,16 +14,24 @@ class ArchiveSection extends Component
 
     public function mount($archives, $customerId)
     {
-        $this->archives = $archives; 
-        $this->customerId = $customerId; 
+        // Sort the passed-in archives by 'date' descending
+        $this->archives = $archives->sortByDesc('date');
+        $this->customerId = $customerId;
+
+        // Debugging to check the sorted collection
+        // dd($this->archives);
     }
+
 
     public function archiveAdded($archiveId)
     {
         $archive = Archive::find($archiveId);
-        // dd($archive);
         if ($archive) {
+            // Add the new archive to the collection
             $this->archives->push($archive);
+            
+            // Sort the collection by 'created_at' descending
+            $this->archives = $this->archives->sortByDesc('date')->values();
         }
     }
     

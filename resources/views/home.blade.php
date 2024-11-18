@@ -41,21 +41,21 @@
             # code...
             $nonAdminItems = [
                 [
-                    'color' => 'bg-[#FF7F50]',
-                    'image' => 'img6.png',
+                    'color' => 'bg-[#FFCD5D]',
+                    'image' => 'images/commesse_icona.svg',
                     'title' =>
                         Auth::user()->customerInfo->finished_cars_count + Auth::user()->customerInfo->queued_cars_count,
                     'subtitle' => 'Numero totale riparazioni auto grandinate',
                 ],
                 [
-                    'color' => 'bg-[#48D1CC]',
-                    'image' => 'img7.png',
+                    'color' => 'bg-[#5E66CC]',
+                    'image' => 'images/tools.svg',
                     'title' => Auth::user()->customerInfo->queued_cars_count,
                     'subtitle' => 'Riparazioni in lavorazione',
                 ],
                 [
-                    'color' => 'bg-[#FFD700]',
-                    'image' => 'img8.png',
+                    'color' => 'bg-[#68C9BB]',
+                    'image' => 'images/car.svg',
                     'title' => Auth::user()->customerInfo->finished_cars_count,
                     'subtitle' => 'Riparazioni concluse',
                 ],

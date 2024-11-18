@@ -29,16 +29,12 @@
 
             <div class="mb-4 xl:flex justify-between items-center px-4 space-y-3 xl:space-y-0">
                 <div class="flex flex-col xl:flex-row space-y-3 xl:space-y-0">
-                    <input type="text" class="border border-gray-300 rounded xl:mr-6 h-8 2xl:w-[600px]"
-                        placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
+                    {{-- <input type="text" class="border border-gray-300 rounded xl:mr-6 h-8 2xl:w-[600px]"
+                        placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" /> --}}
 
-                    {{-- <select
-                        class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px]">
-                        <option value="">Filtra per stato</option>
-                    </select> --}}
                     @role('admin')
                         <select id="mechanic-filter"
-                            class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-8 leading-none w-[225px] 2xl:ml-6">
+                            class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-8 leading-none w-[225px]">
                             <option value="">Filtra per tecnico</option>
                             @foreach ($mechanics as $mechanic)
                                 <option value="{{ $mechanic->id }}">{{ $mechanic->user->name }} {{ $mechanic->user->surname }}
@@ -94,6 +90,7 @@
 
         let eventElementMap = new Map();
         const eventColorMap = new Map();
+        const availabilities = @json($availabilities);
 
         function createCalendar() {
             calendar = new Calendar(calendarEl, {
@@ -108,6 +105,7 @@
                     weekday: 'long'
                 },
                 eventDidMount: function(info) {
+
                     eventElementMap.set(info.event.id, info.el);
 
                     // Define the color pairs
@@ -189,13 +187,16 @@
                             eventDot.style.borderColor = selectedPair.textColor;
                         }
                     }
+                },
+                viewDidMount: function(info) {
+                    // Ensure the select element is created for every day, not just the event days
+                    let allDayCells = document.querySelectorAll(
+                        '.fc-daygrid-day'); // Get all days in the current view
 
-                    // Additional logic for role-specific features (mechanic)
-                    @role('mechanic')
-                        const filteredEvents = @json($events).filter(event => event
-                            .id == info.event._def.publicId);
-                        createSelectElement(info.el, filteredEvents);
-                    @endrole
+                    allDayCells.forEach(dayCell => {
+                        // console.log(dayCell);
+                        createSelectElement(); // Add a select element to each day
+                    });
                 },
                 initialView: 'dayGridMonth',
                 locale: 'it',
@@ -269,7 +270,8 @@
         document.getElementById('prev-month').addEventListener('click', function() {
             calendar.prev();
             updateCurrentMonth();
-            updateScheduleTable(); // Update the schedule table when navigating months
+            updateScheduleTable();
+            createSelectElement();
             if (selectedMechanicId) {
                 filterEventsByMechanic(selectedMechanicId);
             }
@@ -279,6 +281,8 @@
             calendar.next();
             updateCurrentMonth();
             updateScheduleTable(); // Update the schedule table when navigating months
+            createSelectElement();
+
             if (selectedMechanicId) {
                 filterEventsByMechanic(selectedMechanicId);
             }
@@ -305,69 +309,69 @@
 
         function updateScheduleTable() {
             let tableBody = document.querySelector('#schedule-section tbody');
-            tableBody.innerHTML = ''; // Clear existing rows
+            tableBody.innerHTML = ''; // Pulisce le righe esistenti
 
-            // Get the current month and year from FullCalendar
-            let currentDate = calendar.getDate(); // This gives the date of the currently selected view
+            // Ottenere il mese e l'anno correnti da FullCalendar
+            let currentDate = calendar.getDate();
             let currentYear = currentDate.getFullYear();
             let currentMonth = currentDate.getMonth(); // 0-indexed (0 = January, 11 = December)
 
-            // Get all the days in the current month
+            // Ottenere tutti i giorni del mese corrente
             let daysInMonth = getDaysInMonth(currentYear, currentMonth);
 
-            // Use JSON-encoded events directly from Laravel
-            var events = @json($events); // Assuming this is correctly outputting your events
-            var mechanics = @json($mechanics); // Mechanics passed from backend
+            // Usa JSON-encoded availabilities direttamente da Laravel
+            const availabilities = @json($availabilities); // Availabilities passed from backend
+            const mechanics = @json($mechanics); // Mechanics passed from backend
+            const customers = @json($customers); // Customers passed from backend
 
-            // Create a mapping of events by date
-            var eventsByDate = {};
-            events.forEach(event => {
-                // Use the raw date string from Laravel (no conversion to Date object)
-                var eventDate = event.date; // This is 'YYYY-MM-DD' directly from backend
+            // Crea una mappa delle disponibilità per data
+            var availabilitiesByDate = {};
+            availabilities.forEach(availability => {
+                var availabilityDate = availability.date; // 'YYYY-MM-DD' dal backend
 
-                if (!eventsByDate[eventDate]) eventsByDate[eventDate] = [];
-                eventsByDate[eventDate].push(event);
+                if (!availabilitiesByDate[availabilityDate]) {
+                    availabilitiesByDate[availabilityDate] = [];
+                }
+                availabilitiesByDate[availabilityDate].push(availability);
             });
 
-            // Iterate through all days in the month
+            // Iterare su tutti i giorni del mese
             daysInMonth.forEach(date => {
                 let day = String(date.getDate()).padStart(2, '0');
                 let month = String(date.getMonth() + 1).padStart(2, '0');
                 let year = date.getFullYear();
-                let originalFormattedDate = `${year}-${month}-${day}`; // This is now 'YYYY-MM-DD'
+                let originalFormattedDate = `${year}-${month}-${day}`; // 'YYYY-MM-DD'
 
-                // Format date as DD/MM/YYYY for table display
+                // Formattare la data come DD/MM/YYYY per la visualizzazione nella tabella
                 let formattedDate = `${day}/${month}/${year}`;
 
-                // Check if the day is a weekend and skip if so
+                // Controllare se il giorno è un weekend
                 let dayOfWeek = new Date(year, date.getMonth(), date.getDate()).toLocaleDateString(
                     'it-IT', {
                         weekday: 'long'
                     });
                 if (dayOfWeek === "sabato" || dayOfWeek === "domenica") {
-                    return; // Skip weekends
+                    return; // Salta i weekend
                 }
 
                 let tr = document.createElement('tr');
 
-                // Add appropriate class for Fridays
+                // Aggiungi classi appropriate per i venerdì
                 if (dayOfWeek === "venerdì") {
                     tr.classList.add('border-dashed', 'border', 'border-b-[#2626B4FF]');
                 } else {
                     tr.classList.add('border-b', 'border-b-[#E4E4F7]');
                 }
+
+                // Crea una funzione per generare celle
                 const createCell = (content, cellClasses = ['border-x']) => {
                     let td = document.createElement('td');
                     td.textContent = content;
-
-                    // Add all classes provided in the cellClasses array
-                    cellClasses.forEach(cls => {
-                        td.classList.add(cls);
-                    });
-
+                    cellClasses.forEach(cls => td.classList.add(cls));
                     return td;
                 };
-                // Create and append cells
+
+                // Crea e aggiungi le celle
                 tr.appendChild(createCell(formattedDate, ['border', 'border-dashed',
                     'border-r-[#4453A5]', 'border-b-[#4453A5]', 'px-2', 'py-4',
                     'bg-[#F2F1FB]'
@@ -376,54 +380,33 @@
                     weekday: 'long'
                 }), ['bg-[#F2F1FB]', 'px-2', 'text-center']));
 
-                // Check for mechanic events and populate cells
+                // Controlla le disponibilità e popola le celle
                 mechanics.forEach(mechanic => {
-                    let mechanicEvents = eventsByDate[originalFormattedDate] || [];
-                    let mechanicEvent = mechanicEvents.find(event => {
-                        return event.mechanics && event.mechanics.some(m => m.id ==
-                            mechanic.id);
-                    });
+                    let mechanicAvailabilities = availabilitiesByDate[originalFormattedDate] ||
+                        [];
+                    let mechanicAvailability = mechanicAvailabilities.find(availability =>
+                        availability.mechanic_info_id == mechanic.id);
 
-                    // Create the cell for the mechanic's availability
                     let td = document.createElement('td');
                     td.classList.add('border-x', 'text-center', 'p-2');
 
-                    if (mechanicEvent) {
-                        // Find the mechanic's pivot data (confirmed, client_name)
-                        let mechanicPivot = mechanicEvent.mechanics.find(m => m.id == mechanic
-                            .id);
-                        let confirmed = mechanicPivot.confirmed;
-                        let clientName = mechanicPivot.client_name; // Get client_name
+                    if (mechanicAvailability) {
+                        let state = mechanicAvailability.state;
+                        let clientName = mechanicAvailability.client_name;
 
-                        // Create a select dropdown for customer selection
+                        // Crea un select per la selezione del cliente
                         let customerSelect = document.createElement('select');
-                        customerSelect.classList.add('w-full', 'border-none',
-                            'bg-[#FAFAFA]', 'focus:ring-transparent',
-                            'focus:border-transparent'
-                        ); // Add basic styling
-                        if (confirmed === null && clientName === null) {
-                            td.textContent = '';
-                            return;
-                        }
+                        customerSelect.classList.add('w-full', 'border-none', 'bg-[#FAFAFA]',
+                            'focus:ring-transparent', 'focus:border-transparent');
 
-                        if (confirmed === 1) {
+                        if (state === 'available') {
                             let defaultOption = document.createElement('option');
                             defaultOption.value = '';
                             defaultOption.textContent = clientName ? clientName : 'Disponibile';
                             customerSelect.style.color = clientName ? 'black' : 'green';
                             customerSelect.appendChild(defaultOption);
-                            customerSelect.addEventListener('focus', function() {
-                                this.style.color =
-                                    'black'; // Change to black when focused
-                            });
 
-                            customerSelect.addEventListener('blur', function() {
-                                if (!this.value) {
-                                    this.style.color =
-                                        'green'; // Change back to green if no selection
-                                }
-                            });
-                            @json($customers).forEach(customer => {
+                            customers.forEach(customer => {
                                 let option = document.createElement('option');
                                 option.value = customer.id;
                                 option.textContent = customer.user.name + ' ' + customer
@@ -434,39 +417,33 @@
                             customerSelect.addEventListener('change', function() {
                                 let selectedCustomerId = this.value;
 
-
                                 fetch('/update-customer', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': csrfToken,
-                                        },
-                                        body: JSON.stringify({
-                                            mechanic_id: mechanic.id,
-                                            event_id: mechanicEvent.id,
-                                            customer_id: selectedCustomerId // Selected Customer ID
-                                        })
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': csrfToken,
+                                    },
+                                    body: JSON.stringify({
+                                        mechanic_id: mechanic.id,
+                                        date: originalFormattedDate,
+                                        customer_id: selectedCustomerId // Selected Customer ID
                                     })
-                                    .catch(error => {
-                                        console.error('Error:', error);
-                                    });
+                                }).catch(error => console.error('Error:', error));
                             });
 
-                        } else if (confirmed === 0) {
+                        } else if (state === 'not_available') {
                             let defaultOption = document.createElement('option');
                             defaultOption.value = '';
-
                             defaultOption.textContent = 'Non disponibile';
                             customerSelect.style.color = '#DC0851';
                             customerSelect.appendChild(defaultOption);
                             customerSelect.disabled = true;
-
                         }
 
                         td.appendChild(customerSelect);
 
                     } else {
-                        td.textContent = '';
+                        td.textContent = ''; // Nessuna disponibilità trovata
                     }
 
                     tr.appendChild(td);
@@ -476,106 +453,124 @@
             });
         }
 
-        function createSelectElement(dayGridEl, mechanicEvents) {
-            mechanicEvents.forEach(mechanicEvent => {
-                let existingSelect = dayGridEl.querySelector('.mechanic-select');
-                let selectEl;
 
-                if (existingSelect) {
-                    selectEl = existingSelect; // Use the existing select element if present
-                } else {
-                    // Create a new select element if it doesn't exist
-                    selectEl = document.createElement('div');
-                    selectEl.classList.add('mechanic-select', 'rounded-sm', 'px-0.5', 'mx-2',
-                        'text-[#DC0814]', 'text-[15px]', 'cursor-pointer', 'bg-[#FCF5F6]',
-                        'relative');
-                    dayGridEl.parentNode.insertBefore(selectEl, dayGridEl);
-                }
 
-                let statusText = 'Seleziona'; // Default text
-                let confirmed = null; // default state
+        // Funzione per trovare il <td> più vicino con l'attributo 'data-date'
+        function getClosestTdDataDate(element) {
+            // Cerca il primo <td> antenato con l'attributo data-date
+            const closestTd = element.closest('td[data-date]');
 
-                // Ensure there is at least one mechanic in the event's mechanics array
-                if (mechanicEvent.mechanics && mechanicEvent.mechanics.length > 0) {
-                    let firstMechanic = mechanicEvent.mechanics[0];
-                    confirmed = firstMechanic.confirmed; // Get confirmed status
-
-                    // Determine status text and update select element style
-                    if (confirmed === 1) {
-                        statusText = 'Disponibile';
-                        selectEl.classList.remove('text-[#DC0814]', 'bg-[#FCF5F6]');
-                        selectEl.classList.add('text-[#7FBC4B]', 'bg-[#FAFAFA]'); // Available styles
-                    } else if (confirmed === 0) {
-                        statusText = 'Non Disponibile';
-                        selectEl.classList.remove('text-[#DC0814]', 'bg-[#FCF5F6]');
-                        selectEl.classList.add('text-[#E4434C]',
-                            'bg-[#FCF5F6]'); // Not available styles
-                    } else {
-                        selectEl.classList.add('text-[#DC0814]', 'bg-[#FCF5F6]'); // Default styling
-                    }
-                }
-
-                selectEl.textContent = statusText;
-
-                // Attach event listener for dropdown
-                selectEl.onclick = function() {
-                    // Remove any existing dropdown
-                    let existingDropdown = dayGridEl.querySelector('.custom-dropdown');
-                    if (existingDropdown) {
-                        existingDropdown.remove();
-                        return;
-                    }
-
-                    // Create dropdown
-                    let customDropdown = document.createElement('div');
-                    customDropdown.classList.add('custom-dropdown', 'z-50', 'bg-white', 'w-full',
-                        'absolute', 'top-0');
-
-                    // Create "Disponibile" option
-                    let available = document.createElement('div');
-                    available.classList.add('cursor-pointer', 'p-2', 'text-[#7FBC4B]',
-                        'hover:bg-[#E7F4E7]');
-                    available.textContent = 'Disponibile';
-
-                    // Create "Non Disponibile" option
-                    let notAvailable = document.createElement('div');
-                    notAvailable.classList.add('cursor-pointer', 'p-2', 'border-y',
-                        'text-[#E4434C]', 'hover:bg-[#F7E5E5]');
-                    notAvailable.textContent = 'Non Disponibile';
-
-                    // Append options to dropdown
-                    customDropdown.appendChild(available);
-                    customDropdown.appendChild(notAvailable);
-                    dayGridEl.appendChild(customDropdown);
-
-                    // Handle click for "Disponibile"
-                    available.onclick = function() {
-                        // Set confirmed to 1 and update UI immediately
-                        updateMechanicStatus(mechanicEvent.id, 1);
-                        selectEl.textContent = 'Disponibile';
-                        selectEl.classList.remove('text-[#DC0814]', 'bg-[#FCF5F6]',
-                            'text-[#E4434C]', 'bg-[#F7E5E5]');
-                        selectEl.classList.add('text-[#7FBC4B]', 'bg-[#FAFAFA]');
-                        customDropdown.remove();
-                    };
-
-                    // Handle click for "Non Disponibile"
-                    notAvailable.onclick = function() {
-                        // Set confirmed to 0 and update UI immediately
-                        updateMechanicStatus(mechanicEvent.id, 0);
-                        selectEl.textContent = 'Non Disponibile';
-                        selectEl.classList.remove('text-[#DC0814]', 'bg-[#FCF5F6]',
-                            'text-[#7FBC4B]', 'bg-[#FAFAFA]');
-                        selectEl.classList.add('text-[#E4434C]', 'bg-[#F7E5E5]');
-                        customDropdown.remove();
-                    };
-                };
-            });
+            // Se trova il <td>, restituisce il suo attributo data-date
+            if (closestTd) {
+                return closestTd.getAttribute('data-date');
+            } else {
+                // Restituisce null se non trova nessun <td> con data-date
+                return null;
+            }
         }
 
+        function createSelectElement() {
+            @role('mechanic')
+                const dayEvents = document.querySelectorAll('.fc-daygrid-day-events');
+
+                dayEvents.forEach(dayEvent => {
+                    if (dayEvent && !dayEvent.querySelector('.mechanic-select')) {
+                        // Creazione dell'elemento select
+                        const selectEl = document.createElement('div');
+                        selectEl.classList.add('mechanic-select', 'rounded-sm', 'px-0.5', 'mx-2',
+                            'text-[#DC0814]',
+                            'text-[15px]', 'cursor-pointer', 'bg-[#FCF5F6]', 'relative');
+                        selectEl.textContent = 'Seleziona';
+                        dayEvent.insertBefore(selectEl, dayEvent.firstChild);
+
+                        const dataDate = getClosestTdDataDate(selectEl);
+
+                        // Imposta lo stato e lo stile basato sulla disponibilità
+                        availabilities.forEach(availability => {
+                            if (dataDate === availability.date) {
+                                if (availability.state === 'available') {
+                                    selectEl.textContent = 'Disponibile';
+                                    selectEl.classList.remove('text-[#DC0814]', 'bg-[#FCF5F6]',
+                                        'text-[#E4434C]', 'bg-[#F7E5E5]');
+                                    selectEl.classList.add('text-[#7FBC4B]', 'bg-[#FAFAFA]');
+                                } else if (availability.state === 'not_available') {
+                                    selectEl.textContent = 'Non Disponibile';
+                                    selectEl.classList.remove('text-[#DC0814]', 'bg-[#FCF5F6]',
+                                        'text-[#7FBC4B]', 'bg-[#FAFAFA]');
+                                    selectEl.classList.add('text-[#E4434C]', 'bg-[#F7E5E5]');
+                                }
+                            }
+                        });
+
+                        // Funzione per gestire il click sul select
+                        selectEl.onclick = function(event) {
+                            event.stopPropagation(); // Previene il bubbling dell'evento
+
+                            // Chiude eventuali dropdown aperti
+                            const existingDropdown = dayEvent.querySelector('.custom-dropdown');
+                            if (existingDropdown) existingDropdown.remove();
+
+                            // Creazione del dropdown con le opzioni
+                            const customDropdown = document.createElement('div');
+                            customDropdown.classList.add('custom-dropdown', 'z-50', 'bg-white',
+                                'w-full', 'absolute', 'top-full', 'mt-1');
+
+                            // Opzioni: Disponibile e Non Disponibile
+                            const availableOption = document.createElement('div');
+                            availableOption.classList.add('cursor-pointer', 'p-2', 'text-[#7FBC4B]',
+                                'hover:bg-[#E7F4E7]');
+                            availableOption.textContent = 'Disponibile';
+
+                            const notAvailableOption = document.createElement('div');
+                            notAvailableOption.classList.add('cursor-pointer', 'p-2', 'border-y',
+                                'text-[#E4434C]', 'hover:bg-[#F7E5E5]');
+                            notAvailableOption.textContent = 'Non Disponibile';
+
+                            // Aggiunge le opzioni al dropdown
+                            customDropdown.appendChild(availableOption);
+                            customDropdown.appendChild(notAvailableOption);
+                            dayEvent.appendChild(customDropdown);
+
+                            // Gestisce il click su "Disponibile"
+                            availableOption.onclick = function() {
+                                const dataDate = getClosestTdDataDate(selectEl);
+                                updateMechanicStatus(dataDate, 'available');
+                                selectEl.textContent = 'Disponibile';
+                                selectEl.classList.remove('text-[#DC0814]', 'bg-[#FCF5F6]',
+                                    'text-[#E4434C]', 'bg-[#F7E5E5]');
+                                selectEl.classList.add('text-[#7FBC4B]', 'bg-[#FAFAFA]');
+                                customDropdown.remove(); // Chiude il dropdown
+                            };
+
+                            // Gestisce il click su "Non Disponibile"
+                            notAvailableOption.onclick = function() {
+                                const dataDate = getClosestTdDataDate(selectEl);
+                                updateMechanicStatus(dataDate, 'not_available');
+                                selectEl.textContent = 'Non Disponibile';
+                                selectEl.classList.remove('text-[#DC0814]', 'bg-[#FCF5F6]',
+                                    'text-[#7FBC4B]', 'bg-[#FAFAFA]');
+                                selectEl.classList.add('text-[#E4434C]', 'bg-[#F7E5E5]');
+                                customDropdown.remove(); // Chiude il dropdown
+                            };
+
+                            // Chiude il dropdown cliccando fuori
+                            document.addEventListener('click', function closeDropdown(event) {
+                                if (!selectEl.contains(event.target) && !customDropdown
+                                    .contains(event.target)) {
+                                    customDropdown.remove();
+                                    document.removeEventListener('click',
+                                        closeDropdown); // Rimuove l'evento listener
+                                }
+                            });
+                        };
+                    }
+                });
+            @endrole
+        }
 
         // Function to handle the fetch request for updating mechanic status
-        function updateMechanicStatus(eventId, confirmed) {
+        function updateMechanicStatus(date, state) {
+
             fetch('/update-mechanic-day', {
                     method: 'POST',
                     headers: {
@@ -583,8 +578,8 @@
                         'X-CSRF-TOKEN': csrfToken,
                     },
                     body: JSON.stringify({
-                        event_id: eventId,
-                        confirmed: confirmed // Set confirmed status
+                        date: date,
+                        state: state
                     })
                 })
                 .then(response => {
@@ -594,9 +589,6 @@
                     console.error('Error:', error);
                 });
         }
-
-
-
 
         // View toggle between calendar and schedule
         const calendarBtn = document.getElementById('calendar-btn');

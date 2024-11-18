@@ -6,6 +6,8 @@ use App\Mail\EstimateRequestMail;
 use App\Models\Archive;
 use App\Models\Estimate;
 use App\Models\MechanicInfo;
+use App\Models\User;
+use App\Notifications\EstimateRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -23,7 +25,7 @@ class EstimateRequestForm extends Component
     public $km;
 
     protected $rules = [
-        'description' => 'required|string|min:10',
+        'description' => 'required|string|min:4',
         'date' => 'required|date',
         'selectedMechanic' => 'required|exists:mechanic_infos,id',
         'brand' => 'required|string|max:255',
@@ -34,6 +36,7 @@ class EstimateRequestForm extends Component
 
     protected $messages = [
         'description.required' => 'La descrizione è obbligatoria.',
+        'description.min' => 'La descrizione deve essere almeno 4 caratteri',
         'date.required' => 'La data è obbligatoria.',
         'selectedMechanic.required' => 'Devi selezionare un cliente.',
         'brand.required' => 'La marca è obbligatoria.',
@@ -53,7 +56,7 @@ class EstimateRequestForm extends Component
 
             // Send email to admin@example.com
             $emailData = [
-                'customer' => Auth::user()->name . ' ' . Auth::user()->surname,
+                'customer' => Auth::user()->getFullName(),
                 'description' => $this->description,
                 'date' => $this->date,
                 'mechanic' => MechanicInfo::find($this->selectedMechanic)->user->name . ' ' . MechanicInfo::find($this->selectedMechanic)->user->surname,
@@ -64,6 +67,7 @@ class EstimateRequestForm extends Component
             ];
 
             $customerId = Auth::user()->customerInfo->id;
+            $creator = Auth::user()->id;
 
             Estimate::create([
                 'customer_id' => $customerId,
@@ -77,19 +81,22 @@ class EstimateRequestForm extends Component
 
             Archive::create([
                 'customer_id' => $customerId,
-                'user_id' => $customerId, 
+                'user_id' => $creator, 
                 'date' => now(),
                 'title' => 'Invio preventivo' 
             ]);
 
             Mail::to('admin@example.com')->send(new EstimateRequestMail($emailData));
             
+            $customerName = Auth::user()->getFullName();
+            $user = User::find(1);
+            $user->notify(new EstimateRequest($customerName));
             $this->dispatch('showBanner', 'Richiesta inviata con successo!', 'Quando verrà accettata ti arriverà una notifica.', 'success');
             $this->reset();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->dispatch('showBanner', 'Errore', 'Qualcosa è andato storto', 'error');
+            $this->dispatch('showBanner', 'Errore', $e->getMessage(), 'error');
             Log::info($e->getMessage());
         }
     }

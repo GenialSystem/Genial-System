@@ -134,7 +134,7 @@
                             <td class="py-3 px-6 relative">
                                 <div x-data="{ open: false }" class="relative">
                                     <!-- Dropdown Button -->
-                                    <button @click="open = !open"
+                                    <button @if (Auth::user()->hasAnyRole(['admin', 'mechanic'])) @click="open = !open" @endif
                                         class="block w-full text-left rounded {{ $states[$row->state] }} {{ $statesText[$row->state] }} text-[13px] font-semibold py-1 px-2 flex items-center justify-between">
                                         {{ ucfirst($row->state) }}
                                         <!-- Chevron Icon -->
@@ -190,7 +190,36 @@
 
                                     </div>
                                 @endrole
-                                @livewire('download-button', key(str()->random(10)))
+                                <a href="{{ route('downloadPDF', ['model' => 'estimate', 'ids' => $row->id]) }}">
+                                    <div
+                                        class="bg-[#FCEEF2] w-6 p-1 h-full flex items-center justify-center group hover:bg-[#E57A97] duration-200 rounded-sm">
+                                        <button class="flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13.937" height="13.937"
+                                                viewBox="0 0 13.937 13.937">
+                                                <g id="Icon_feather-download" data-name="Icon feather-download"
+                                                    transform="translate(-3.75 -3.75)">
+                                                    <path id="Tracciato_630" data-name="Tracciato 630"
+                                                        d="M16.937,22.5v2.764a1.382,1.382,0,0,1-1.382,1.382H5.882A1.382,1.382,0,0,1,4.5,25.264V22.5"
+                                                        transform="translate(0 -9.709)" fill="none"
+                                                        stroke="#e57a97" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="1.5"
+                                                        class="transition-colors duration-200 group-hover:stroke-white" />
+                                                    <path id="Tracciato_631" data-name="Tracciato 631"
+                                                        d="M10.5,15l3.455,3.455L17.409,15"
+                                                        transform="translate(-3.236 -5.663)" fill="none"
+                                                        stroke="#e57a97" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="1.5"
+                                                        class="transition-colors duration-200 group-hover:stroke-white" />
+                                                    <path id="Tracciato_632" data-name="Tracciato 632"
+                                                        d="M18,12.791V4.5" transform="translate(-7.282)"
+                                                        fill="none" stroke="#e57a97" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="1.5"
+                                                        class="transition-colors duration-200 group-hover:stroke-white" />
+                                                </g>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </a>
                                 @role('admin')
                                     @livewire('delete-button', ['modelId' => $row->id, 'modelName' => 'estimates', 'modelClass' => \App\Models\Estimate::class], key(str()->random(10)))
                                 @endrole
@@ -211,6 +240,7 @@
     @livewire('selection-banner', [
         'modelClass' => App\Models\Estimate::class,
         'modelId' => $selectedRows,
-        'buttons' => ['delete', 'download'],
+        'modelName' => 'estimate',
+        'buttons' => ['delete', 'download', 'archive'],
     ])
 </div>

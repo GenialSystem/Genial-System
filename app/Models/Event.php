@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $fillable = ['name', 'date', 'start_time', 'end_time'];
+    protected $fillable = ['name', 'date', 'start_time', 'end_time', 'notify_me'];
 
     public function mechanics()
     {

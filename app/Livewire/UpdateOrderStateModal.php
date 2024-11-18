@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Order;
+use App\Notifications\OrderFinished;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use LivewireUI\Modal\ModalComponent;
 
@@ -27,13 +29,34 @@ class UpdateOrderStateModal extends ModalComponent
     
     public function applyStateToSelectedRows()
     {
-        Log::info('IN');
         if (!empty($this->selectedRows) && !empty($this->newState)) {
-            Order::whereIn('id', $this->selectedRows)
-                ->update(['state' => $this->newState]);
+            // Retrieve the selected orders
+            $orders = Order::whereIn('id', $this->selectedRows)->get();
 
+            foreach ($orders as $order) {
+                // Update the state of each order
+                $order->state = $this->newState;
+                $order->save();
+
+                if ($this->newState === 'Riparata' && $order->customer) {
+                    $this->handleOrderFinish($order);
+                }
+            }
+
+            // Dispatch events after all updates
             $this->dispatch('updateSelectionBanner');
             $this->dispatch('closeModal');
+        }
+    }
+
+    private function handleOrderFinish($order)
+    {
+        $creator = Auth::user()->getFullName();
+        $order->customer->user->notify(new OrderFinished($creator, $order->id));
+        $order->customer->increment('finished_cars_count');
+
+        foreach ($order->mechanics as $mechanic) {
+            $mechanic->mechanicInfo->increment('repaired_count');
         }
     }
 

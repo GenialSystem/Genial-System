@@ -27,6 +27,7 @@ class StoreOrderRequest extends FormRequest
             'mechanic' => 'required|exists:mechanic_infos,id',
             'earn_mechanic_percentage' => 'required|numeric|min:0|max:100',
             'plate' => 'required|string|max:255',
+            'damage_diameter' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'parts.*.damage_count' => 'required|integer|min:0',

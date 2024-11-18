@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Invoice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Spatie\Browsershot\Browsershot;
 
 class InvoiceController extends Controller
 {

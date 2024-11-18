@@ -5,7 +5,7 @@
             <input type="text" class="p-2 border border-gray-300 rounded xl:w-[600px]" placeholder="Cerca elemento..."
                 wire:model.debounce.300ms.live="searchTerm" />
 
-            <div class="relative z-50" x-data="{ open: false }">
+            <div class="relative z-30" x-data="{ open: false }">
                 <button @click="open = !open" class="ml-4 py-1 px-2 bg-[#1E1B58] text-white rounded-md text-sm h-full">
                     Aggiungi nuovo </button>
 

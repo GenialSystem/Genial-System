@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Notifications\EstimateStateChanged;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Estimate extends Model
 {
@@ -37,9 +39,21 @@ class Estimate extends Model
                 // Extract the number part (before the slash) and increment it
                 $lastNumber = (int) explode('/', $lastEstimate->number)[0];
                 $estimate->number = ($lastNumber + 1) . '/' . $year;
+                // $estimate->save();
             } else {
                 // Start with "1/year" if this is the first estimate of the year
                 $estimate->number = '1/' . $year;
+            }
+            $estimate->saveQuietly();
+        });
+        static::updated(function ($estimate) {
+           
+            if ($estimate->customer) {
+                
+                if ($estimate->state != 'Nuovo') {
+                    $editor = Auth::user()->getFullName();
+                    $estimate->customer->user->notify(new EstimateStateChanged($editor, $estimate));
+                }
             }
         });
     }

@@ -25,6 +25,11 @@ class CustomerInfo extends Model
         'legal_address',
     ];
 
+    public function archives()
+    {
+        return $this->hasMany(Archive::class, 'customer_id');
+    }
+
     public function estimates()
     {
         return $this->hasMany(Estimate::class, 'customer_id');

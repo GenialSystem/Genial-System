@@ -25,19 +25,6 @@
         {{-- Calendar Section --}}
         <div id="calendar-section" class="">
             <div class="border-dashed border my-5"></div>
-
-            <div class="mb-4 flex justify-between items-center h-8 px-4">
-                <div>
-                    <input type="text" class="border border-gray-300 rounded mr-6 h-8 w-[600px]"
-                        placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
-
-                    {{-- <select
-                        class="pr-12 border border-gray-300 rounded text-gray-600 text-sm h-full leading-none w-[225px]">
-                        <option value="">Filtra per stato</option>
-                    </select> --}}
-                </div>
-
-            </div>
             <div class="p-4" id="calendar"></div>
         </div>
 
@@ -214,43 +201,41 @@
 
         function updateScheduleTable() {
             let scheduleSection = document.getElementById('schedule-section');
-            scheduleSection.innerHTML = ''; // Clear existing tables
+            scheduleSection.innerHTML = ''; // Pulisce le tabelle esistenti
 
-            // Get the current month and year from FullCalendar
+            // Ottieni il mese e l'anno correnti da FullCalendar
             let currentDate = calendar.getDate();
             let currentYear = currentDate.getFullYear();
-            let currentMonth = currentDate.getMonth(); // 0-indexed (0 = January, 11 = December)
-            let today = new Date().toLocaleDateString('en-CA'); // Format today as YYYY-MM-DD
-            // Get all the days in the current month
+            let currentMonth = currentDate.getMonth(); // 0-indexed (0 = Gennaio, 11 = Dicembre)
+            let today = new Date().toLocaleDateString('en-CA'); // Formatta oggi come YYYY-MM-DD
+            // Ottieni tutti i giorni del mese corrente
             let daysInMonth = getDaysInMonth(currentYear, currentMonth);
 
+            // Ottieni le disponibilità direttamente dal backend
+            const availabilities = @json($availabilities); // Disponibilità passate dal backend
 
-            var events = @json($events); // Directly pulling events from the backend data
-            var eventsByDate = {};
+            const customers = @json($customers); // Clienti passati dal backend
 
-
-            events.forEach(function(event) {
-                // Convert the event 'start' date to YYYY-MM-DD format for consistent comparison
-                let eventDate = new Date(event.start).toLocaleDateString(
-                    'en-CA'); // This format ensures YYYY-MM-DD
-
-                if (!eventsByDate[eventDate]) eventsByDate[eventDate] = [];
-                eventsByDate[eventDate].push(event);
+            // Crea una mappa delle disponibilità per data
+            var availabilitiesByDate = {};
+            availabilities.forEach(availability => {
+                var availabilityDate = availability.date; // 'YYYY-MM-DD' dal backend
+                if (!availabilitiesByDate[availabilityDate]) availabilitiesByDate[
+                    availabilityDate] = [];
+                availabilitiesByDate[availabilityDate].push(availability);
             });
-            console.log(eventsByDate);
 
             let weeks = [];
             let week = [];
 
             daysInMonth.forEach(function(date) {
-                let dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
-
+                let dayOfWeek = date.getDay(); // 0 = Domenica, 6 = Sabato
 
                 if (dayOfWeek >= 1 && dayOfWeek <= 5) {
                     week.push(date);
                 }
 
-                // If it's Friday or the last day of the month, push the week to the weeks array and reset the week array
+                // Se è venerdì o l'ultimo giorno del mese, aggiungi la settimana all'array delle settimane e resetta l'array della settimana
                 if (dayOfWeek === 5 || date.getDate() === daysInMonth[daysInMonth.length - 1]
                     .getDate()) {
                     weeks.push(week);
@@ -258,7 +243,7 @@
                 }
             });
 
-            // Iterate through each week to create a separate table for each
+            // Itera attraverso ogni settimana per creare una tabella separata per ciascuna
             weeks.forEach(function(week) {
                 let table = document.createElement('table');
                 table.classList.add('w-full', 'bg-white', 'border', 'border-gray-200', 'rounded-md',
@@ -268,7 +253,7 @@
                 thead.classList.add('bg-[#F5F5F5]', 'text-start');
                 let headerRow = document.createElement('tr');
 
-                // Creating table headers (days of the week)
+                // Crea le intestazioni della tabella (giorni della settimana)
                 week.forEach(dayInWeek => {
                     let th = document.createElement('th');
                     th.classList.add('px-2', 'text-[#808080]', 'bg-[#F5F5F5]', 'text-[15px]',
@@ -279,8 +264,7 @@
                     let year = dayInWeek.getFullYear();
                     let formattedDate = `${year}-${month}-${day}`;
 
-                    // Apply blue color if the day is today
-                    console.log('equal', formattedDate, today)
+                    // Applica il colore blu se il giorno è oggi
                     if (formattedDate === today) {
                         th.style.color = '#4453A5';
                     }
@@ -301,109 +285,94 @@
                         'text-center');
 
                     let currentDay = dayInWeek.toLocaleDateString(
-                        'en-CA'); // This format ensures YYYY-MM-DD
+                        'en-CA'); // Formato YYYY-MM-DD
 
+                    // Ottieni le disponibilità per il giorno corrente
+                    let mechanicAvailabilities = availabilitiesByDate[currentDay] || [];
 
-                    // Get mechanic events on this date
-                    let mechanicEvents = eventsByDate[currentDay] || [];
+                    if (mechanicAvailabilities.length > 0) {
+                        let mechanicAvailability = mechanicAvailabilities[
+                            0]; // Supponendo un meccanico per disponibilità
 
-
-                    // Check if there's any event on this day (filtering by date now)
-                    let mechanicEvent = mechanicEvents.find(function(event) {
-                        let eventDate = new Date(event.start).toISOString().split('T')[
-                            0];
-                        return eventDate === currentDay;
-                    });
-
-                    if (mechanicEvent) {
-                        let mechanicPivot = mechanicEvent.mechanics[
-                            0]; // Only one mechanic since it's filtered
-
-                        let confirmed = mechanicPivot.confirmed;
-                        let clientName = mechanicPivot.client_name;
+                        let confirmed = mechanicAvailability.state; // Stato della disponibilità
+                        let clientName = mechanicAvailability.client_name;
 
                         let customerSelect = document.createElement('select');
                         customerSelect.classList.add('w-full', 'border-none', 'bg-[#FAFAFA]',
                             'focus:ring-transparent', 'focus:border-transparent');
 
-                        if (confirmed === null && clientName === null) {
-                            td.textContent = 'N/A';
-                        } else {
-                            if (confirmed === 1) {
-                                let defaultOption = document.createElement('option');
-                                defaultOption.value = '';
-                                defaultOption.textContent = clientName ? clientName :
-                                    'Disponibile';
-                                defaultOption.style.color = clientName ? 'black' : 'green';
-                                customerSelect.appendChild(defaultOption);
+                        if (confirmed === 'available') {
+                            let defaultOption = document.createElement('option');
+                            defaultOption.value = '';
+                            defaultOption.textContent = clientName ? clientName : 'Disponibile';
+                            defaultOption.style.color = clientName ? 'black' : 'green';
+                            customerSelect.appendChild(defaultOption);
 
-                                // Add customer options
-                                @json($customers).forEach(customer => {
-                                    let option = document.createElement('option');
-                                    option.value = customer.id;
-                                    option.textContent = customer.user.name + ' ' +
-                                        customer.user.surname;
-                                    customerSelect.appendChild(option);
-                                });
+                            // Aggiungi opzioni dei clienti
+                            customers.forEach(customer => {
+                                let option = document.createElement('option');
+                                option.value = customer.id;
+                                option.textContent = customer.user.name + ' ' + customer
+                                    .user.surname;
+                                customerSelect.appendChild(option);
+                            });
 
-                                // Handle selection change event
-                                customerSelect.addEventListener('change', function() {
-                                    let selectedCustomerId = this.value;
-                                    let eventId = mechanicEvent.id;
-
-                                    const mechanicId = mechanicEvent.mechanics[0].id;
-                                    // Make AJAX request to update the customer
-                                    fetch('/update-customer', {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                                'X-CSRF-TOKEN': csrfToken,
-                                            },
-                                            body: JSON.stringify({
-                                                mechanic_id: mechanicId,
-                                                event_id: eventId,
-                                                customer_id: selectedCustomerId
-                                            })
+                            // Gestisci l'evento di cambio selezione
+                            customerSelect.addEventListener('change', function() {
+                                let selectedCustomerId = this.value;
+                                // Recupera l'id del meccanico
+                                const mechanicId = mechanicAvailability
+                                    .mechanic_info_id;
+                                // Esegui la richiesta AJAX per aggiornare il cliente
+                                fetch('/update-customer', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': csrfToken,
+                                        },
+                                        body: JSON.stringify({
+                                            mechanic_id: mechanicId,
+                                            date: currentDay,
+                                            customer_id: selectedCustomerId
                                         })
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            if (data.success) {
-                                                console.log(
-                                                    'Customer updated successfully'
-                                                );
-                                            } else {
-                                                console.error(
-                                                    'Failed to update customer');
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Error:', error);
-                                        });
-                                });
-                            } else if (confirmed === 0) {
-                                let defaultOption = document.createElement('option');
-                                defaultOption.value = '';
-                                defaultOption.textContent = 'Non disponibile';
-                                customerSelect.style.color = '#DC0851';
-                                customerSelect.appendChild(defaultOption);
-                                customerSelect.disabled = true;
-                            }
-
-                            td.appendChild(customerSelect);
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            console.log(
+                                                'Customer updated successfully');
+                                        } else {
+                                            console.error(
+                                                'Failed to update customer');
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                            });
+                        } else if (confirmed === 'not_available') {
+                            let defaultOption = document.createElement('option');
+                            defaultOption.value = '';
+                            defaultOption.textContent = 'Non disponibile';
+                            customerSelect.style.color = '#DC0851';
+                            customerSelect.appendChild(defaultOption);
+                            customerSelect.disabled = true;
                         }
+
+                        td.appendChild(customerSelect);
                     } else {
-                        td.textContent = 'N/A';
+                        td.textContent = 'N/A'; // Nessuna disponibilità trovata
                     }
 
                     tr.appendChild(td);
                 });
-
 
                 tbody.appendChild(tr);
                 table.appendChild(tbody);
                 scheduleSection.appendChild(table);
             });
         }
+
 
         updateScheduleTable();
 

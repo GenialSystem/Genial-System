@@ -1,6 +1,6 @@
 <div class="mx-auto p-4 bg-white 2xl:w-[1000px] rounded-md shadow-sm">
     @if ($errors->any())
-        <div id="error-banner" class="bg-red-500 text-white text-center py-2 rounded-md my-4">
+        <div id="error-banner" class="bg-[#DC0814] text-white text-center py-2 rounded-md my-4">
             {{ $errors->first() }}
         </div>
     @endif
@@ -59,10 +59,13 @@
                         class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <option value="" data-admin-name="">Seleziona un cliente</option>
                         @foreach ($customers as $customer)
-                            <option value="{{ $customer->id }}" data-admin-name="{{ $customer->admin_name }}">
-                                {{ $customer->user->name . ' ' . $customer->user->surname }}</option>
+                            <option value="{{ $customer->id }}" data-admin-name="{{ $customer->admin_name }}"
+                                {{ $selectedCustomerId == $customer->id ? 'selected' : '' }}>
+                                {{ $customer->user->name . ' ' . $customer->user->surname }}
+                            </option>
                         @endforeach
                     </select>
+
                     <span id="customer-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                 </div>
             </div>
@@ -74,7 +77,7 @@
                     <label for="admin_name" class="block text-sm font-medium">Responsabile</label>
                     <input required type="text" name="admin_name" id="admin_name"
                         class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none"
-                        disabled>
+                        disabled value="{{ $adminName }}">
                     <span id="admin_name-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                 </div>
             </div>
@@ -119,13 +122,15 @@
                 <div>
                     <label for="plate" class="block text-sm font-medium">Targa/Telaio</label>
                     <input required type="text" name="plate" id="plate"
-                        class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
+                        class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none"
+                        value="{{ $plate }}">
                     <span id="plate-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                 </div>
                 <div>
                     <label for="brand" class="block text-sm font-medium">Marca modello</label>
                     <input required type="text" name="brand" id="brand"
-                        class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
+                        class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none"
+                        value="{{ $brand }}">
                     <span id="brand-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                 </div>
                 <div>
@@ -138,8 +143,6 @@
             </div>
 
         </div>
-
-        <!-- Step 2 -->
 
         <!-- Step 2 -->
         <div id="step-2" class="hidden">
@@ -174,6 +177,12 @@
                         class="text-[15px] text-[#222222] ml-2">Alluminio</span>
                     <span id="aluminium-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                 </div>
+                <div>
+                    <label for="damage_diameter" class="block text-sm font-medium">Diametro bolli</label>
+                    <input required type="text" name="damage_diameter" id="damage_diameter"
+                        class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
+                    <span id="damage_diameter-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
+                </div>
             </div>
             <label class="block text-sm font-medium" for="replacements">Ricambi</label>
             <textarea name="replacements" id="replacements" cols="20" rows="10"
@@ -186,13 +195,14 @@
 
         <div id="step-3" class="hidden">
             <span class="text-[#222222] text-[15px] mb-4">Carica le foto dell'auto</span>
+            <div id="file-type-error" class="text-[#DC0814] text-lg my-3"></div>
             <!-- Drag and Drop Container -->
             <div class="flex h-72 mb-8 mt-4">
                 <div id="drop-area"
                     class="h-full border-2 border-dashed border-[#DDDDDD] bg-[#FAFAFA] w-2/3 p-10 flex flex-col place-content-center place-items-center text-center rounded-md cursor-pointer">
                     <p class="text-[#222222] font-medium mb-2">Trascina le foto oppure selezionale dal </p>
                     <button type="button" id="file-picker-btn" class="text-[#4453A5] underline">browse</button>
-                    <input id="images" type="file" name="images[]" multiple class="hidden">
+                    <input accept="image/*" id="images" type="file" name="images[]" multiple class="hidden">
                 </div>
                 <div id="file-preview" class="ml-4 w-1/3 h-full overflow-y-auto"></div>
             </div>
@@ -206,8 +216,8 @@
                     <p class="text-[#222222] font-medium mb-2">Trascina le foto oppure selezionale dal </p>
                     <button type="button" id="file-picker-btn-disassembly"
                         class="text-[#4453A5] underline">browse</button>
-                    <input id="images-disassembly" type="file" name="images-disassembly[]" multiple
-                        class="hidden">
+                    <input accept="image/*" id="images-disassembly" type="file" name="images-disassembly[]"
+                        multiple class="hidden">
                 </div>
                 <div id="file-preview-disassembly" class="ml-4 w-1/3 h-full overflow-y-auto"></div>
             </div>
@@ -291,7 +301,8 @@
             let valid = true;
 
             if (stepCounter === 1) {
-                const requiredFieldsStep1 = ['earn_mechanic_percentage', 'date', 'customer', 'mechanic',
+                const requiredFieldsStep1 = ['earn_mechanic_percentage', 'date', 'customer',
+                    'mechanicIds',
                     'admin_name', 'brand', 'plate', 'price'
                 ];
                 valid = validateFields(requiredFieldsStep1);
@@ -301,7 +312,7 @@
                     stepCounter++;
                 }
             } else if (stepCounter === 2) {
-                const requiredFieldsStep2 = ['replacements', 'notes', 'car_size'];
+                const requiredFieldsStep2 = ['replacements', 'notes', 'car_size', 'damage_diameter'];
                 valid = validateParts() && validateFields(requiredFieldsStep2);
 
                 if (valid) {
@@ -401,7 +412,7 @@
             const selectedOption = this.options[this.selectedIndex];
 
             // Get mechanic details from the option element
-            const mechanicId = selectedOption.value;
+            const mechanicId = selectedOption.value; // This should be a string
             const mechanicName = selectedOption.text.split(' ')[0];
             const mechanicSurname = selectedOption.text.split(' ')[1];
 
@@ -409,7 +420,7 @@
             if (!selectedMechanics.some(mechanic => mechanic.id === mechanicId) && mechanicId) {
                 // Add mechanic to the selectedMechanics array
                 selectedMechanics.push({
-                    id: mechanicId,
+                    id: mechanicId, // Keep this as a string
                     name: mechanicName,
                     surname: mechanicSurname
                 });
@@ -423,14 +434,14 @@
         });
 
         // Function to remove a mechanic from the selected list
-        function removeMechanic(mechanicId) {
+        window.removeMechanic = function(mechanicId) {
+            // Ensure the ID is treated as a string
+            mechanicId = String(mechanicId); // Convert mechanicId to string for consistent comparison
             // Remove the mechanic from the selectedMechanics array
             selectedMechanics = selectedMechanics.filter(mechanic => mechanic.id !== mechanicId);
-
             // Re-render the list
             renderSelectedMechanics();
-        }
-
+        };
 
         // For the car photos section
         const dropAreaCar = document.getElementById('drop-area');
@@ -508,9 +519,25 @@
             const files = [...e.target.files];
             addFiles(files, 'disassembly');
         });
-
+        const fileTypeError = document.getElementById('file-type-error');
         // Add files to the selection and update preview
         function addFiles(files, type) {
+            const validImageFiles = files.filter(isImage); // Filter files to only include images
+
+            // If no valid images, notify the user
+            if (validImageFiles.length === 0) {
+                fileTypeError.textContent = 'Seleziona soltanto immagini';
+                return; // Exit the function if no image files are present
+            }
+
+            // Notify about invalid files
+            const invalidFiles = files.filter(file => !isImage(file));
+            if (invalidFiles.length > 0) {
+                fileTypeError.textContent =
+                    `Seleziona soltanto immagini, rimuovi le seguenti: ${invalidFiles.map(file => file.name).join(', ')}`;
+                return;
+            }
+
             if (type === 'car') {
                 selectedFilesCar = [...selectedFilesCar, ...filterNewFiles(files,
                     selectedFilesCar)]; // Append new files
@@ -556,6 +583,10 @@
                     file)); // Add disassembly files to DataTransfer
                 imageInputDisassembly.files = dataTransfer.files; // Update the disassembly file input
             }
+        }
+
+        function isImage(file) {
+            return file && file['type'].startsWith('image/');
         }
 
         // Update file preview for both sections

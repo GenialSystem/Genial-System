@@ -30,6 +30,7 @@ class WorkStationsTable extends Component
                     });
             });
         }
+        $query->orderBy('id', 'desc');
 
         return view('livewire.work-stations-table', [
             'rows' => $query->paginate(12)

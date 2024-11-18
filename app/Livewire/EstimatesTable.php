@@ -48,19 +48,6 @@ class EstimatesTable extends Component
 
     protected $queryString = ['searchTerm', 'selectedState'];
     public $isCustomer;
-    
-    public function applyStateToSelectedRows()
-    {
-        $this->selectAll = false;
-        if (!empty($this->selectedRows) && !empty($this->newState)) {
-            Estimate::whereIn('id', $this->selectedRows)
-                ->update(['state' => $this->newState]);
-
-            $this->selectedRows = [];
-            $this->closeModal();
-            $this->dispatch('rowsSelected', $this->selectedRows);
-        }
-    }
 
     public function updatedSearchTerm()
     {
@@ -102,13 +89,39 @@ class EstimatesTable extends Component
 
     public function updateState($estimateId, $newState)
     {
-        Log::info('change' . $estimateId);
         $estimate = Estimate::find($estimateId);
         if ($estimate) {
             $estimate->state = $newState;
             $estimate->update();
+            
+            if ($newState === 'Confermato') {
+                //parametri da passare al form di creazione
+                $params = [
+                    'customer_id' => $estimate->customer->id,
+                ];
+
+                if (!empty($estimate->brand)) {
+                    $params['brand'] = $estimate->brand;
+                }
+
+                if (!empty($estimate->plate)) {
+                    $params['plate'] = $estimate->plate;
+                }
+
+                return redirect()->route('orders.create', $params);
+            }
         }
     }
+
+    public function updatedPage()
+    {
+        // Get the current page order IDs
+        $currentPageOrderIds = $this->getCurrentPageEstimatesIds();
+
+        // Check if selectedRows contain all current page order IDs
+        $this->selectAll = !array_diff($currentPageOrderIds, $this->selectedRows);
+    }
+
 
     protected function getCurrentPageEstimatesIds()
     {
@@ -131,7 +144,7 @@ class EstimatesTable extends Component
                         })
                         ->orWhere('price', 'like', "%{$this->searchTerm}%");
                 });
-            })
+            })->orderBy('id', 'desc')
             ->paginate(12) // Ensure pagination here
             ->pluck('id')
             ->map(fn($id) => (string) $id)
@@ -184,6 +197,7 @@ class EstimatesTable extends Component
                     ->orWhere('price', 'like', "%{$this->searchTerm}%");
             });
         }
+        $query->orderBy('id', 'desc');
 
         return view('livewire.estimates-table', [
             'rows' => $query->paginate(12), // Ensure pagination here

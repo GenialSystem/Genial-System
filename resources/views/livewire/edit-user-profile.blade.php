@@ -127,6 +127,50 @@
                                 @disabled(!$isEditing) /> <!-- Editable based on $isEditing -->
                         </div> --}}
                     </div>
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <!-- Old Password -->
+                        <div>
+                            <label for="oldPassword" class="block text-sm text-[#9F9F9F] text-[13px]">Vecchia
+                                Password</label>
+                            <input type="password" wire:model="oldPassword" id="oldPassword"
+                                class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none"
+                                @disabled(!$isEditing) />
+
+                            <!-- Show oldPassword error message -->
+                            @error('oldPassword')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- New Password -->
+                        <div>
+                            <label for="newPassword" class="block text-sm text-[#9F9F9F] text-[13px]">Nuova
+                                Password</label>
+                            <input type="password" wire:model="newPassword" id="newPassword"
+                                class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none"
+                                @disabled(!$isEditing) />
+
+                            <!-- Show newPassword error message -->
+                            @error('newPassword')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div>
+                            <label for="confirmPassword" class="block text-sm text-[#9F9F9F] text-[13px]">Conferma
+                                Password</label>
+                            <input type="password" wire:model="confirmPassword" id="confirmPassword"
+                                class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none"
+                                @disabled(!$isEditing) />
+
+                            <!-- Show confirmPassword error message -->
+                            @error('confirmPassword')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
                 </form>
             </div>
         </div>
@@ -135,6 +179,8 @@
             <div class="p-1 bg-[#F2F1FB] mb-4">
                 <span class="text-[15px] text-[#222222]">Notifiche</span>
             </div>
+            @livewire('notification-preferences')
+
         </div>
     </div>
 

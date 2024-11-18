@@ -50,6 +50,7 @@ class MechanicTable extends Component
 
         }
 
+        $query->orderBy('id', 'desc');
         $rows = $query->paginate(12);
 
         return view('livewire.mechanic-table', [

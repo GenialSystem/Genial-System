@@ -163,8 +163,9 @@
                                 ticks: {
                                     stepSize: stepSize, // Dynamically set step size
                                     callback: function(value) {
-                                        return (value / 1000) + 'k';
-                                    }
+                                        return (value / 1000).toFixed(2) + 'k';
+                                    },
+
                                 },
                                 grid: {
                                     color: '#ddd',

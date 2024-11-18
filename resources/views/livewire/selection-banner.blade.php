@@ -5,8 +5,21 @@
                 <span class="text-white text-2xl font-bold">{{ count($selectedRows) }}</span>
                 <span class="text-white text-lg">Elementi selezionati</span>
             </div>
+            <div>
+                <div wire:loading wire:target="applyStateToSelectedRows"
+                    class="flex place-items-center place-content-center justify-center h-full px-10">
+                    <!-- Spinner Icon -->
+                    <svg class="animate-spin h-6 w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                            stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
 
-            <div class="flex space-x-2">
+                </div>
+            </div>
+            <div wire:loading.remove wire:target="applyStateToSelectedRows" class="flex space-x-2">
                 @foreach ($actionButtons as $button)
                     @if ($button === 'delete')
                         <button wire:key="{{ str()->random(10) }}"
@@ -32,8 +45,15 @@
                             Modifica
                         </button>
                     @elseif ($button === 'download')
-                        <button wire:key="{{ str()->random(10) }}" class="text-[#222222] px-4 py-2 rounded">
+                        <button wire:key="{{ str()->random(10) }}"
+                            wire:click="downloadPdfs('{{ $modelName }}', @js($selectedRows))"
+                            class="text-[#222222] px-4 py-2 rounded">
                             Scarica
+                        </button>
+                    @elseif ($button === 'archive')
+                        <button wire:key="{{ str()->random(10) }}" wire:click="applyStateToSelectedRows"
+                            class="text-[#222222] px-4 py-2 rounded">
+                            Archivia
                         </button>
                     @endif
                 @endforeach

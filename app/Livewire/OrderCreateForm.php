@@ -9,7 +9,33 @@ use Livewire\Component;
 
 class OrderCreateForm extends Component
 {
-   public  $car_sizes = ['Piccolo', 'Medio', 'Grande', 'Veicolo commerciale'];
+    public  $car_sizes = ['Piccolo', 'Medio', 'Grande', 'Veicolo commerciale'];
+    public $adminName = '';
+    public $selectedCustomerId = null;
+    public $brand = '';
+    public $plate = '';
+
+    public function mount()
+    {
+        // Check if a customer_id, brand, and plate are passed via the query string and set them
+        if ($customerId = request()->query('customer_id')) {
+            $this->selectedCustomerId = $customerId;
+            $customer = CustomerInfo::find($customerId);
+            
+            if ($customer) {
+                $this->adminName = $customer->admin_name; 
+            }
+        }
+
+        if ($brand = request()->query('brand')) {
+            $this->brand = $brand; // Prepopulate brand
+        }
+
+        if ($plate = request()->query('plate')) {
+            $this->plate = $plate; // Prepopulate plate
+        }
+    }
+    
     public function render()
     {
         $customers = CustomerInfo::all();

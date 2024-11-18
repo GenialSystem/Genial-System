@@ -61,6 +61,7 @@ class DoneOrdersTable extends Component
             });
         }
 
+        $query->orderBy('id', 'desc');
 
         return view('livewire.done-orders-table', [
             'rows' => $query->paginate(12),

@@ -45,7 +45,17 @@
 
                     <span id="damage_diameter-error" class="text-red-500 text-xs hidden"></span>
                 </div>
-
+                @role('admin')
+                    <div>
+                        <label for="earn_mechanic_percentage" class="block text-sm text-[13px] text-[#9F9F9F]">Guadagno
+                            Tecnico %</label>
+                        <input required type="number" value="{{ $order->earn_mechanic_percentage ?? '' }}" min="1"
+                            max="99" name="earn_mechanic_percentage" id="earn_mechanic_percentage"
+                            class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
+                        <span id="earn_mechanic_percentage-error" class="text-red-500 text-xs hidden">Campo
+                            obbligatorio.</span>
+                    </div>
+                @endrole
                 <div class="flex place-items-center">
                     <input {{ $order->aluminium ? 'checked' : '' }} type="checkbox" name="aluminium"
                         class="border border-[#D6D6D6] checked:bg-[#7FBC4B] text-[#7FBC4B] focus:ring-0 rounded-sm"><span

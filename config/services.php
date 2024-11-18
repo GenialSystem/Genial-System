@@ -13,6 +13,11 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'browsershot' => [
+        'node' => env('BROWSERSHOT_NODE_BINARY', null),
+        'npm' => env('BROWSERSHOT_NPM_BINARY', null),
+        'bin' => env('BROWSERSHOT_CHROME_BIN', null),
+    ],
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),

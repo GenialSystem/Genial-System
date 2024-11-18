@@ -148,17 +148,12 @@
                         class="mt-1 block w-full pointer-events-none px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
 
                 </div>
-
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-[#9F9F9F] text-[13px]">IVA</label>
                     <input type="text" value="{{ $invoice->iva }} €"
                         class="mt-1 block w-full pointer-events-none px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
 @endsection

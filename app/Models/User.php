@@ -4,13 +4,16 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, Notifiable, HasFactory, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -69,11 +72,6 @@ class User extends Authenticatable
         return $this->hasMany(Archive::class, 'user_id');
     }
 
-    public function archivesCustomer()
-    {
-        return $this->hasMany(Archive::class, 'customer_id');
-    }
-
     public function invoices()
     {
         return $this->hasMany(Invoice::class);
@@ -94,4 +92,30 @@ class User extends Authenticatable
     {
         return $this->hasOne(MechanicInfo::class);
     }
+
+    public function chats()
+    {
+        return $this->belongsToMany(Chat::class)->withPivot('last_read_message_id');    
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return 'users.'. $this->id;
+    }
+
+    public function getFullName():string
+    {
+        return Auth::user()->name . ' ' . Auth::user()->surname;
+    }
+
+    public function notificationPreferences()
+    {
+        return $this->hasOne(NotificationPreference::class);
+    }
+
 }

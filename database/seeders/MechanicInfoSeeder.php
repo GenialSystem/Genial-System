@@ -22,7 +22,7 @@ class MechanicInfoSeeder extends Seeder
             MechanicInfo::create([
                 'user_id' => $userId,
                 'branch' => $faker->company,
-                'plain_password' => $faker->password(6, 12),
+                'plain_password' => 'password',
                 'repaired_count' => $faker->numberBetween(1, 100),
                 'working_count' => $faker->numberBetween(1, 20),
                 'created_at' => now(),

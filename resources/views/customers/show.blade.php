@@ -138,7 +138,7 @@
             </div>
 
             <div x-show="activeTab === 'tab1'" class="p-4">
-                @livewire('archive-section', ['archives' => $customer->user->archivesCustomer, 'customerId' => $customer->id])
+                @livewire('archive-section', ['archives' => $customer->archives, 'customerId' => $customer->id])
             </div>
             <div x-show="activeTab === 'tab2'" class="p-4">
                 @livewire('general-docs', ['docs' => $customer->user->docs, 'modelId' => $customer->user->id, 'isOrderModel' => 0])
