@@ -156,7 +156,7 @@
                                         </button>
                                     </a>
 
-                                    @livewire('download-order-photos', ['orderId' => $row->id])
+                                    @livewire('download-order-photos', ['orderId' => $row->id], key(str()->random(10)))
                                 @endrole
                             </td>
                         </tr>
