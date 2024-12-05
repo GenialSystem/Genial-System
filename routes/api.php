@@ -51,7 +51,7 @@ Route::post('upload_images/{id}/{type}', [OrderController::class, 'uploadImages'
 Route::post('upload_files/{id}', [OrderController::class, 'uploadFiles']);
 // Route::get('download_images/{id}', [OrderController::class, 'downloadImages']);
 // Route::apiResource('orders', OrderController::class);
-Route::get('testdownloadPDF/{model}/{ids}', [PdfController::class, 'downloadPdfs'])->name('downloadPDF');
+Route::get('testdownloadPDF/{model}/{ids}', [PdfController::class, 'downloadPdfs'])->name('testdownloadPDF');
 // Route::middleware('auth:sanctum')->get('test', function (){return response()->json('ok');});
 Route::get('get_orders_images/{id}/{disassembly}', [OrderController::class, 'orderImages']);
 Route::middleware('auth:sanctum')->post('logout', [LoginController::class, 'logout']);
