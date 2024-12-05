@@ -50,7 +50,7 @@ Route::get('get_orders_files/{id}', [OrderController::class, 'orderFiles']);
 Route::post('upload_images/{id}/{type}', [OrderController::class, 'uploadImages']);
 Route::post('upload_files/{id}', [OrderController::class, 'uploadFiles']);
 // Route::get('download_images/{id}', [OrderController::class, 'downloadImages']);
-Route::apiResource('orders', OrderController::class);
+// Route::apiResource('orders', OrderController::class);
 Route::get('testdownloadPDF/{model}/{ids}', [PdfController::class, 'downloadPdfs'])->name('downloadPDF');
 // Route::middleware('auth:sanctum')->get('test', function (){return response()->json('ok');});
 Route::get('get_orders_images/{id}/{disassembly}', [OrderController::class, 'orderImages']);
@@ -83,43 +83,4 @@ Route::post('/broadcasting/auth', function (Request $request) {
     } else {
         return response()->json(['message' => 'Forbidden'], 403);
     }
-});
-// Route::post('/broadcasting/auth', function (Request $request) {
-//     $user = User::find($request->input('user_id'));
-
-//     $socketId = $request->input('socket_id');
-//     $channelName = $request->input('channel_name');
-
-//     $pusher = new Pusher(
-//         env('PUSHER_APP_KEY'),
-//         env('PUSHER_APP_SECRET'),
-//         env('PUSHER_APP_ID'),
-//         ['cluster' => env('PUSHER_APP_CLUSTER')]
-//     );
-
-//     if ($user) {
-//         // Genera la stringa di autenticazione
-//         $authData = $pusher->authorizePresenceChannel(
-//             $channelName,
-//             $socketId,
-//             (string) $user->id,
-//             ['name' => $user->name] // Dati aggiuntivi utente
-//         );
-
-//         // Restituisci la risposta JSON
-//         return response()->json(json_decode($authData, true));
-//     } else {
-//         return response()->json(['message' => 'Forbidden'], 403);
-//     }
-// });
-
-
-
-Route::get('test', function(){
-    // $user = User::find(2);
-    // $user->notify(new OrderCreate($user));
-    $users = User::find(2);
-    UserOnlineEvent::broadcast($users);
-
-    return $users;
 });
