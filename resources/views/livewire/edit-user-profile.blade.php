@@ -186,22 +186,13 @@
 
         </div>
     </div>
-    <div class="flex justify-between">
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="py-2 px-4 bg-red-500 text-white rounded-md text-sm mt-10"
-                wire:loading.remove>
-                Logout
-            </button>
-        </form>
-        <form wire:submit.prevent='clearStorage' method="POST"
-            onsubmit="return confirm('Sei sicuro di voler eliminare tutti i file?')">
-            @csrf
-            <button type="submit" class="py-2 px-4 bg-red-500 text-white rounded-md text-sm mt-10"
-                wire:loading.remove>
-                Rimuovi tutti i file
-            </button>
-        </form>
 
-    </div>
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit" class="py-2 px-4 bg-red-500 text-white rounded-md text-sm mt-10" wire:loading.remove>
+            Logout
+        </button>
+    </form>
+
+
 </div>
