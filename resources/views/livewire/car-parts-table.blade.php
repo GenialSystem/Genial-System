@@ -13,13 +13,13 @@
                 <td class="py-2 px-2">{{ $part->name }}</td>
                 <td class="py-2 px-2">{{ $part->pivot->damage_count ?? 0 }}</td>
                 <td class="py-2 px-2 text-center">
-                    <input type="checkbox"
+                    <input type="checkbox" @disabled(Auth::user()->hasRole('customer'))
                         class="border border-[#D6D6D6] checked:bg-[#7FBC4B] text-[#7FBC4B] focus:ring-0 rounded-sm"
                         wire:change="updatePivotField({{ $part->id }}, 'paint_prep', $event.target.checked)"
                         {{ $part->pivot->paint_prep ? 'checked' : '' }}>
                 </td>
                 <td class="py-2 px-2 text-center">
-                    <input type="checkbox"
+                    <input type="checkbox" @disabled(Auth::user()->hasRole('customer'))
                         class="border border-[#D6D6D6] checked:bg-[#7FBC4B] text-[#7FBC4B] focus:ring-0 rounded-sm"
                         wire:change="updatePivotField({{ $part->id }}, 'replacement', $event.target.checked)"
                         {{ $part->pivot->replacement ? 'checked' : '' }}>

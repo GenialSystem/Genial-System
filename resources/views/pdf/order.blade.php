@@ -63,8 +63,7 @@
                                 <span class="text-[#222222] text-[15px]">{{ $order->customer->user->name }}
                                     {{ $order->customer->user->surname }}</span>
                             </div>
-                            <a href="{{ route('customers.show', $order->customer->id) }}" class="text-[#4453A5]">Vai
-                                all'anagrafica</a>
+
                         </div>
                         <div>
                             <span class="text-[#808080] text-[15px]">Responsabile: </span>
@@ -74,12 +73,10 @@
                     <div class="flex justify-between">
                         <div>
                             <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                            <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->name }}
-                                {{ $order->mechanics[0]->surname }}</span>
+                            <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->user->name }}
+                                {{ $order->mechanics[0]->user->surname }}</span>
                         </div>
-                        <a href="{{ route('mechanics.show', App\Models\MechanicInfo::where('user_id', $order->mechanics[0]->pivot->mechanic_id)->value('id')) }}"
-                            class="text-[#4453A5]">Vai
-                            all'anagrafica</a>
+
                     </div>
                     <hr class="my-3">
                     <div>
@@ -118,8 +115,8 @@
                         <hr class="my-3">
                         <div>
                             <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                            <span class="text-[#222222] text-[15px]"> {{ $order->mechanics[0]->name }}
-                                {{ $order->mechanics[0]->surname }}</span>
+                            <span class="text-[#222222] text-[15px]"> {{ $order->mechanics[0]->user->name }}
+                                {{ $order->mechanics[0]->user->surname }}</span>
                         </div>
                         <div>
                             <span class="text-[#808080] text-[15px]">Guadagno tecnico: </span>
@@ -138,7 +135,7 @@
                 <div class="xl:flex">
                     <div class="xl:w-3/5">
                         @livewire('car-parts-table', ['order' => $order])
-                        <div class="grid grid-cols-2 gap-4 my-6">
+                        <div class="grid grid-cols-3 gap-4 my-6">
                             <div>
                                 <label for="assembly_deassembly"
                                     class="block text-sm text-[#9F9F9F] text-[13px]">Montaggio/Smontaggio</label>
@@ -282,7 +279,7 @@
             </div>
             <div class="p-4">
                 <span class="text-sm font-semibold text-[#222222] text-[15px]">Foto</span>
-                <div class="grid grid-cols-2 2xl:grid-cols-4 gap-6">
+                <div class="grid grid-cols-3 gap-6">
                     @forelse ($order->images->where('disassembly', 0) as $image)
                         <img src="{{ asset('storage/' . $image->image_path) }}" alt="Order Image"
                             class="h-[315px] object-cover rounded-md">
@@ -294,7 +291,7 @@
             </div>
             <div class="p-4">
                 <span class="text-sm font-semibold text-[#222222] text-[15px]">Foto smontaggio</span>
-                <div class="grid grid-cols-4 gap-6">
+                <div class="grid grid-cols-3 gap-6">
                     @forelse ($order->images->where('disassembly', 1) as $image)
                         <img src="{{ asset('storage/' . $image->image_path) }}" alt="Order Image"
                             class="h-[315px] object-cover rounded-md">

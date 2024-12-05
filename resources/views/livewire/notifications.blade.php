@@ -67,9 +67,9 @@
         window.Echo.private('users.' + @json($id))
             .notification((notification) => {
                 console.log(notification);
-                if (notification.type === 'App\\Notifications\\OrderFinished') {
-                    console.log('TIPO CORRETT');
-                }
+                // if (notification.type === 'App\\Notifications\\OrderFinished') {
+                //     console.log('TIPO CORRETT');
+                // }
                 // Dispatch event to Livewire with the new notification data
                 Livewire.dispatch('addNotification', {
                     notificationData: {

@@ -23,6 +23,8 @@ class MechanicInfo extends Model
         'province',
         'branch',
     ];
+
+    protected $with = ['user'];
     
     public function workstations()
     {
@@ -44,6 +46,11 @@ class MechanicInfo extends Model
     public function availabilities()
     {
         return $this->hasMany(Availability::class);
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'order_mechanic', 'mechanic_id', 'order_id');
     }
     
 }

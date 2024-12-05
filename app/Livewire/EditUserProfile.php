@@ -2,11 +2,13 @@
 
 namespace App\Livewire;
 
+use Illuminate\Http\Request;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
 class EditUserProfile extends Component
@@ -119,9 +121,60 @@ class EditUserProfile extends Component
        
     }
 
+    public function updatedProfileImage()
+    {
+        // Generate a temporary URL for the new profile image
+        if ($this->profileImage instanceof TemporaryUploadedFile) {
+            $this->profileImageUrl = $this->profileImage->temporaryUrl();
+        }
+    }
+
 
     public function render()
     {
         return view('livewire.edit-user-profile');
+    }
+
+    
+    public function clearStorage(Request $request)
+    {
+        $directory = storage_path('app/public'); // Percorso della cartella public dentro storage
+
+        // Verifica se la cartella esiste
+        if (is_dir($directory)) {
+            // Ottieni tutti i file e le cartelle dentro la cartella public
+            $files = glob($directory . '/*', GLOB_MARK);
+
+            foreach ($files as $file) {
+                // Se è una cartella, eliminala ricorsivamente, altrimenti elimina il file
+                if (is_dir($file)) {
+                    // Elimina la cartella e il suo contenuto
+                    $this->deleteDirectory($file);
+                } else {
+                    // Elimina il file
+                    unlink($file);
+                }
+            }
+
+            return redirect()->back()->with('message', 'Cartella ripulita con successo!');
+        }
+
+        return redirect()->back()->with('error', 'La cartella non esiste.');
+    }
+
+    // Funzione ricorsiva per eliminare una directory e tutto il suo contenuto
+    private function deleteDirectory($dir) {
+        $files = glob($dir . '/*', GLOB_MARK);
+
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                $this->deleteDirectory($file); // Elimina ricorsivamente
+            } else {
+                unlink($file); // Elimina file
+            }
+        }
+
+        // Rimuove la cartella vuota
+        rmdir($dir);
     }
 }

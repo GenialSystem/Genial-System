@@ -37,12 +37,12 @@
         ];
 
         // List items for non-admin roles
-        if (Auth::user()->roles->pluck('name')[0] === 'customer') {
+        if (Auth::user()->hasRole('customer')) {
             # code...
             $nonAdminItems = [
                 [
                     'color' => 'bg-[#FFCD5D]',
-                    'image' => 'images/commesse_icona.svg',
+                    'image' => 'images/car.svg',
                     'title' =>
                         Auth::user()->customerInfo->finished_cars_count + Auth::user()->customerInfo->queued_cars_count,
                     'subtitle' => 'Numero totale riparazioni auto grandinate',
@@ -61,10 +61,10 @@
                 ],
             ];
         }
-
     @endphp
     <!-- w-1/3  w-1/5 -->
     <div>
+        {{-- @dd(Auth::user()->roles) --}}
         <h2 class="text-2xl font-bold mb-4">Home</h2>
         @role('admin')
             <div class="grid grid-cols-5 gap-4">

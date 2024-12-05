@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('brand')->nullable();
             $table->string('plate')->nullable();
             $table->unsignedBigInteger('mechanic_id')->nullable();
-            $table->foreign('mechanic_id')->references('id')->on('customer_infos')->onDelete('cascade');
+            $table->foreign('mechanic_id')->references('id')->on('mechanic_infos')->onDelete('cascade');
             $table->unsignedBigInteger('customer_id');
             $table->foreign('customer_id')->references('id')->on('customer_infos')->onDelete('cascade');
             $table->enum('type', ['Preventivo combinato', 'Preventivo leva bolli', 'Carrozzeria']);

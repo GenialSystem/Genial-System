@@ -104,6 +104,10 @@ class EstimatesTable extends Component
                     $params['brand'] = $estimate->brand;
                 }
 
+                if (!empty($estimate->mechanic_id)) {
+                    $params['mechanic_id'] = $estimate->mechanic_id;
+                }
+
                 if (!empty($estimate->plate)) {
                     $params['plate'] = $estimate->plate;
                 }
@@ -136,10 +140,11 @@ class EstimatesTable extends Component
                         ->orWhere('state', 'like', "%{$this->searchTerm}%")
                         ->orWhere('type', 'like', "%{$this->searchTerm}%")
                         ->orWhereHas('customer', function ($userQuery) {
-                            $userQuery->where('name', 'like', "%{$this->searchTerm}%")
-                                ->orWhereHas('customerInfo', function ($infoQuery) {
+                            $userQuery->where('admin_name', 'like', "%{$this->searchTerm}%")
+                                ->orWhereHas('user', function ($infoQuery) {
                                     $infoQuery->where('city', 'like', "%{$this->searchTerm}%")
-                                        ->orWhere('admin_name', 'like', "%{$this->searchTerm}%");
+                                    ->orWhere('name', 'like', "%{$this->searchTerm}%")
+                                    ->orWhere('admin_name', 'like', "%{$this->searchTerm}%");
                                 });
                         })
                         ->orWhere('price', 'like', "%{$this->searchTerm}%");

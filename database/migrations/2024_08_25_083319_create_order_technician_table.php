@@ -19,7 +19,7 @@ return new class extends Migration
 
             // Define foreign key constraints
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
-            $table->foreign('mechanic_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('mechanic_id')->references('id')->on('mechanic_infos')->onDelete('cascade');
 
             // To prevent duplicate entries for the same order-mechanic pair
             $table->unique(['order_id', 'mechanic_id']);

@@ -15,6 +15,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable, HasFactory, HasRoles;
 
+    protected $guard_name = 'web';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -78,10 +80,10 @@ class User extends Authenticatable
     }
 
     // A mechanic can belong to many orders
-    public function assignedOrders()
-    {
-        return $this->belongsToMany(Order::class, 'order_mechanic', 'mechanic_id', 'order_id');
-    }
+    // public function assignedOrders()
+    // {
+    //     return $this->belongsToMany(Order::class, 'order_mechanic', 'mechanic_id', 'order_id');
+    // }
 
     public function customerInfo()
     {

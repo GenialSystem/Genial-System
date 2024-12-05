@@ -158,8 +158,11 @@
                         <input type="text"
                             class="mt-1 block w-full pointer-events-none pl-12 px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none relative">
                         <span
-                            class="flex place-items-center absolute inset-y-0 left-0 h-[70%] bg-[#F2F1FB] text-[#4453A5] font-semibold rounded-md ml-2 my-auto px-2 text-[13px]">Nicola
-                            Nonini &times;</span>
+                            class="flex place-items-center absolute inset-y-0 left-0 h-[70%] bg-[#F2F1FB] text-[#4453A5] font-semibold rounded-md ml-2 my-auto px-2 text-[13px]">
+                            @if ($estimate->mechanic)
+                                {{ $estimate->mechanic->user->name . ' ' . $estimate->mechanic->user->surname }}
+                            @endif
+                        </span>
                     </div>
                 </div>
 

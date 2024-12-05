@@ -170,7 +170,7 @@
             }
         }
 
-        // Validate each field
+        // Validate each ld
         for (const [field, rule] of Object.entries(rules)) {
             const input = document.querySelector(`[name="${field}"]`);
             if (input) {

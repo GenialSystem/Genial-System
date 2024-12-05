@@ -28,26 +28,32 @@ class OrderUploadModal extends ModalComponent
         return '4xl';
     }
 
-    protected $listeners = ['fileInputUpdated'];
+    protected $listeners = ['fileInputUpdated', 'removeFileFromImages'];
 
     public function fileInputUpdated()
     {
-        // Check if any files are being uploaded
-        if (count($this->images) === 0) {
-            return; // No need to proceed if there are no images
-        }
+        $this->images = array_filter($this->images, function ($image) {
+            return $image !== null;
+        });
     }
 
+    public function removeFileFromImages($index)
+    {
+        // Remove the file at the given index from the images array
+        unset($this->images[$index]);
+
+        // Reindex the array to avoid gaps
+        $this->images = array_values($this->images);
+    }
 
     public function uploadImages()
     {
         try {
-                // dd($this->images);
             // Check if images are uploaded
             $hasSkippedImages = []; // Array to store names of skipped images
             if (empty($this->images)) {
                 $this->dispatch('closeModal');
-                return redirect()->route('orders.show',  $this->order->id)->with('error', ['title' => 'Errore', 'subtitle' => 'Nessuna immagine selezionata']);
+                return;
             }
     
             // Determine the folder based on the type
@@ -88,7 +94,7 @@ class OrderUploadModal extends ModalComponent
                 'Immagini caricate con successo';
     
             // Redirect with success message
-            return redirect()->route('orders.show', $this->order->id)->with('success', [
+            return redirect()->route('orders.show', $this->order->id)->with($hasSkippedImages ? 'warning' : 'success', [
                 'title' => 'Operazione confermata.', 
                 'subtitle' => $message,
             ]);

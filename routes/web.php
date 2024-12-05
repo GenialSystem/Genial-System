@@ -15,12 +15,18 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WorkstationController;
 use App\Models\CustomerInfo;
 use App\Models\Estimate;
+use App\Models\Event;
 use App\Models\MechanicInfo;
 use App\Models\Order;
 use App\Models\User;
 use App\Notifications\EstimateRequest;
+use App\Notifications\EventNotification;
+use App\Notifications\OrderCreate;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
+use Pusher\Pusher;
 
 require __DIR__ . '/auth.php';
 Route::middleware('auth')->group(function () {
@@ -51,6 +57,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('/workstations', WorkstationController::class);
         Route::get('/invoices_customers', [InvoiceController::class, 'indexForCustomers'])->name('invoicesCustomer');
         Route::get('/invoices_mechanics', [InvoiceController::class, 'indexForMechanics'])->name('invoicesMechanic');
+        Route::get('invoices/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
     });
     Route::resource('/chats', ChatController::class);
     Route::get('/done_order/{order}', [OrderController::class, 'showDoneOrder'])->name('showDoneOrder');
@@ -67,9 +74,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::get('test', function () {
-    return response()->json(['message' => 'Success']);
-});
+
+
 
 // Route::get('test', function () {
 //     for ($i = 1; $i <= 50; $i++) {

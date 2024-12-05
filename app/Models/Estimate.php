@@ -6,6 +6,7 @@ use App\Notifications\EstimateStateChanged;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class Estimate extends Model
 {
@@ -30,31 +31,31 @@ class Estimate extends Model
         static::creating(function ($estimate) {
             // Get the current year
             $year = now()->year;
-
-            // Find the last estimate created this year
-            $lastEstimate = static::whereYear('created_at', $year)->latest()->first();
-
-            // If there is no estimate for this year, start from 1, otherwise increment the last number
-            if ($lastEstimate) {
-                // Extract the number part (before the slash) and increment it
-                $lastNumber = (int) explode('/', $lastEstimate->number)[0];
-                $estimate->number = ($lastNumber + 1) . '/' . $year;
-                // $estimate->save();
+        
+            // Find the highest `number` for this year in a safe way
+            $lastNumber = static::whereYear('created_at', $year)
+                ->orderByRaw('CAST(SUBSTRING_INDEX(number, "/", 1) AS UNSIGNED) DESC')
+                ->value('number');
+        
+            if ($lastNumber) {
+                // Extract the numeric part before the `/` and increment
+                $lastSequence = (int)explode('/', $lastNumber)[0];
+                $estimate->number = ($lastSequence + 1) . '/' . $year;
             } else {
-                // Start with "1/year" if this is the first estimate of the year
+                // Start from 1 if no records for the year
                 $estimate->number = '1/' . $year;
             }
-            $estimate->saveQuietly();
         });
+        
+
         static::updated(function ($estimate) {
-           
-            if ($estimate->customer) {
-                
-                if ($estimate->state != 'Nuovo') {
-                    $editor = Auth::user()->getFullName();
-                    $estimate->customer->user->notify(new EstimateStateChanged($editor, $estimate));
-                }
+            if ($estimate->customer && $estimate->state != 'Nuovo') {
+                $editor = Auth::user()->getFullName();
+                $estimate->customer->user->notify(new EstimateStateChanged($editor, $estimate));
             }
         });
     }
+
+    
+
 }

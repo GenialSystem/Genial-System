@@ -92,7 +92,7 @@
                         class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <option value="">Seleziona un tecnico</option>
                         @foreach ($mechanics as $mechanic)
-                            <option value="{{ $mechanic->user->id }}">{{ $mechanic->user->name }}
+                            <option value="{{ $mechanic->id }}">{{ $mechanic->user->name }}
                                 {{ $mechanic->user->surname }}</option>
                         @endforeach
                     </select>
@@ -382,8 +382,21 @@
 
         // Array to keep track of selected mechanics
         let selectedMechanics = [];
+        Livewire.on('default_mechanic', function(data) {
+            // Access the first object in the array
+            const mechanic = data[0];
 
-        // Function to render the selected mechanics
+            selectedMechanics.push({
+                id: mechanic.mechanic_id, // Use `mechanic_id` here
+                name: mechanic.name,
+                surname: mechanic.surname
+            });
+
+            // Render the updated list
+            renderSelectedMechanics();
+        });
+
+        // Function to render   the selected mechanics
         function renderSelectedMechanics() {
             // Clear the current displayed list
             selectedMechanicsDiv.innerHTML = '';

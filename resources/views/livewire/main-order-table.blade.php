@@ -118,7 +118,7 @@
                                     <div
                                         class="absolute right-0 top-4 mt-1 hidden group-hover:block bg-gray-700 text-white text-xs rounded-lg px-2 py-1 whitespace-nowrap z-10">
                                         @foreach ($row->mechanics as $mechanic)
-                                            {{ $mechanic->name }} {{ $mechanic->surname }}<br>
+                                            {{ $mechanic->user->name }} {{ $mechanic->user->surname }}<br>
                                         @endforeach
                                     </div>
                                 @else

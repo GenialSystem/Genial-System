@@ -25,6 +25,8 @@ class Order extends Model
         'earn_mechanic_percentage'
     ];
 
+    // protected $with = ['customer'];
+
     public function images()
     {
         return $this->hasMany(OrderImage::class);
@@ -56,7 +58,7 @@ class Order extends Model
     // An order has many mechanics
     public function mechanics()
     {
-        return $this->belongsToMany(User::class, 'order_mechanic', 'order_id', 'mechanic_id');
+        return $this->belongsToMany(MechanicInfo::class, 'order_mechanic', 'order_id', 'mechanic_id');
     }
     // Example accessor to format price for display
     public function getPriceAttribute($value)

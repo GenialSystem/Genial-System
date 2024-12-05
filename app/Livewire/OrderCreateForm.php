@@ -14,7 +14,7 @@ class OrderCreateForm extends Component
     public $selectedCustomerId = null;
     public $brand = '';
     public $plate = '';
-
+    public $mechanicIdFromEstimate;
     public function mount()
     {
         // Check if a customer_id, brand, and plate are passed via the query string and set them
@@ -34,6 +34,24 @@ class OrderCreateForm extends Component
         if ($plate = request()->query('plate')) {
             $this->plate = $plate; // Prepopulate plate
         }
+
+        if ($mechanicIdFromEstimate = request()->query('mechanic_id')) {
+            $this->mechanicIdFromEstimate = $mechanicIdFromEstimate;
+        
+            $mechanic = MechanicInfo::with('user:id,name,surname')
+                        ->find($this->mechanicIdFromEstimate);
+        
+            if ($mechanic && $mechanic->user) {
+                $data = [
+                    'mechanic_id' => $mechanic->id,
+                    'name'        => $mechanic->user->name,
+                    'surname'     => $mechanic->user->surname,
+                ];
+        
+                $this->dispatch('default_mechanic', $data);
+            }
+        }
+        
     }
     
     public function render()

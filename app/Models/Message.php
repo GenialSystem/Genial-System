@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model 
 {
     use HasFactory;
-    
+    protected $casts = [
+        'id' => 'integer',
+        'chat_id' => 'integer',
+        'user_id' => 'integer',
+    ];
     protected $fillable = ['chat_id', 'user_id', 'content', 'file_path'];
 
     public function chat()

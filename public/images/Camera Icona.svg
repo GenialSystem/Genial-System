@@ -1,0 +1,14 @@
+<svg id="Camera_Icona" data-name="Camera Icona" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18" viewBox="0 0 18 18">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rettangolo_915" data-name="Rettangolo 915" width="13.451" height="11.188" transform="translate(0 0)" fill="#FFFFFF"/>
+    </clipPath>
+  </defs>
+  <g id="Raggruppa_3615" data-name="Raggruppa 3615" transform="translate(2.273 3.406)">
+    <g id="Raggruppa_3614" data-name="Raggruppa 3614" clip-path="url(#clip-path)">
+      <path id="Tracciato_904" data-name="Tracciato 904" d="M11.819,11.188H1.632A1.634,1.634,0,0,1,0,9.556V3.33A1.635,1.635,0,0,1,1.632,1.7h2L4.611.223A.5.5,0,0,1,5.028,0h3.4a.5.5,0,0,1,.416.223L9.827,1.7h2a1.637,1.637,0,0,1,1.627,1.629V9.556a1.634,1.634,0,0,1-1.632,1.632M1.632,2.7A.632.632,0,0,0,1,3.331V9.556a.632.632,0,0,0,.632.632H11.819a.633.633,0,0,0,.632-.632V3.33a.634.634,0,0,0-.63-.63H9.56a.5.5,0,0,1-.416-.223L8.16,1H5.3l-.98,1.476A.5.5,0,0,1,3.9,2.7Z" fill="#FFFFFF"/>
+      <path id="Tracciato_905" data-name="Tracciato 905" d="M6.726,8.924A2.764,2.764,0,1,1,9.49,6.16,2.767,2.767,0,0,1,6.726,8.924m0-4.528A1.764,1.764,0,1,0,8.49,6.16,1.766,1.766,0,0,0,6.726,4.4" fill="#FFFFFF"/>
+    </g>
+  </g>
+  <rect id="Rettangolo_916" data-name="Rettangolo 916" width="18" height="18" fill="none"/>
+</svg>

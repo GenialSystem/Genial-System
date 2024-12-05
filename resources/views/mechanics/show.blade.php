@@ -122,10 +122,10 @@
             </div>
 
             <div x-show="activeTab === 'tab1'" class="p-4">
-                @livewire('show-orders-mechanic', ['orders' => $mechanic->user->assignedOrders->where('state', 'Riparata')])
+                @livewire('show-orders-mechanic', ['orders' => $mechanic->orders->where('state', 'Riparata')])
             </div>
             <div x-show="activeTab === 'tab2'" class="p-4">
-                @livewire('show-orders-mechanic', ['orders' => $mechanic->user->assignedOrders->where('state', 'In lavorazione')])
+                @livewire('show-orders-mechanic', ['orders' => $mechanic->orders->where('state', 'In lavorazione')])
             </div>
             <div x-show="activeTab === 'tab3'" class="p-4">
                 @livewire('general-docs', ['docs' => $mechanic->user->docs, 'modelId' => $mechanic->user->id, 'isOrderModel' => 0])

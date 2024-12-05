@@ -37,7 +37,7 @@ class OrderCreate extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'title' => 'Operatrice ' . $this->user,
+            'title' => 'Operatrice ' . $this->user->name . ' ' . $this->user->surname,
             'message' => 'Ti ha assegnato una nuova commessa',
         ];
     }
@@ -45,8 +45,9 @@ class OrderCreate extends Notification
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
         return new BroadcastMessage([
-            'title' => 'Operatrice ' . $this->user,
+            'title' => 'Operatrice ' . $this->user->name . ' ' . $this->user->surname,
             'message' => 'Ti ha assegnato una nuova commessa',
+            'id' => $this->id,
             'created_at' => now()->toISOString()
         ]);
     }

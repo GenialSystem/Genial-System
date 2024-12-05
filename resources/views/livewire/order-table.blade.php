@@ -51,7 +51,7 @@
                         </td>
                         <td class="py-3 px-6">
                             @if ($row->mechanics->isNotEmpty())
-                                {{ $row->mechanics->first()->name . ' ' . $row->mechanics->first()->surname }}
+                                {{ $row->mechanics->first()->user->name . ' ' . $row->mechanics->first()->user->surname }}
                             @else
                                 N/A
                             @endif

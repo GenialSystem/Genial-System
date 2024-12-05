@@ -317,8 +317,9 @@ class ChatList extends Component
         // dd($this->filterType);
         $this->loadChats();
         $this->dispatch('chatsFiltered');
-     
+        
         $this->dispatch('listenChats', $this->chats);
+        // $this->selectedChat = null;
     }
 
     public function incrementUnreadCount($chatId, $message)

@@ -123,23 +123,29 @@ class MainOrderTable extends Component
                         ->orWhere('state', 'like', "%{$this->searchTerm}%")
                         ->orWhere('plate', 'like', "%{$this->searchTerm}%")
                         ->orWhere('price', 'like', "%{$this->searchTerm}%")
-                        ->orWhereHas('customer', function ($userQuery) {
-                            $userQuery->where('name', 'like', "%{$this->searchTerm}%")
-                                ->orWhereHas('customerInfo', function ($infoQuery) {
-                                    $infoQuery->where('city', 'like', "%{$this->searchTerm}%")
-                                        ->orWhere('admin_name', 'like', "%{$this->searchTerm}%");
+                        ->orWhereHas('customer', function ($customerQuery) {
+                            $customerQuery->where('admin_name', 'like', "%{$this->searchTerm}%")
+                                ->orWhereHas('user', function ($userQuery) {
+                                    $userQuery->where('city', 'like', "%{$this->searchTerm}%")
+                                        ->orWhere('name', 'like', "%{$this->searchTerm}%")
+                                        ->orWhere('surname', 'like', "%{$this->searchTerm}%"); // Modifica: "name" viene cercato in "users"
                                 });
                         })
                         ->orWhereHas('mechanics', function ($mechanicQuery) {
-                            $mechanicQuery->where('name', 'like', "%{$this->searchTerm}%");
+                            $mechanicQuery->whereHas('user', function ($userQuery) {
+                                $userQuery->where('name', 'like', "%{$this->searchTerm}%")
+                                ->orWhere('surname', 'like', "%{$this->searchTerm}%"); // Modifica: "name" in relazione con "users"
+                            });
                         });
                 });
-            })->orderBy('id', 'desc')
+            })
+            ->orderBy('id', 'desc')
             ->paginate(12); // Recupera la paginazione
-    
+
         // Prendi solo gli ID della pagina corrente
         return $orders->pluck('id')->map(fn($id) => (string) $id)->toArray();
     }
+
     
     public function toggleRow($rowId)
     {
@@ -176,12 +182,16 @@ class MainOrderTable extends Component
                     ->orWhereHas('customer', function ($customerQuery) {
                         $customerQuery->where('admin_name', 'like', "%{$this->searchTerm}%")
                             ->orWhereHas('user', function ($userQuery) {
-                                $userQuery->where('name', 'like', "%{$this->searchTerm}%")
-                                    ->orWhere('surname', 'like', "%{$this->searchTerm}%");
+                                $userQuery->where('city', 'like', "%{$this->searchTerm}%")
+                                    ->orWhere('name', 'like', "%{$this->searchTerm}%")
+                                    ->orWhere('surname', 'like', "%{$this->searchTerm}%"); // Modifica: "name" viene cercato in "users"
                             });
                     })
                     ->orWhereHas('mechanics', function ($mechanicQuery) {
-                        $mechanicQuery->where('name', 'like', "%{$this->searchTerm}%");
+                        $mechanicQuery->whereHas('user', function ($userQuery) {
+                            $userQuery->where('name', 'like', "%{$this->searchTerm}%")
+                            ->orWhere('surname', 'like', "%{$this->searchTerm}%"); // Modifica: "name" in relazione con "users"
+                        });
                     });
             });
         }

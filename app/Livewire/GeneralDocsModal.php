@@ -19,15 +19,13 @@ class GeneralDocsModal extends ModalComponent
     public $modelId;
     public $isOrderModel;
 
-    protected $rules = [
-        'files.*' => 'required|file|max:10240'
-    ];
+   
     
 
     public function submit()
     {
         try {
-            $this->validate();
+            // $this->validate();
             DB::beginTransaction();
     
             $newDocs = [];

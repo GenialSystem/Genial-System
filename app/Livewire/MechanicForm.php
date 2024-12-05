@@ -119,6 +119,7 @@ class MechanicForm extends ModalComponent
                     'cap' => $validatedData['cap'],
                     'cdf' => $validatedData['cdf'],
                 ]);
+                $newUser->assignRole('mechanic');
 
                 MechanicInfo::create([
                     'user_id' => $newUser->id,

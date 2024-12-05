@@ -3,7 +3,6 @@
 @section('content')
     @livewire('back-button')
     <h4 class="text-[22px] text-[#222222] font-semibold mb-4">Dettaglio riparazione #{{ $order->id }}</h4>
-    {{-- {{ $order->user->assignedOrders }} --}}
 
     <div class="2xl:flex 2xl:space-x-4 space-y-4 2xl:space-y-0">
         <div class="flex gap-4 2xl:block 2xl:w-1/3 2xl:space-y-4">
@@ -64,11 +63,10 @@
                     <div class="flex justify-between">
                         <div>
                             <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                            <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->name }}
-                                {{ $order->mechanics[0]->surname }}</span>
+                            <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->user->name }}
+                                {{ $order->mechanics[0]->user->surname }}</span>
                         </div>
-                        <a href="{{ route('mechanics.show', App\Models\MechanicInfo::where('user_id', $order->mechanics[0]->pivot->mechanic_id)->value('id')) }}"
-                            class="text-[#4453A5]">Vai
+                        <a href="{{ route('mechanics.show', $order->mechanics[0]->id) }}" class="text-[#4453A5]">Vai
                             all'anagrafica</a>
                     </div>
                     <hr class="my-3">
@@ -108,8 +106,8 @@
                         <hr class="my-3">
                         <div>
                             <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                            <span class="text-[#222222] text-[15px]"> {{ $order->mechanics[0]->name }}
-                                {{ $order->mechanics[0]->surname }}</span>
+                            <span class="text-[#222222] text-[15px]"> {{ $order->mechanics[0]->user->name }}
+                                {{ $order->mechanics[0]->user->surname }}</span>
                         </div>
                         <div>
                             <span class="text-[#808080] text-[15px]">Guadagno tecnico: </span>

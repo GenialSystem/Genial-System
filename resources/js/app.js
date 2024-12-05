@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!isChannelJoined) {
         presenceChannel = window.Echo.join("online-users")
             .here((users) => {
+                console.log(users);
                 // console.log("Users currently online:", users);
                 users.forEach((user) => {
                     onlineUsers[user.id] = true; // Mark user as online in the object
@@ -28,14 +29,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 onlineUsers[user.id] = true; // Mark user as online in the object
                 // console.log(user.id);
                 updateUserStatus(user.id, true); // Update UI to reflect online status
+                console.log(user);
             })
             .leaving((user) => {
                 // console.log(user.name + " left the channel.");
                 delete onlineUsers[user.id]; // Remove user from the online users object
                 updateUserStatus(user.id, false); // Update UI to reflect offline status
+                console.log(user);
             })
             .error((error) => {
                 console.error("Failed to join the channel:", error);
+            })
+            .listen("UserOnlineEvent", (e) => {
+                console.log(e);
             });
 
         isChannelJoined = true; // Set the flag to true to prevent rejoining
@@ -44,15 +50,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Function to update user online status
 function updateUserStatus(userId, isOnline) {
-    const statusElement = document.getElementById(`status-${userId}`);
-    setTimeout(() => {
-        // console.log(statusElement);
+    const checkInterval = setInterval(() => {
+        const statusElement = document.getElementById(`status-${userId}`);
+        const statusTextElement = document.getElementById(
+            `status-text-${userId}`
+        );
         if (statusElement) {
             statusElement.className = `w-2 h-2 rounded-full mr-2 ${
                 isOnline ? "bg-green-500" : "bg-red-500"
             }`;
+            if (statusTextElement) {
+                statusTextElement.innerText = isOnline ? "Online" : "Offline";
+            }
+            clearInterval(checkInterval); // Interrompi il loop
         }
-    }, 2000);
+    }, 100); // Controlla ogni 100ms
 }
 
 // Ensure the channel is left when the user closes the tab or navigates away

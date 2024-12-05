@@ -42,7 +42,7 @@ class OrderTable extends Component
             // dd($this->orders);
         } elseif ($user->hasRole('mechanic')) {
             // Mechanics see only orders assigned to them
-            $this->orders = $user->assignedOrders()->orderBy('id', 'desc')->take(20)->get();
+            $this->orders = $user->mechanicInfo->orders()->orderBy('id', 'desc')->take(20)->get();
         }
     }
 
@@ -64,7 +64,7 @@ class OrderTable extends Component
                 ->take(20)
                 ->get();
         } elseif ($user->hasRole('mechanic')) {
-            $newOrders = $user->assignedOrders()
+            $newOrders = $user->mechanicInfo->orders()
                 ->where('orders.id', '<', $lastOrderId)  // Specify table for `id`
                 ->orderBy('orders.id', 'desc')
                 ->take(20)

@@ -3,11 +3,12 @@
     <!-- Drag and Drop Container -->
     <form wire:submit.prevent="uploadImages" enctype="multipart/form-data">
         <div class="flex h-72 mb-8 mt-4">
-            <div id="drop-area"
+            <div id="drop-area" wire:ignore
                 class="h-full border-2 border-dashed border-[#DDDDDD] bg-[#FAFAFA] w-2/3 p-10 flex flex-col place-content-center place-items-center text-center rounded-md">
                 <p class="text-[#222222] font-medium mb-2">Trascina le foto oppure selezionale dal </p>
                 <button type="button" id="file-picker-btn" class="text-[#4453A5] underline">browse</button>
-                <input wire:model.live="images" id="images" type="file" name="images[]" multiple class="hidden">
+                <input wire:model.live="images" id="images" type="file" name="images[]" accept="image/*" multiple
+                    class="hidden">
             </div>
             <div wire:ignore id="file-preview" class="ml-4 w-1/3 h-full overflow-y-auto"></div>
         </div>
@@ -65,21 +66,26 @@
             // Handle dropped files
             function handleDrop(e) {
                 const files = Array.from(e.dataTransfer.files);
+
                 addFiles(files);
+
+
             }
 
             // Add files to the selection and update preview
             function addFiles(files) {
-                const newFiles = filterNewFiles(files, selectedFiles); // Get new files
+                const newFiles = filterNewFiles(files, selectedFiles).filter(isImageFile); // Filtra solo immagini
                 if (newFiles.length > 0) {
-                    selectedFiles = [...selectedFiles, ...newFiles]; // Append new files
-                    updateFileInput(); // Update the input file array
-                    updatePreview(); // Update preview after adding files
-                    // Trigger Livewire change event only once here
-                    triggerLivewireInputChange();
+                    selectedFiles = [...selectedFiles, ...newFiles]; // Aggiungi nuovi file
+                    updateFileInput(); // Aggiorna l'input
+                    updatePreview(); // Aggiorna la preview
+                    triggerLivewireInputChange(); // Notifica il cambiamento a Livewire
                 }
             }
 
+            function isImageFile(file) {
+                return file.type.startsWith('image/');
+            }
             // Filter out duplicate files based on name
             function filterNewFiles(files, existingFiles) {
                 const existingFileNames = existingFiles.map(file => file.name);
@@ -87,20 +93,26 @@
             }
 
             // Remove file by index
+            // Remove file by index
             function removeFile(index) {
                 selectedFiles.splice(index, 1); // Remove file from the array
-                updateFileInput(); // Update the input file array
-                updatePreview(); // Update preview after removing files
-                // Trigger Livewire change event only once here
-                triggerLivewireInputChange();
+                updateFileInput(); // Synchronize the input file array with the new selection
+                updatePreview(); // Update the UI to reflect the new selection
+                Livewire.dispatch('removeFileFromImages', {
+                    index: index
+                });
+                triggerLivewireInputChange(); // Notify Livewire about the change
             }
 
             // Update the input element with the currently selected files
             function updateFileInput() {
-                const dataTransfer = new DataTransfer(); // Create a new DataTransfer object
-                selectedFiles.forEach(file => dataTransfer.items.add(file)); // Add files to DataTransfer
-                imageInput.files = dataTransfer.files; // Update the input
+                const dataTransfer = new DataTransfer(); // Crea un nuovo oggetto DataTransfer
+                selectedFiles.forEach(file => dataTransfer.items.add(file)); // Aggiungi i file
+                imageInput.files = dataTransfer.files; // Aggiorna l'input
+                imageInput.dispatchEvent(new Event('change')); // Forza Livewire a rilevare la modifica
             }
+
+
 
             // Update file preview
             function updatePreview() {
@@ -128,12 +140,13 @@
 
             // Trigger Livewire input change
             function triggerLivewireInputChange() {
-                // Use Livewire's method to trigger a change event
-                const event = new Event('change', {
+                const event = new Event('input', {
                     bubbles: true
                 });
                 imageInput.dispatchEvent(event);
+                // Livewire.dispatch('handleDrop', )
             }
+
 
             // Helper function to format file size
             function formatFileSize(size) {

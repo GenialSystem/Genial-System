@@ -1,54 +1,52 @@
 <?php
-
 namespace App\Livewire;
 
 use Livewire\Component;
 
 class ResultBanner extends Component
 {
-    public $title;
-    public $subtitle;
+    public $title = '';
+    public $subtitle = '';
     public $visible = false;
-    public $type; // 'success' or 'error'
+    public $type; // 'success', 'error', or 'warning'
 
-    protected $listeners = ['showBanner'];
+    protected $listeners = ['showBanner', 'hideBanner'];
 
     public function mount()
     {
+        // Initialize with session data if available
         if (session()->has('success')) {
-            $this->title = session('success.title');
-            $this->subtitle = session('success.subtitle');
-            $this->type = 'success';
-            $this->visible = true;
+            $this->setupBanner(session('success.title'), session('success.subtitle'), 'success');
         } elseif (session()->has('error')) {
-            $this->title = session('error.title');
-            $this->subtitle = session('error.subtitle');
-            $this->type = 'error';
-            $this->visible = true;
+            $this->setupBanner(session('error.title'), session('error.subtitle'), 'error');
+        } elseif (session()->has('warning')) {
+            $this->setupBanner(session('warning.title'), session('warning.subtitle'), 'warning');
         }
-        $this->dispatch('banner-auto-hide');
-
     }
 
-    public function showBanner($title, $subtitle, $type)
+    public function setupBanner($title, $subtitle, $type)
     {
         $this->title = $title;
         $this->subtitle = $subtitle;
         $this->type = $type;
-
         $this->visible = true;
 
-        // // Trigger auto-hide of the banner after 4 seconds
+        // Trigger auto-hide of the banner after 2 seconds
         $this->dispatch('banner-auto-hide');
+    }
+
+    public function showBanner($title, $subtitle, $type)
+    {
+        $this->setupBanner($title, $subtitle, $type);
+    }
+
+    public function hideBanner()
+    {
+        $this->visible = false;
     }
 
     public function render()
     {
-        return view('livewire.result-banner', [
-            'title' => $this->title,
-            'subtitle' => $this->subtitle,
-            'visible' => $this->visible,
-            'type' => $this->type,
-        ]);
+        return view('livewire.result-banner');
     }
 }

@@ -13,18 +13,21 @@
 
                     <div class="flex justify-between mb-4">
                         <div class="rounded-full w-20 h-20 relative" wire:loading.class='opacity-50'>
-                            <div class="z-20 absolute rounded-full w-5 h-5 bg-[#4453A5] bottom-0 right-0"></div>
+                            <div class="z-20 absolute rounded-full w-5 h-5 bg-[#4453A5] bottom-0 right-0">
+                                <img src="{{ asset('images/Camera Icona.svg') }}" alt="camera-icona">
+                            </div>
                             <input type="file" wire:model="profileImage" accept="image/*" placeholder="Foto"
                                 @disabled(!$isEditing)
                                 class="z-20 absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                             @if ($profileImageUrl)
-                                <img src="{{ asset($profileImageUrl) }}" alt="Profile Image"
+                                <img src="{{ $profileImageUrl }}" alt="Profile Image"
                                     class="rounded-full w-full h-full object-cover absolute inset-0">
                             @else
                                 <img src="{{ asset('images/placeholder.png') }}" alt="Profile Image"
                                     class="rounded-full w-full h-full object-cover absolute inset-0">
                             @endif
                         </div>
+
 
 
                         @if ($isEditing)
@@ -183,11 +186,22 @@
 
         </div>
     </div>
+    <div class="flex justify-between">
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="py-2 px-4 bg-red-500 text-white rounded-md text-sm mt-10"
+                wire:loading.remove>
+                Logout
+            </button>
+        </form>
+        <form wire:submit.prevent='clearStorage' method="POST"
+            onsubmit="return confirm('Sei sicuro di voler eliminare tutti i file?')">
+            @csrf
+            <button type="submit" class="py-2 px-4 bg-red-500 text-white rounded-md text-sm mt-10"
+                wire:loading.remove>
+                Rimuovi tutti i file
+            </button>
+        </form>
 
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
-        <button type="submit" class="py-2 px-4 bg-red-500 text-white rounded-md text-sm mt-10" wire:loading.remove>
-            Logout
-        </button>
-    </form>
+    </div>
 </div>

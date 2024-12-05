@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+set_time_limit(120);
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -28,14 +29,20 @@ class PdfController extends Controller
             if (!File::exists($pdfPath)) {
                 File::makeDirectory($pdfPath, 0755, true);
             }
-    
             // Handle a single ID case (download the PDF directly)
             if (count($idArray) === 1) {
                 $instance = $modelClass::findOrFail($idArray[0]); // Get the model instance
                 $view = view("pdf.{$model}", [$model => $instance])->render(); // Render view
-                $pdfFileName = "{$model}-{$instance->id}.pdf"; // File name
+                Log::info($model);
+                Log::info($instance);
+                if ($model == 'invoice' || $model == 'estimate') {
+                    $pdfFileName = "{$model}-" . str_replace('/', '_', $instance->number) . ".pdf";
+                } else {
+                    $pdfFileName = "{$model}-{$instance->id}.pdf";
+                }
+                
                 $pdfFullPath = $pdfPath . $pdfFileName; // Full path
-    
+                
                 // Generate the PDF
                 Browsershot::html($view)
                     ->waitUntilNetworkIdle()
@@ -58,7 +65,11 @@ class PdfController extends Controller
                 foreach ($idArray as $id) {
                     $instance = $modelClass::findOrFail($id);
                     $view = view("pdf.{$model}", [$model => $instance])->render(); // Render view
-                    $pdfFileName = "{$model}-{$instance->id}.pdf"; // File name
+                    if ($model == 'invoice' || $model == 'estimate') {
+                        $pdfFileName = "{$model}-" . str_replace('/', '_', $instance->number) . ".pdf";
+                    } else {
+                        $pdfFileName = "{$model}-{$instance->id}.pdf";
+                    }
                     $pdfFullPath = $pdfPath . $pdfFileName;
     
                     // Generate the PDF
