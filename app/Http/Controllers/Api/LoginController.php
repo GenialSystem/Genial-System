@@ -27,6 +27,7 @@ class LoginController extends Controller
                 $role_id = $user->mechanicInfo->id;
             } else {
                 $role_id = $user->customerInfo->id;
+                return response()->json(['message' => 'Unauthorized'], 401);
             }
             return response()->json([
                 'token' => $user->createToken('GenialSystem')->plainTextToken,

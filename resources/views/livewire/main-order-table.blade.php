@@ -155,7 +155,8 @@
                                             Scarica pdf
                                         </button>
                                     </a>
-                                    @livewire('download-order-photos', ['orderId' => $row->id], key(str()->random(10)))
+
+                                    @livewire('download-order-photos', ['orderId' => $row->id])
                                 @endrole
                             </td>
                         </tr>

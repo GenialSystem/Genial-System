@@ -50,7 +50,13 @@ Route::get('get_orders_files/{id}', [OrderController::class, 'orderFiles']);
 Route::post('upload_images/{id}/{type}', [OrderController::class, 'uploadImages']);
 Route::post('upload_files/{id}', [OrderController::class, 'uploadFiles']);
 // Route::get('download_images/{id}', [OrderController::class, 'downloadImages']);
-// Route::apiResource('orders', OrderController::class);
+Route::apiResource('orders', OrderController::class)->names([
+    'index' => 'apiOrders.index',
+    'show' => 'apiOrders.show',
+    'store' => 'apiOrders.store',
+    'update' => 'apiOrders.update',
+    'destroy' => 'apiOrders.destroy',
+]);
 Route::get('testdownloadPDF/{model}/{ids}', [PdfController::class, 'downloadPdfs'])->name('testdownloadPDF');
 // Route::middleware('auth:sanctum')->get('test', function (){return response()->json('ok');});
 Route::get('get_orders_images/{id}/{disassembly}', [OrderController::class, 'orderImages']);
