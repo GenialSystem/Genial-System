@@ -74,9 +74,11 @@ class PdfController extends Controller
     
                     // Generate the PDF
                     Browsershot::html($view)
-                        ->waitUntilNetworkIdle()
-                        ->setOption('printBackground', true)
-                        ->save($pdfFullPath);
+                    ->waitUntilNetworkIdle()
+                    ->setOption('printBackground', true)
+                    ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
+                    ->save($pdfFullPath);
+                
     
                     // Add the PDF to the zip archive
                     if (!$zip->addFile($pdfFullPath, $pdfFileName)) {
