@@ -16,32 +16,29 @@ class ResultBanner extends Component
     {
         // Initialize with session data if available
         if (session()->has('success')) {
-            $this->setupBanner(session('success.title'), session('success.subtitle'), 'success');
+            $this->showBanner(session('success.title'), session('success.subtitle'), 'success');
         } elseif (session()->has('error')) {
-            $this->setupBanner(session('error.title'), session('error.subtitle'), 'error');
+            $this->showBanner(session('error.title'), session('error.subtitle'), 'error');
         } elseif (session()->has('warning')) {
-            $this->setupBanner(session('warning.title'), session('warning.subtitle'), 'warning');
+            $this->showBanner(session('warning.title'), session('warning.subtitle'), 'warning');
         }
     }
 
-    public function setupBanner($title, $subtitle, $type)
+    public function showBanner($title, $subtitle, $type)
     {
+        // Imposta i dati del banner
         $this->title = $title;
         $this->subtitle = $subtitle;
         $this->type = $type;
         $this->visible = true;
 
-        // Trigger auto-hide of the banner after 2 seconds
+        // Invia l'evento per nascondere automaticamente dopo 3 secondi
         $this->dispatch('banner-auto-hide');
-    }
-
-    public function showBanner($title, $subtitle, $type)
-    {
-        $this->setupBanner($title, $subtitle, $type);
     }
 
     public function hideBanner()
     {
+        // Imposta visibilità a false dopo la transizione
         $this->visible = false;
     }
 

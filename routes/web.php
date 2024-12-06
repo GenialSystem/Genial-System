@@ -74,26 +74,3 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-
-
-// Route::get('test', function () {
-//     for ($i = 1; $i <= 50; $i++) {
-//         // Alterna user_id tra 1 e 17
-//         $user_id = $i % 2 === 0 ? 2 : 1;
-
-//         // Genera un timestamp unico per ogni messaggio (aggiungi secondi per ogni ciclo)
-//         $createdAt = Carbon::now()->addSeconds($i);
-        
-//         // Crea il messaggio usando Eloquent
-//         Message::create([
-//             'chat_id' => 1,
-//             'user_id' => $user_id,
-//             'content' => (string) $i,
-//             'created_at' => $createdAt,
-//             'updated_at' => $createdAt,
-//         ]);
-//     }
-
-//     return '50 messaggi creati con successo con timestamp unici!';
-// });

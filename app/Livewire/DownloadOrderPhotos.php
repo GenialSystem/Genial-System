@@ -26,6 +26,7 @@ class DownloadOrderPhotos extends Component
         // Check if either directory has files before proceeding
         if (!$this->directoryHasFiles($normalPath) && !$this->directoryHasFiles($disassemblyPath)) {
             $this->dispatch('showBanner', 'Errore durante il download', 'Nessuna foto presente in questa commessa.', 'error');
+
             return;
         }
 
