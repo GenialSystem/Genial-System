@@ -29,6 +29,10 @@ class PdfController extends Controller
             if (!File::exists($pdfPath)) {
                 File::makeDirectory($pdfPath, 0755, true);
             }
+
+            // Custom path for Browsershot temp files
+            $customTempPath = '/home/forge/custom_temp_path/'; // Update this path as needed
+
             // Handle a single ID case (download the PDF directly)
             if (count($idArray) === 1) {
                 $instance = $modelClass::findOrFail($idArray[0]); // Get the model instance
@@ -43,12 +47,13 @@ class PdfController extends Controller
                 
                 $pdfFullPath = $pdfPath . $pdfFileName; // Full path
                 
-                // Generate the PDF
+                // Generate the PDF with custom temp path
                 Browsershot::html($view)
+                    ->setCustomTempPath($customTempPath)  // Set custom temporary path
                     ->waitUntilNetworkIdle()
                     ->setOption('printBackground', true)
                     ->save($pdfFullPath);
-    
+
                 // Download the PDF and delete temp file after download
                 return response()->download($pdfFullPath)
                     ->deleteFileAfterSend(true); // Deletes the single PDF after download
@@ -72,16 +77,15 @@ class PdfController extends Controller
                     }
                     $pdfFullPath = $pdfPath . $pdfFileName;
     
-                    // Generate the PDF
+                    // Generate the PDF with custom temp path
                     Browsershot::html($view)
-                    ->waitUntilNetworkIdle()
-                    ->setCustomTempPath('/home/forge/custom_temp_path/')
-                    ->setOption('executablePath', '/usr/bin/chromium-browser')
-                    ->setOption('printBackground', true)
-                    ->setOption('args', ['--no-sandbox'])
-                    ->save($pdfFullPath);
+                        ->setCustomTempPath($customTempPath)  // Set custom temporary path
+                        ->waitUntilNetworkIdle()
+                        ->setOption('printBackground', true)
+                        ->setOption('args', ['--no-sandbox'])
+                        ->setOption('executablePath', '/usr/bin/chromium-browser')
+                        ->save($pdfFullPath);
                 
-    
                     // Add the PDF to the zip archive
                     if (!$zip->addFile($pdfFullPath, $pdfFileName)) {
                         // Log any errors while adding files to the zip
@@ -105,14 +109,13 @@ class PdfController extends Controller
             Log::error($e->getMessage());
             return redirect()->back()->with('error', ['title' => 'Errore durante il download.', 'subtitle' => $e->getMessage()]);
         } finally {
-            // // Cleanup: delete PDF files after processing
-            // foreach ($pdfFiles ?? [] as $pdfFile) {
-            //     if (File::exists($pdfFile)) {
-            //         File::delete($pdfFile);
-            //     }
-            // }
+            // Cleanup: delete PDF files after processing
+            foreach ($pdfFiles ?? [] as $pdfFile) {
+                if (File::exists($pdfFile)) {
+                    File::delete($pdfFile);
+                }
+            }
         }
     }
-    
     
 }
