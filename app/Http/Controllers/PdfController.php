@@ -75,9 +75,10 @@ class PdfController extends Controller
                     // Generate the PDF
                     Browsershot::html($view)
                     ->waitUntilNetworkIdle()
+                    ->setCustomTempPath('/home/forge/custom_temp_path/')
+                    ->setOption('executablePath', '/usr/bin/chromium-browser')
                     ->setOption('printBackground', true)
                     ->setOption('args', ['--no-sandbox'])
-                    ->setOption('executablePath', '/usr/bin/chromium-browser')
                     ->save($pdfFullPath);
                 
     
