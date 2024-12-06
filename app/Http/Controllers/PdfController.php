@@ -104,12 +104,12 @@ class PdfController extends Controller
             Log::error($e->getMessage());
             return redirect()->back()->with('error', ['title' => 'Errore durante il download.', 'subtitle' => $e->getMessage()]);
         } finally {
-            // Cleanup: delete PDF files after processing
-            foreach ($pdfFiles ?? [] as $pdfFile) {
-                if (File::exists($pdfFile)) {
-                    File::delete($pdfFile);
-                }
-            }
+            // // Cleanup: delete PDF files after processing
+            // foreach ($pdfFiles ?? [] as $pdfFile) {
+            //     if (File::exists($pdfFile)) {
+            //         File::delete($pdfFile);
+            //     }
+            // }
         }
     }
     
