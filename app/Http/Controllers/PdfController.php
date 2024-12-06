@@ -76,7 +76,8 @@ class PdfController extends Controller
                     Browsershot::html($view)
                     ->waitUntilNetworkIdle()
                     ->setOption('printBackground', true)
-                    ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
+                    ->setOption('args', ['--no-sandbox'])
+                    ->setOption('executablePath', '/usr/bin/chromium-browser')
                     ->save($pdfFullPath);
                 
     
