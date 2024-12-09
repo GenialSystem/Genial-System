@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
 
 class ChatList extends Component
 {
@@ -271,11 +272,22 @@ class ChatList extends Component
         // Initialize file path as null
         $filePath = null;
 
-        // If a file is selected, upload and store it
+                
         if ($this->file) {
+            // Get the original file name and extension
+            $originalName = pathinfo($this->file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $this->file->getClientOriginalExtension();
+
+            // Sanitize the file name (remove special characters, spaces, etc.)
+            $sanitizedName = Str::slug($originalName, '_');
+
+            // Append timestamp to ensure uniqueness
+            $timestampedName = time() . $sanitizedName . '.' . $extension;
+
+            // Store the file
             $filePath = $this->file->storeAs(
                 "chats/{$this->selectedChat['id']}/files",
-                $this->file->getClientOriginalName(),
+                $timestampedName,
                 'public'
             );
 

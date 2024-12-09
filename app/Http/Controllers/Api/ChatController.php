@@ -8,6 +8,7 @@ use App\Models\Chat;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ChatController extends Controller
 {
@@ -112,15 +113,26 @@ class ChatController extends Controller
         ]);
     
         $filePath = null; // Percorso del file
-    
-        // Logica per il caricamento del file
+
         if ($request->hasFile('file')) {
+            // Get the original file name and extension
+            $originalName = pathinfo($request->file('file')->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $request->file('file')->getClientOriginalExtension();
+        
+            // Sanitize the file name (remove special characters, spaces, etc.)
+            $sanitizedName = Str::slug($originalName, '_');
+        
+            // Append timestamp to ensure uniqueness
+            $timestampedName = time() . '_' . $sanitizedName . '.' . $extension;
+        
+            // Store the file
             $filePath = $request->file('file')->storeAs(
                 "chats/{$request->chat_id}/files",
-                $request->file('file')->getClientOriginalName(),
+                $timestampedName,
                 'public'
             );
         }
+        
         // Creazione del messaggio
         $message = Message::create([
             'chat_id' => $validated['chat_id'],

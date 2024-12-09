@@ -302,8 +302,10 @@
                                                 <div class="w-20 text-6xl my-4">
                                                     📄
                                                 </div>
-                                                <div class="text-[#4453A5]">{{ basename($message['file_path']) }}
+                                                <div class="text-[#4453A5]">
+                                                    {{ collect(explode('_', basename($message['file_path'])))->last() }}
                                                 </div>
+
                                             </a>
                                         @endif
                                     </div>
@@ -330,7 +332,7 @@
                         <!-- File Input -->
                         <div class="relative">
                             <input type="file" id="fileInput" wire:model.live="file" class="hidden"
-                                accept="image/*" onchange="handleFileSelect(event)">
+                                onchange="handleFileSelect(event)">
                             <button type="button" class="px-4 text-black rounded-l h-full"
                                 onclick="document.getElementById('fileInput').click()">
                                 📎
