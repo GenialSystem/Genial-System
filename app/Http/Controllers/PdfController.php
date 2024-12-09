@@ -53,7 +53,7 @@ class PdfController extends Controller
                     ->setCustomTempPath($customTempPath)  // Set custom temporary path
                     ->waitUntilNetworkIdle()
                     ->setOption('printBackground', true)
-                    ->setOption('args', ['--no-sandbox'])
+                    ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
                     ->setOption('executablePath', $chromiumPath)
                     ->save($pdfFullPath);
 
@@ -85,7 +85,7 @@ class PdfController extends Controller
                         ->setCustomTempPath($customTempPath)  // Set custom temporary path
                         ->waitUntilNetworkIdle()
                         ->setOption('printBackground', true)
-                        ->setOption('args', ['--no-sandbox'])
+                        ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
                         ->setOption('executablePath', $chromiumPath)
                         ->save($pdfFullPath);
                 
