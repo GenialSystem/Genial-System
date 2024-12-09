@@ -31,8 +31,7 @@ class PdfController extends Controller
             }
 
             // Custom path for Browsershot temp files
-            $customTempPath = storage_path('app/temp');
-            $chromiumPath = env('CHROMIUM_DEV') == null ? '/usr/bin/chromium-browser' : 'C:\chromium\chrome-win\chrome.exe';
+            $customTempPath = '/home/forge/custom_temp_path/'; // Update this path as needed
 
             // Handle a single ID case (download the PDF directly)
             if (count($idArray) === 1) {
@@ -50,12 +49,12 @@ class PdfController extends Controller
                 
                 // Generate the PDF with custom temp path
                 Browsershot::html($view)
-                    ->setCustomTempPath($customTempPath)  // Set custom temporary path
-                    ->waitUntilNetworkIdle()
-                    ->setOption('printBackground', true)
-                    ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
-                    ->setOption('executablePath', $chromiumPath)
-                    ->save($pdfFullPath);
+                        ->setCustomTempPath($customTempPath)  // Set custom temporary path
+                        ->waitUntilNetworkIdle()
+                        ->setOption('printBackground', true)
+                        ->setOption('args', ['--no-sandbox'])
+                        ->setOption('executablePath', '/usr/bin/chromium-browser')
+                        ->save($pdfFullPath);
 
                 // Download the PDF and delete temp file after download
                 return response()->download($pdfFullPath)
@@ -85,8 +84,8 @@ class PdfController extends Controller
                         ->setCustomTempPath($customTempPath)  // Set custom temporary path
                         ->waitUntilNetworkIdle()
                         ->setOption('printBackground', true)
-                        ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
-                        ->setOption('executablePath', $chromiumPath)
+                        ->setOption('args', ['--no-sandbox'])
+                        ->setOption('executablePath', '/usr/bin/chromium-browser')
                         ->save($pdfFullPath);
                 
                     // Add the PDF to the zip archive
