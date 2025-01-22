@@ -1,10 +1,4 @@
 <div>
-    <!-- Display error message if available -->
-    @if (session()->has('error'))
-        <div class="bg-red-100 text-red-700 p-2 rounded mb-4">
-            {{ session('error') }}
-        </div>
-    @endif
 
     <!-- Download Button -->
     <button wire:click="downloadPhotos"
