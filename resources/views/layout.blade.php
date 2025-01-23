@@ -24,8 +24,8 @@
 
 <body class="font-tome antialiased bg-[#F5F5F5]">
     <div id="app">
-        <div id="mobile-warning" class="fixed inset-0 bg-[#E8E8E8] flex z-50 items-center justify-center">
-            <div class="text-[#222222] text-center p-4">
+        <div id="mobile-warning" class="hidden fixed inset-0 bg-[#E8E8E8] z-50 items-center justify-center">
+            <div class="text-[#222222] w-96 p-10">
                 <h2 class="text-4xl font-semibold">La piattaforma è visualizzabile solo in versione desktop.</h2>
             </div>
         </div>
