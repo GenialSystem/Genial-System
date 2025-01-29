@@ -47,32 +47,17 @@ class Order extends Model
         return $this->belongsTo(CustomerInfo::class, 'customer_id');
     }
 
+    public function getPriceAttribute($value)
+    {
+        return number_format($value, 2, ',', '.'); 
+    }
     
-    // public function customerInfo()
-    // {
-    //     // Access customer info through the customer (User model)
-    //     return $this->hasOneThrough(CustomerInfo::class, User::class, 'id', 'user_id', 'customer_id', 'id');
-    // }
-
-
     // An order has many mechanics
     public function mechanics()
     {
         return $this->belongsToMany(MechanicInfo::class, 'order_mechanic', 'order_id', 'mechanic_id');
     }
-    // Example accessor to format price for display
-    public function getPriceAttribute($value)
-    {
-        return number_format($value, 2, ',', '.'); // Format price for display
-    }
-
-    // Example mutator to format price before saving to database
-    public function setPriceAttribute($value)
-    {
-        $formattedValue = str_replace(['.', ','], ['', '.'], $value);
-        $this->attributes['price'] = number_format($formattedValue, 2, '.', '');
-    }
-
+   
     protected static function boot()
     {
         parent::boot();
@@ -87,6 +72,7 @@ class Order extends Model
             }
     
         });
+
     }
 
     public function chat()

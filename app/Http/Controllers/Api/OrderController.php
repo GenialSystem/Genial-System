@@ -108,8 +108,7 @@ class OrderController extends Controller
      
         // Validate the incoming request
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            // 'order_id' => 'required|integer',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:102400', // 100MB
         ]);
         $order = Order::find($id);
         // Get the uploaded file

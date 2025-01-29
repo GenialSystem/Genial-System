@@ -117,6 +117,13 @@ class PdfController extends Controller
                     File::delete($pdfFile);
                 }
             }
+
+            if (File::exists($customTempPath)) {
+                $tempFiles = File::files($customTempPath);
+                foreach ($tempFiles as $file) {
+                    File::delete($file);
+                }
+            }
         }
     }
     

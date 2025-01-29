@@ -104,15 +104,16 @@
 
                     <span id="mechanic-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                 </div>
-                <div>
-                    <label for="earn_mechanic_percentage" class="block text-sm font-medium">Guadagno Tecnico %</label>
-                    <input required type="number" min="1" max="99" name="earn_mechanic_percentage"
-                        id="earn_mechanic_percentage"
-                        class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
-                    <span id="earn_mechanic_percentage-error" class="text-red-500 text-xs hidden">Campo
-                        obbligatorio.</span>
-                </div>
-
+                @role('admin')
+                    <div>
+                        <label for="earn_mechanic_percentage" class="block text-sm font-medium">Guadagno Tecnico %</label>
+                        <input required type="number" min="1" max="99" name="earn_mechanic_percentage"
+                            id="earn_mechanic_percentage"
+                            class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
+                        <span id="earn_mechanic_percentage-error" class="text-red-500 text-xs hidden">Campo
+                            obbligatorio.</span>
+                    </div>
+                @endrole
             </div>
             <div id="selectedMechanics" class="my-2 flex flex-wrap gap-2">
                 <!-- JavaScript will append selected mechanics here -->

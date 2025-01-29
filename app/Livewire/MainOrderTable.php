@@ -74,12 +74,18 @@ class MainOrderTable extends Component
     private function handleOrderFinish($order)
     {
         $creator = Auth::user()->getFullName();
-        $order->customer->user->notify(new OrderFinished($creator, $order->id));
-        $order->customer->increment('finished_cars_count');
 
-        foreach ($order->mechanics as $mechanic) {
-            $mechanic->mechanicInfo->increment('repaired_count');
+        $order->customer->user->notify(new OrderFinished($creator, $order->id));
+        
+        if($order->finish_date == null){
+            $order->customer->increment('finished_cars_count');
+            
+            foreach ($order->mechanics as $mechanic) {
+                $mechanic->increment('repaired_count');
+            }
         }
+        $order->finish_date = now();
+        $order->update();
     }
 
     public function clearSelectedRows()

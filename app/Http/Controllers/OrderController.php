@@ -49,7 +49,8 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-      
+        $price = (float) $request->input('price');
+    
         DB::beginTransaction();
         try {
             // 1. Create the order
@@ -61,7 +62,7 @@ class OrderController extends Controller
                 'earn_mechanic_percentage' => $request->input('earn_mechanic_percentage'),
                 'plate' => $request->input('plate'),
                 'brand' => $request->input('brand'),
-                'price' => $request->input('price'),
+                'price' => $price,
                 'car_size' => $request->input('car_size'),
                 'aluminium' => $request->input('aluminium') == 'on',
                 'assembly_disassembly' => false,
@@ -69,7 +70,7 @@ class OrderController extends Controller
                 'replacements' => $request->input('replacements'),
                 'notes' => $request->input('notes')
             ]);
-    
+            
             // 2. Attach mechanics
             $mechanicIds = explode(',', $request->input('mechanic'));
             // Attach mechanics to the order
