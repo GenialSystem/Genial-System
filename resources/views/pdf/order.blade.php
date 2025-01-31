@@ -70,14 +70,16 @@
                             <span class="text-[#222222] text-[15px]">{{ $order->customer->admin_name }}</span>
                         </div>
                     @endhasanyrole
-                    <div class="flex justify-between">
-                        <div>
-                            <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                            <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->user->name }}
-                                {{ $order->mechanics[0]->user->surname }}</span>
-                        </div>
+                    @if ($order->mechanics->isNotEmpty())
+                        <div class="flex justify-between">
+                            <div>
+                                <span class="text-[#808080] text-[15px]">Tecnico: </span>
+                                <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->user->name }}
+                                    {{ $order->mechanics[0]->user->surname }}</span>
+                            </div>
 
-                    </div>
+                        </div>
+                    @endif
                     <hr class="my-3">
                     <div>
                         <span class="text-[#808080] text-[15px]">Città: </span>
