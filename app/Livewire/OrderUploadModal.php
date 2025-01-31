@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Order;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use LivewireUI\Modal\ModalComponent;
 
@@ -98,11 +99,12 @@ class OrderUploadModal extends ModalComponent
                 'title' => 'Operazione confermata.', 
                 'subtitle' => $message,
             ]);
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             // Handle error case
+            Log::error($e->getMessage());
             return redirect()->route('orders.show', $this->order->id)->with('error', [
                 'title' => 'Qualcosa è andato storto.', 
-                'subtitle' => $th->getMessage(),
+                'subtitle' => $e->getMessage(),
             ]);
         }
     }

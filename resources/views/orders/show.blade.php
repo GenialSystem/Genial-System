@@ -42,6 +42,10 @@
                         </span>
                     </div>
                     <div>
+                        <span class="text-[#808080] text-[15px]">Colore: </span>
+                        <span class="text-[#222222] text-[15px]">{{ $order->color }}</span>
+                    </div>
+                    <div>
                         <span class="text-[#808080] text-[15px]">Data: </span>
                         <span class="text-[#222222] text-[15px]">{{ $order->created_at->format('d/m/Y') }}</span>
                     </div>
