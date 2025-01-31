@@ -60,7 +60,7 @@
                             <td class="py-3 px-6">
                                 <div
                                     class="w-8 h-8 rounded-full bg-[#EEEDFA] text-lg text-center text-[#805ECC] place-content-center">
-                                    {{ $row->mechanics->sum('working_count') }}
+                                    {{ $row->totalInProgressCars() }}
                                 </div>
                             </td>
 

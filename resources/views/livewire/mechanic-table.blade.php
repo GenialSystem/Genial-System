@@ -51,7 +51,7 @@
                         <td class="py-3 px-6">
                             <div
                                 class="w-8 h-8 rounded-full bg-[#CECEF7] text-lg text-center text-[#805ECC] place-content-center">
-                                {{ $row->working_count }}
+                                {{ $row->workingCount() }}
                             </div>
                         </td>
                         <td class="py-3 px-6 flex space-x-2">

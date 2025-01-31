@@ -52,5 +52,10 @@ class MechanicInfo extends Model
     {
         return $this->belongsToMany(Order::class, 'order_mechanic', 'mechanic_id', 'order_id');
     }
+
+    public function workingCount()
+    {
+        return $this->orders()->where('state', 'In lavorazione')->count();
+    }
     
 }

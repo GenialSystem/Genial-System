@@ -22,4 +22,11 @@ class Workstation extends Model
         return $this->belongsTo(CustomerInfo::class, 'customer_id');
     }
 
+    public function totalInProgressCars()
+    {
+        return $this->mechanics()->with('orders')->get()->sum(function ($mechanic) {
+            return $mechanic->orders()->where('state', 'In lavorazione')->count();
+        });
+    }
+
 }
