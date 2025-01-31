@@ -8,6 +8,7 @@
                     <th class="py-3 px-6 text-[15px] text-[#808080] font-light">N. Riparazione</th>
                     <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Data</th>
                     <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Stato Riparazione</th>
+                    <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Colore</th>
                     <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Tecnico</th>
                     <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Cliente</th>
                     <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Responsabile</th>
@@ -48,6 +49,9 @@
                                     @endforeach
                                 </div>
                             </div>
+                        </td>
+                        <td class="py-3 px-6 relative group">
+                            {{ $row->color }}
                         </td>
                         <td class="py-3 px-6">
                             @if ($row->mechanics->isNotEmpty())

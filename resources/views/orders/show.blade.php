@@ -184,6 +184,14 @@
                                 <span id="car_size-error" class="text-red-500 text-xs hidden">Campo
                                     obbligatorio.</span>
                             </div>
+                            <div>
+                                <label for="color" class="block text-sm text-[#9F9F9F] text-[13px]">Colore</label>
+                                <input disabled type="text" value="{{ $order->color }}" name="color"
+                                    id="color"
+                                    class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
+                                <span id="color-error" class="text-red-500 text-xs hidden">Campo
+                                    obbligatorio.</span>
+                            </div>
                         </div>
                     </div>
 

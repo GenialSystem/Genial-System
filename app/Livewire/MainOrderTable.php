@@ -127,6 +127,7 @@ class MainOrderTable extends Component
                 $q->where(function ($q) {
                     $q->where('id', 'like', "%{$this->searchTerm}%")
                         ->orWhere('state', 'like', "%{$this->searchTerm}%")
+                        ->orWhere('color', 'like', "%{$this->searchTerm}%")
                         ->orWhere('plate', 'like', "%{$this->searchTerm}%")
                         ->orWhere('price', 'like', "%{$this->searchTerm}%")
                         ->orWhereHas('customer', function ($customerQuery) {
@@ -183,6 +184,7 @@ class MainOrderTable extends Component
             $query->where(function ($q) {
                 $q->where('id', 'like', "%{$this->searchTerm}%")
                     ->orWhere('state', 'like', "%{$this->searchTerm}%")
+                    ->orWhere('color', 'like', "%{$this->searchTerm}%")
                     ->orWhere('plate', 'like', "%{$this->searchTerm}%")
                     ->orWhere('price', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('customer', function ($customerQuery) {

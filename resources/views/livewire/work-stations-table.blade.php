@@ -48,7 +48,7 @@
                             <td class="py-3 px-6">
                                 <div
                                     class="w-8 h-8 rounded-full bg-[#EEEDFA] text-lg text-center text-[#1E1B58] place-content-center">
-                                    {{ $row->assigned_cars_count }}
+                                    {{ $row->totalAssignedCars() }}
                                 </div>
                             </td>
                             <td class="py-3 px-6">
@@ -67,7 +67,8 @@
                             <td class="py-3 px-6">
                                 <div
                                     class="w-8 h-8 rounded-full bg-[#EEEDFA] text-lg text-center text-[#1E1B58] place-content-center">
-                                    {{ $row->customer->queued_cars_count }}
+                                    {{ $row->totalInQueueCars() }}
+
                                 </div>
                             </td>
                             <td class="py-4 px-6 flex space-x-2">

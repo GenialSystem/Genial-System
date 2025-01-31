@@ -24,7 +24,8 @@
                                 alt="profile image" class="w-8 h-8 rounded-full mr-2">{{ $row->user->name }}
                             {{ $row->user->surname }}</td>
                         <td class="py-3 px-6">Postazione lavoro</td>
-                        <td class="py-3 px-6 text-center">{{ $row->working_count }}</td>
+                        <td class="py-3 px-6 text-center">
+                            {{ $row->orders()->where('state', 'Nuova')->count() }}</td>
                         <td class="py-3 px-6 text-center">10h</td>
                     </tr>
                 @empty

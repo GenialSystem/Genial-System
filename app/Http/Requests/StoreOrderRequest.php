@@ -25,13 +25,14 @@ class StoreOrderRequest extends FormRequest
             'date' => 'required|date',
             'customer' => 'required|exists:customer_infos,id',
             'mechanic' => 'required|exists:mechanic_infos,id',
-            'earn_mechanic_percentage' => 'required|numeric|min:0|max:100',
+            // 'earn_mechanic_percentage' => 'required|numeric|min:0|max:100',
             'plate' => 'required|string|max:255',
             'damage_diameter' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'parts.*.damage_count' => 'required|integer|min:0',
             'car_size' => 'required|string',
+            'color' => 'required|string',
         ];
     }
 
@@ -40,7 +41,7 @@ class StoreOrderRequest extends FormRequest
         return [
             'customer.required' => 'Please select a customer.',
             'mechanic.required' => 'Please select a mechanic.',
-            'earn_mechanic_percentage.required' => 'Mechanic earnings percentage is required.',
+            // 'earn_mechanic_percentage.required' => 'Mechanic earnings percentage is required.',
         ];
     }
 }

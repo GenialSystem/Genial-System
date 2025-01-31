@@ -50,7 +50,7 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $request)
     {
         $price = (float) $request->input('price');
-    
+        
         DB::beginTransaction();
         try {
             // 1. Create the order
@@ -59,7 +59,7 @@ class OrderController extends Controller
                 'state' => 'Nuova',
                 'customer_id' => $request->input('customer'),
                 'admin_name' => $request->input('admin_name'),
-                'earn_mechanic_percentage' => $request->input('earn_mechanic_percentage'),
+                'earn_mechanic_percentage' => $request->input('earn_mechanic_percentage') ?? 0,
                 'plate' => $request->input('plate'),
                 'brand' => $request->input('brand'),
                 'price' => $price,
@@ -68,7 +68,8 @@ class OrderController extends Controller
                 'assembly_disassembly' => false,
                 'damage_diameter' => $request->input('damage_diameter'),
                 'replacements' => $request->input('replacements'),
-                'notes' => $request->input('notes')
+                'notes' => $request->input('notes'),
+                'color' => $request->input('color')
             ]);
             
             // 2. Attach mechanics
@@ -211,9 +212,10 @@ class OrderController extends Controller
                 'car_size' => $request->car_size,
                 'aluminium' => $request->aluminium == 'on' ? true : false,
                 'replacements' => $request->replacements,
+                'color' => $request->color,
                 'notes' => $request->notes,
                 'damage_diameter' => $request->damage_diameter,
-                'earn_mechanic_percentage' => $request->earn_mechanic_percentage,
+                'earn_mechanic_percentage' => $request->earn_mechanic_percentage ?? 0,
             ]);
            
             // 3. Sync car parts damage to the pivot table `order_car_part`

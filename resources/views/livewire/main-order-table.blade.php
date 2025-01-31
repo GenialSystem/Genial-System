@@ -46,6 +46,7 @@
                             <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Responsabile</th>
                         @endrole
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Stato Riparazione</th>
+                        <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Colore</th>
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Tecnico</th>
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Targa/Telaio</th>
 
@@ -103,7 +104,9 @@
                                     </div>
                                 </div>
                             </td>
-
+                            <td class="py-3 px-6 relative group">
+                                {{ $row->color }}
+                            </td>
                             <td class="py-3 px-6 relative group">
                                 @if ($row->mechanics->isNotEmpty())
                                     <div class="flex -space-x-4">

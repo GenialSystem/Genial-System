@@ -26,11 +26,7 @@ class MechanicHomeBanner extends Component
     public function fetchOrderCount()
     {
         // Fetch the number of orders for the authenticated mechanic
-        $this->orderCountPerYear = Order::whereYear('created_at', $this->selectedYear)->where('state', 'Riparata')
-            ->whereHas('mechanics', function ($query) {
-                $query->where('mechanic_id', Auth::id());
-            })
-            ->count();
+        $this->orderCountPerYear = Auth::user()->mechanicInfo->repaired_count;
             
     }
 

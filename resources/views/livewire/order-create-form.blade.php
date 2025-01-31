@@ -107,13 +107,20 @@
                 @role('admin')
                     <div>
                         <label for="earn_mechanic_percentage" class="block text-sm font-medium">Guadagno Tecnico %</label>
-                        <input required type="number" min="1" max="99" name="earn_mechanic_percentage"
+                        <input required type="number" min="0" max="99" name="earn_mechanic_percentage"
                             id="earn_mechanic_percentage"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <span id="earn_mechanic_percentage-error" class="text-red-500 text-xs hidden">Campo
                             obbligatorio.</span>
                     </div>
                 @endrole
+                <div>
+                    <label for="color" class="block text-sm font-medium">Colore</label>
+                    <input required type="text" name="color" id="color"
+                        class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
+                    <span id="color-error" class="text-red-500 text-xs hidden">Campo
+                        obbligatorio.</span>
+                </div>
             </div>
             <div id="selectedMechanics" class="my-2 flex flex-wrap gap-2">
                 <!-- JavaScript will append selected mechanics here -->
@@ -302,7 +309,7 @@
             let valid = true;
 
             if (stepCounter === 1) {
-                const requiredFieldsStep1 = ['earn_mechanic_percentage', 'date', 'customer',
+                const requiredFieldsStep1 = ['earn_mechanic_percentage', 'color', 'date', 'customer',
                     'mechanicIds',
                     'admin_name', 'brand', 'plate', 'price'
                 ];
