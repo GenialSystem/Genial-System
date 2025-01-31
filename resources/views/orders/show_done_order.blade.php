@@ -175,15 +175,19 @@
                             <span class="text-[#808080] text-[15px]">Data: </span>
                             <span class="text-[#222222] text-[15px]">{{ $order->created_at->format('d/m/Y') }}</span>
                         </div>
-                        <div class="flex justify-between my-3">
-                            <div>
-                                <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                                <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->user->name }}
-                                    {{ $order->mechanics[0]->user->surname }}</span>
+                        @if ($order->mechanics->isNotEmpty())
+                            <div class="flex justify-between my-3">
+                                <div>
+                                    <span class="text-[#808080] text-[15px]">Tecnico: </span>
+                                    <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->user->name }}
+                                        {{ $order->mechanics[0]->user->surname }}</span>
+                                </div>
+                                <a href="{{ route('mechanics.show', $order->mechanics[0]->id) }}"
+                                    class="text-[#4453A5]">Vai
+                                    all'anagrafica</a>
                             </div>
-                            <a href="{{ route('mechanics.show', $order->mechanics[0]->id) }}" class="text-[#4453A5]">Vai
-                                all'anagrafica</a>
-                        </div>
+                        @endif
+
                         <table class="w-full mt-6 bg-white border border-gray-200">
                             <thead class="bg-[#F5F5F5]">
                                 <tr class="w-full text-left text-gray-600 text-sm leading-normal">
