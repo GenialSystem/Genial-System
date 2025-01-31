@@ -114,18 +114,20 @@
                         </span>
                     </div>
                     @role('admin')
-                        <hr class="my-3">
-                        <div>
-                            <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                            <span class="text-[#222222] text-[15px]"> {{ $order->mechanics[0]->user->name }}
-                                {{ $order->mechanics[0]->user->surname }}</span>
-                        </div>
-                        <div>
-                            <span class="text-[#808080] text-[15px]">Guadagno tecnico: </span>
-                            <span class="text-[#222222] text-[15px]">
-                                {{ number_format(($order->earn_mechanic_percentage / 100) * floatval(str_replace(['.', ','], ['', '.'], $order->price)), 2, ',', '.') }}€
-                            </span>
-                        </div>
+                        @if ($order->mechanics->isNotEmpty())
+                            <hr class="my-3">
+                            <div>
+                                <span class="text-[#808080] text-[15px]">Tecnico: </span>
+                                <span class="text-[#222222] text-[15px]"> {{ $order->mechanics[0]->user->name }}
+                                    {{ $order->mechanics[0]->user->surname }}</span>
+                            </div>
+                            <div>
+                                <span class="text-[#808080] text-[15px]">Guadagno tecnico: </span>
+                                <span class="text-[#222222] text-[15px]">
+                                    {{ number_format(($order->earn_mechanic_percentage / 100) * floatval(str_replace(['.', ','], ['', '.'], $order->price)), 2, ',', '.') }}€
+                                </span>
+                            </div>
+                        @endif
                     @endrole
                 </div>
             </div>
