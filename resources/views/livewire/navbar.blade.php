@@ -28,9 +28,16 @@
                 <img src="{{ asset(Auth::user()->image_path ?? 'images/placeholder.png') }}" alt="Profile"
                     class="w-10 h-10 rounded-full mr-2">
                 <div>
-
                     <span class="text-secondary text-sm">{{ Auth::user()->name }} {{ Auth::user()->surname }}</span>
-                    <div class="text-xs text-[#747881]">{{ Auth::user()->roles->pluck('name')[0] ?? '' }}</div>
+                    <div class="text-xs text-[#747881]">
+                        @if (Auth::user()->roles->pluck('name')[0] === 'customer')
+                            Cliente
+                        @elseif (Auth::user()->roles->pluck('name')[0] === 'mechanic')
+                            Tecnico
+                        @else
+                            {{ Auth::user()->roles->pluck('name')[0] ?? '' }}
+                        @endif
+                    </div>
                 </div>
             </div>
         </a>
