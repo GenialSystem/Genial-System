@@ -12,82 +12,119 @@ class PdfController extends Controller
 {
     public function downloadPdfs($model, $ids)
     {
-        set_time_limit(300);  // Aumenta il tempo di esecuzione per evitare timeout
-
         try {
-            // Converti gli ID separati da virgola in un array
+            // Convert comma-separated IDs to an array
             $idArray = explode(',', $ids);
-            
-            // Risolvi dinamicamente il modello
+    
+            // Dynamically resolve the model class from the string
             $modelClass = 'App\\Models\\' . ucfirst($model);
-            
-            // Verifica se il modello esiste
+    
+            // Check if the model class exists
             if (!class_exists($modelClass)) {
                 return response()->json(['error' => 'Invalid model specified'], 400);
             }
-            
-            // Definisci la cartella di salvataggio dei PDF
+    
+            // Define the path where PDFs will be saved (inside storage, not public)
             $pdfPath = storage_path("app/temp/");
             if (!File::exists($pdfPath)) {
                 File::makeDirectory($pdfPath, 0755, true);
             }
 
-            // Crea un file ZIP per contenere i PDF
-            $zip = new ZipArchive();
-            $zipFileName = "{$model}_pdfs.zip";
-            $zipFilePath = $pdfPath . $zipFileName;
-            
-            // Prova ad aprire il file ZIP
-            if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
-                
-                // Creazione di PDF in parallelo per ogni ID
-                foreach ($idArray as $id) {
-                    dispatch(function() use ($model, $id, $pdfPath) {
-                        $this->generateAndSavePdf($model, $id, $pdfPath);
-                    });
+            // Custom path for Browsershot temp files
+            $customTempPath = '/home/forge/custom_temp_path/'; // Update this path as needed
+
+            // Handle a single ID case (download the PDF directly)
+            if (count($idArray) === 1) {
+                $instance = $modelClass::findOrFail($idArray[0]); // Get the model instance
+                $view = view("pdf.{$model}", [$model => $instance])->render(); // Render view
+                Log::info($model);
+                Log::info($instance);
+                if ($model == 'invoice' || $model == 'estimate') {
+                    $pdfFileName = "{$model}-" . str_replace('/', '_', $instance->number) . ".pdf";
+                } else {
+                    $pdfFileName = "{$model}-{$instance->id}.pdf";
                 }
                 
-                // Qui puoi sincronizzare o aspettare che tutti i job siano completati
-                // Dopo aver generato i PDF, aggiungili al file ZIP
+                $pdfFullPath = $pdfPath . $pdfFileName; // Full path
+                
+                // Generate the PDF with custom temp path
+                Browsershot::html($view)
+                        ->setCustomTempPath($customTempPath)  // Set custom temporary path
+                        ->waitUntilNetworkIdle()
+                        ->setOption('printBackground', true)
+                        ->setOption('args', ['--no-sandbox'])
+                        ->setOption('executablePath', '/usr/bin/chromium-browser')
+                        ->save($pdfFullPath);
+
+                // Download the PDF and delete temp file after download
+                return response()->download($pdfFullPath)
+                    ->deleteFileAfterSend(true); // Deletes the single PDF after download
+            }
+    
+            // Handle multiple IDs (generate a zip folder)
+            $zip = new ZipArchive();
+            $zipFileName = "{$model}_pdfs.zip"; // Create a zip file name
+            $zipFilePath = $pdfPath . $zipFileName;
+    
+            if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+                $pdfFiles = []; // Array to store generated PDF file paths
+    
                 foreach ($idArray as $id) {
                     $instance = $modelClass::findOrFail($id);
-                    $pdfFileName = "{$model}-{$instance->id}.pdf";
-                    $pdfFullPath = $pdfPath . $pdfFileName;
-                    
-                    if (File::exists($pdfFullPath)) {
-                        $zip->addFile($pdfFullPath, $pdfFileName);
+                    $view = view("pdf.{$model}", [$model => $instance])->render(); // Render view
+                    if ($model == 'invoice' || $model == 'estimate') {
+                        $pdfFileName = "{$model}-" . str_replace('/', '_', $instance->number) . ".pdf";
+                    } else {
+                        $pdfFileName = "{$model}-{$instance->id}.pdf";
                     }
+                    $pdfFullPath = $pdfPath . $pdfFileName;
+    
+                    // Generate the PDF with custom temp path
+                    Browsershot::html($view)
+                        ->setCustomTempPath($customTempPath)  // Set custom temporary path
+                        ->waitUntilNetworkIdle()
+                        ->setOption('printBackground', true)
+                        ->setOption('args', ['--no-sandbox'])
+                        ->setOption('executablePath', '/usr/bin/chromium-browser')
+                        ->save($pdfFullPath);
+                
+                    // Add the PDF to the zip archive
+                    if (!$zip->addFile($pdfFullPath, $pdfFileName)) {
+                        // Log any errors while adding files to the zip
+                        Log::error("Failed to add file to zip: {$pdfFullPath}");
+                    }
+                    $pdfFiles[] = $pdfFullPath; // Store the path for deletion later
                 }
-
-                // Chiudi il file ZIP
+    
+                // Close the zip archive
                 $zip->close();
-
-                // Rimuovi i PDF temporanei dopo il download
-                return response()->download($zipFilePath)->deleteFileAfterSend(true);
+    
+                // Flush output buffers
+                ob_end_clean();
+    
+                // Prepare the zip file for download
+                return response()->download($zipFilePath)->deleteFileAfterSend(true); // Deletes the zip after download
+            } else {
+                return response()->json(['error' => 'Unable to create zip file'], 500);
             }
-
-            return response()->json(['error' => 'Unable to create zip file'], 500);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return redirect()->back()->with('error', ['title' => 'Errore durante il download.', 'subtitle' => $e->getMessage()]);
+        } finally {
+            // Cleanup: delete PDF files after processing
+            foreach ($pdfFiles ?? [] as $pdfFile) {
+                if (File::exists($pdfFile)) {
+                    File::delete($pdfFile);
+                }
+            }
+
+            if (File::exists($customTempPath)) {
+                $tempFiles = File::files($customTempPath);
+                foreach ($tempFiles as $file) {
+                    File::delete($file);
+                }
+            }
         }
     }
-
-    private function generateAndSavePdf($model, $id, $pdfPath)
-    {
-        $modelClass = 'App\\Models\\' . ucfirst($model);
-        $instance = $modelClass::findOrFail($id);
-
-        $view = view("pdf.{$model}", [$model => $instance])->render();
-        $pdfFileName = "{$model}-{$instance->id}.pdf";
-        $pdfFullPath = $pdfPath . $pdfFileName;
-
-        // Ottimizzazione Browsershot per maggiore velocità
-        Browsershot::html($view)
-            ->waitUntilNetworkIdle()
-            ->setOption('printBackground', true)
-            ->setOption('executablePath', '/usr/bin/chromium-browser') // Percorso a Chromium
-            ->save($pdfFullPath);
-    }
- 
+    
 }
