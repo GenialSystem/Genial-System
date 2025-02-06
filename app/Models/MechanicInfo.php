@@ -58,4 +58,15 @@ class MechanicInfo extends Model
         return $this->orders()->where('state', 'In lavorazione')->count();
     }
     
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Elimina l'utente associato quando il meccanico viene eliminato
+        static::deleted(function ($mechanicInfo) {
+            if ($mechanicInfo->user) {
+                $mechanicInfo->user->delete();
+            }
+        });
+    }
 }

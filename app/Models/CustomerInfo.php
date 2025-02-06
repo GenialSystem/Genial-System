@@ -43,4 +43,16 @@ class CustomerInfo extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Elimina l'utente associato quando il meccanico viene eliminato
+        static::deleted(function ($customerInfo) {
+            if ($customerInfo->user) {
+                $customerInfo->user->delete();
+            }
+        });
+    }
 }

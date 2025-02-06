@@ -64,15 +64,16 @@
                             <span class="text-[#222222] text-[15px]">{{ $order->customer->admin_name }}</span>
                         </div>
                     @endhasanyrole
-                    <div class="flex justify-between">
-                        <div>
-                            <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                            <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->user->name }}
-                                {{ $order->mechanics[0]->user->surname }}</span>
-                        </div>
-                        <a href="{{ route('mechanics.show', $order->mechanics[0]->id) }}" class="text-[#4453A5]">Vai
-                            all'anagrafica</a>
-                    </div>
+                    @if (!empty($order->mechanics) && isset($order->mechanics[0]->user))
+                        <span class="text-[#808080] text-[15px]">Tecnico: </span>
+                        <span class="text-[#222222] text-[15px]">
+                            {{ $order->mechanics[0]->user->name }} {{ $order->mechanics[0]->user->surname }}
+                        </span>
+                    @else
+                        <span class="text-[#808080] text-[15px]">Tecnico: </span>
+                        <span class="text-[#222222] text-[15px]">Nessun tecnico assegnato</span>
+                    @endif
+
                     <hr class="my-3">
                     <div>
                         <span class="text-[#808080] text-[15px]">Città: </span>
@@ -109,9 +110,16 @@
                     @role('admin')
                         <hr class="my-3">
                         <div>
-                            <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                            <span class="text-[#222222] text-[15px]"> {{ $order->mechanics[0]->user->name }}
-                                {{ $order->mechanics[0]->user->surname }}</span>
+                            @if (!empty($order->mechanics) && isset($order->mechanics[0]->user))
+                                <span class="text-[#808080] text-[15px]">Tecnico: </span>
+                                <span class="text-[#222222] text-[15px]">
+                                    {{ $order->mechanics[0]->user->name }} {{ $order->mechanics[0]->user->surname }}
+                                </span>
+                            @else
+                                <span class="text-[#808080] text-[15px]">Tecnico: </span>
+                                <span class="text-[#222222] text-[15px]">Nessun tecnico assegnato</span>
+                            @endif
+
                         </div>
                         <div>
                             <span class="text-[#808080] text-[15px]">Guadagno tecnico: </span>
