@@ -15,15 +15,15 @@ class PdfController extends Controller
         try {
             // Convert comma-separated IDs to an array
             $idArray = explode(',', $ids);
-    
+
             // Dynamically resolve the model class from the string
             $modelClass = 'App\\Models\\' . ucfirst($model);
-    
+
             // Check if the model class exists
             if (!class_exists($modelClass)) {
                 return response()->json(['error' => 'Invalid model specified'], 400);
             }
-    
+
             // Define the path where PDFs will be saved (inside storage, not public)
             $pdfPath = storage_path("app/temp/");
             if (!File::exists($pdfPath)) {
@@ -39,36 +39,38 @@ class PdfController extends Controller
                 $view = view("pdf.{$model}", [$model => $instance])->render(); // Render view
                 Log::info($model);
                 Log::info($instance);
+
+                // Set PDF file name based on model
                 if ($model == 'invoice' || $model == 'estimate') {
                     $pdfFileName = "{$model}-" . str_replace('/', '_', $instance->number) . ".pdf";
                 } else {
                     $pdfFileName = "{$model}-{$instance->id}.pdf";
                 }
-                
+
                 $pdfFullPath = $pdfPath . $pdfFileName; // Full path
-                
+
                 // Generate the PDF with custom temp path
                 Browsershot::html($view)
                         ->setCustomTempPath($customTempPath)  // Set custom temporary path
                         ->waitUntilNetworkIdle()
                         ->setOption('printBackground', true)
                         ->setOption('args', ['--no-sandbox'])
-                        ->setOption('executablePath', '/usr/bin/chromium-browser')
+                        ->setOption('executablePath', '/usr/bin/google-chrome-stable') // Use Google Chrome
                         ->save($pdfFullPath);
 
                 // Download the PDF and delete temp file after download
                 return response()->download($pdfFullPath)
                     ->deleteFileAfterSend(true); // Deletes the single PDF after download
             }
-    
+
             // Handle multiple IDs (generate a zip folder)
             $zip = new ZipArchive();
             $zipFileName = "{$model}_pdfs.zip"; // Create a zip file name
             $zipFilePath = $pdfPath . $zipFileName;
-    
+
             if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
                 $pdfFiles = []; // Array to store generated PDF file paths
-    
+
                 foreach ($idArray as $id) {
                     $instance = $modelClass::findOrFail($id);
                     $view = view("pdf.{$model}", [$model => $instance])->render(); // Render view
@@ -78,14 +80,14 @@ class PdfController extends Controller
                         $pdfFileName = "{$model}-{$instance->id}.pdf";
                     }
                     $pdfFullPath = $pdfPath . $pdfFileName;
-    
+
                     // Generate the PDF with custom temp path
                     Browsershot::html($view)
                         ->setCustomTempPath($customTempPath)  // Set custom temporary path
                         ->waitUntilNetworkIdle()
                         ->setOption('printBackground', true)
                         ->setOption('args', ['--no-sandbox'])
-                        ->setOption('executablePath', '/usr/bin/chromium-browser')
+                        ->setOption('executablePath', '/usr/bin/google-chrome-stable') // Use Google Chrome
                         ->save($pdfFullPath);
                 
                     // Add the PDF to the zip archive
@@ -95,13 +97,13 @@ class PdfController extends Controller
                     }
                     $pdfFiles[] = $pdfFullPath; // Store the path for deletion later
                 }
-    
+
                 // Close the zip archive
                 $zip->close();
-    
+
                 // Flush output buffers
                 ob_end_clean();
-    
+
                 // Prepare the zip file for download
                 return response()->download($zipFilePath)->deleteFileAfterSend(true); // Deletes the zip after download
             } else {
