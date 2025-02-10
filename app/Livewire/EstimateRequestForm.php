@@ -86,7 +86,7 @@ class EstimateRequestForm extends Component
                 'title' => 'Invio preventivo' 
             ]);
 
-            Mail::to('admin@example.com')->send(new EstimateRequestMail($emailData));
+            Mail::to('info.genialsystem@gmail.com')->send(new EstimateRequestMail($emailData));
             
             $customerName = Auth::user()->getFullName();
             $user = User::find(1);

@@ -20,7 +20,9 @@ class CreateChatModal extends ModalComponent
 
     public function mount()
     {
-        $this->users = User::all(); // Fetch all users when the component is mounted
+        $this->users = User::all()->reject(function ($user) {
+            return $user->id === Auth::user()->id;
+        });
     }
 
     public function setTab($tab)
@@ -52,7 +54,7 @@ class CreateChatModal extends ModalComponent
         $this->validate([
             'selectedUser' => 'required|exists:users,id',
         ]);
-
+        
         // Check if a 1-to-1 chat between the authenticated user and the selected user already exists.
         $existingChat = Chat::where('type', 'single')
             ->whereHas('users', function ($query) {
