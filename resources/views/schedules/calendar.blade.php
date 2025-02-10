@@ -55,15 +55,24 @@
 
         {{-- Schedule Section --}}
         <div id="schedule-section" class="my-8 mx-4 hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full bg-white border border-gray-200 rounded-md table-fixed">
-                    <thead class="bg-[#F5F5F5] text-start">
+
+            <div id="top-scrollbar" class="overflow-x-auto overflow-y-hidden h-4">
+    <div class=" w-fit h-full"></div>
+
+</div>
+        {{-- Matteo Denni 6/02/2025 ho aggiunto l'altezza h-3/4 della tabella per non far scrollare l'header della tabella --}}
+            <div id="table-container" class="overflow-y-auto overflow-x-auto h-3/4">
+            {{-- Matteo Denni 6/02/2025 per adattare la tabella Programmazione allo schermo tolgo la classe table-fixed dall'elemento table --}}
+            {{-- Matteo Denni 7/02/2025 table-fixed inserito di nuovo dopo scroll v e o --}}
+                <table id="schedule-table" class="w-full bg-white border border-gray-200 rounded-md table-fixed">
+                        {{-- Matteo Denni 6/02/2025 con sticky e top-0 uniti all'altezza del div padre l'header rimane fisso e z-20 evita di mostrare gli elementi che scorrono, left-n evita di sovrastare la prima colonna --}}
+                    <thead class="bg-[#F5F5F5] text-start sticky top-0 z-20 shadow">
                         <tr>
                             <th
-                                class="text-start px-2 text-[#4453A5] bg-[#F2F1FB] text-[15px] font-normal p-4 border border-dashed border-r-[#4453A5] w-32">
+                                class="sticky left-0 border-r text-start px-2 text-[#4453A5] bg-[#F2F1FB] text-[15px] font-normal p-4 border border-dashed border-r-[#4453A5] w-28">
                                 Data
                             </th>
-                            <th class="text-center px-2 text-[#4453A5] bg-[#F2F1FB] text-[15px] font-normal w-32">
+                            <th class="sticky left-28 border-r text-center px-2 text-[#4453A5] bg-[#F2F1FB] text-[15px] font-normal w-28">
                                 Giorno
                             </th>
                             @foreach ($mechanics as $mechanic)
@@ -372,15 +381,43 @@
                 };
 
                 // Crea e aggiungi le celle
+                //Matteo Denni 6/02/2025 aggiunta delle classi , 'sticky', 'left-0'
                 tr.appendChild(createCell(formattedDate, ['border', 'border-dashed',
                     'border-r-[#4453A5]', 'border-b-[#4453A5]', 'px-2', 'py-4',
-                    'bg-[#F2F1FB]'
+                    'bg-[#F2F1FB]', 'sticky', 'left-0', 'w-28'
                 ]));
                 tr.appendChild(createCell(date.toLocaleDateString('it-IT', {
                     weekday: 'long'
-                }), ['bg-[#F2F1FB]', 'px-2', 'text-center']));
+                }), ['bg-[#F2F1FB]', 'px-2', 'text-center', 'sticky', 'left-28', 'w-28']));
+
+//Matteo Denni 7/02/2025 barra di scorrimento superiore, è una barra di scorrimento sopra la tabella Programmazione
+//prendo il numero dei tecnici e lo moltiplico per la grandezza delle celle
+//la grandezza esatta in px era stata calcolata escudendo le prime due colonne, con il risultato di 256px
+//se divido la lunghezza della tabella (con 15 tecnici è 4065px) direttamente per il numero dei tecnici ottengo 271px
+//con 271px il comportamento dello scroll superiore è migliore
+//testato con 200 tecnici, funziona allo stesso modo di 15
+
+  const topScrollbar = document.getElementById('top-scrollbar');
+  const tableContainer = document.getElementById('table-container');
+
+  const tableWidth = tableContainer.scrollWidth;
+  topScrollbar.querySelector('div').style.width = `${mechanics.length * 271}px`; //viene impostata la lunghezza del div da far scorrere sopra la tabella
+
+  // Sincronizzano le barre di scorrimento superiore e inferiore
+  topScrollbar.addEventListener('scroll', function () {
+    tableContainer.scrollLeft = topScrollbar.scrollLeft;
+  });
+
+  tableContainer.addEventListener('scroll', function () {
+    topScrollbar.scrollLeft = tableContainer.scrollLeft;
+  });
+
+
+
+
 
                 // Controlla le disponibilità e popola le celle
+
                 mechanics.forEach(mechanic => {
                     let mechanicAvailabilities = availabilitiesByDate[originalFormattedDate] ||
                         [];
@@ -641,4 +678,6 @@
         updateScheduleTable();
 
     });
+
+
 </script>
