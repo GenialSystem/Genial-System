@@ -164,13 +164,9 @@
                         @livewire('car-parts-table', ['order' => $order])
                         <div class="grid grid-cols-2 gap-4 my-6">
                             <div>
-
-
-
-
                                 <label for="assembly_disassembly"
                                     class="block text-sm text-[#9F9F9F] text-[13px]">Montaggio/Smontaggio</label>
-                                    <select name="assembly_disassembly" id="assembly_disassembly" name="status" class="mt-1 p-2 border-transparent rounded-md w-20 bg-white">
+                                    <select disabled name="assembly_disassembly" id="assembly_disassembly" name="status" class="mt-1 p-2 border-transparent rounded-md w-20 bg-white">
                                     <option value="1" <?= $order->assembly_disassembly ? 'selected' : '' ?>>Si</option>
                                     <option value="0" <?= !$order->assembly_disassembly ? 'selected' : '' ?>>No</option>
                                 </select>
