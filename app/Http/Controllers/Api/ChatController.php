@@ -111,20 +111,20 @@ class ChatController extends Controller
             'content' => 'nullable|string',
             'file' => 'nullable|file|max:2048', // Limite di 2MB
         ]);
-    
+
         $filePath = null; // Percorso del file
 
         if ($request->hasFile('file')) {
             // Get the original file name and extension
             $originalName = pathinfo($request->file('file')->getClientOriginalName(), PATHINFO_FILENAME);
             $extension = $request->file('file')->getClientOriginalExtension();
-        
+
             // Sanitize the file name (remove special characters, spaces, etc.)
             $sanitizedName = Str::slug($originalName, '_');
-        
+
             // Append timestamp to ensure uniqueness
             $timestampedName = time() . '_' . $sanitizedName . '.' . $extension;
-        
+
             // Store the file
             $filePath = $request->file('file')->storeAs(
                 "chats/{$request->chat_id}/files",
@@ -132,7 +132,7 @@ class ChatController extends Controller
                 'public'
             );
         }
-        
+
         // Creazione del messaggio
         $message = Message::create([
             'chat_id' => $validated['chat_id'],
@@ -140,24 +140,24 @@ class ChatController extends Controller
             'content' => $validated['content'],
             'file_path' => $filePath, // Salva il percorso del file se presente
         ]);
-    
+
         // Trasmissione tramite broadcasting
         MessageSent::broadcast($message)->toOthers();
-        
+
         //leggi il messaggio appena letto
         $user = User::find($validated['user_id']);
-        
+
         $user->chats()->updateExistingPivot($validated['chat_id'], [
             'last_read_message_id' => $message->id,
         ]);
-        
+
         return response()->json('ok', 201);
     }
 
     public function readMessages(Request $request)
     {
         $lastMessage = Message::where('chat_id', $request->chat_id)->latest()->first();
-        
+
         $user = User::find($request->user_id);
         if ($lastMessage) {
             $user->chats()->updateExistingPivot($request->chat_id, [
@@ -166,5 +166,5 @@ class ChatController extends Controller
         }
         return response()->json('ok', 200);
     }
-    
+
 }

@@ -50,7 +50,7 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $request)
     {
         $price = (float) $request->input('price');
-        
+
         DB::beginTransaction();
         try {
             // 1. Create the order
@@ -65,13 +65,13 @@ class OrderController extends Controller
                 'price' => $price,
                 'car_size' => $request->input('car_size'),
                 'aluminium' => $request->input('aluminium') == 'on',
-                'assembly_disassembly' => false,
+                'assembly_disassembly' => $request->input('assembly_disassembly'),
                 'damage_diameter' => $request->input('damage_diameter'),
                 'replacements' => $request->input('replacements'),
                 'notes' => $request->input('notes'),
                 'color' => $request->input('color')
             ]);
-            
+
             // 2. Attach mechanics
             $mechanicIds = explode(',', $request->input('mechanic'));
             // Attach mechanics to the order
@@ -98,13 +98,13 @@ class OrderController extends Controller
                     ]);
                 }
             }
-    
+
             // 4. Store normal images
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
                     // Store image in "orders/{order_id}/normal" directory
                     $imagePath = $image->storeAs("orders/{$order->id}/normal", $image->getClientOriginalName(), 'public');
-    
+
                     // Create a record in order_images table
                     $order->images()->create([
                         'image_path' => $imagePath,
@@ -112,13 +112,13 @@ class OrderController extends Controller
                     ]);
                 }
             }
-    
+
             // 5. Store disassembly images
             if ($request->hasFile('images-disassembly')) {
                 foreach ($request->file('images-disassembly') as $image) {
                     // Store image in "orders/{order_id}/disassembly" directory
                     $imagePath = $image->storeAs("orders/{$order->id}/disassembly", $image->getClientOriginalName(), 'public');
-    
+
                     // Create a record in order_images table with disassembly flag
                     $order->images()->create([
                         'image_path' => $imagePath,
@@ -130,18 +130,18 @@ class OrderController extends Controller
                 'type' => 'single',
                 'order_id' => $order->id
             ]);
-            
+
             $adminUser = User::role('admin')->first();
-            
+
             $customer = CustomerInfo::find($request->input('customer'));
-            
+
             if ($adminUser && $customer && $customer->user) {
                 $userIds = [$adminUser->id, $customer->user->id];
                 $chat->users()->attach($userIds);
             }
-        
+
             DB::commit();
-            $redirectRoute = Auth::user()->roles->pluck("name")->first() === 'mechanic' ? 'home' : 'orders.index'; 
+            $redirectRoute = Auth::user()->roles->pluck("name")->first() === 'mechanic' ? 'home' : 'orders.index';
             $mechanicIds[] = $customer->user->id;
             $users = User::whereIn('id', $mechanicIds)
             ->where(function ($query) {
@@ -151,25 +151,25 @@ class OrderController extends Controller
                 ->orWhereDoesntHave('notificationPreferences'); // Utenti senza preferenze
             })
             ->get();
-            
+
             Log::info($mechanicIds);
             Log::info($users);
             $creator = Auth::user();
-            
+
             Notification::send($users, new OrderCreate($creator));
-            
+
             return redirect()->route($redirectRoute)->with('success', [
                 'title' => 'Nuova riparazione creata',
                 'subtitle' => 'La riparazione da te creata è ora inserita nella sezione delle riparazioni',
             ]);
-    
+
         } catch (\Exception $e) {
             DB::rollback();
             Log::error($e->getMessage());
             return redirect()->back()->withErrors('Errore durante la creazione: ' . $e->getMessage());
         }
     }
-    
+
 
     /**
      * Display the specified resource.
@@ -215,9 +215,10 @@ class OrderController extends Controller
                 'color' => $request->color,
                 'notes' => $request->notes,
                 'damage_diameter' => $request->damage_diameter,
+                'assembly_disassembly' => $request->assembly_disassembly,
                 'earn_mechanic_percentage' => $request->earn_mechanic_percentage ?? 0,
             ]);
-           
+
             // 3. Sync car parts damage to the pivot table `order_car_part`
             foreach ($request->input('parts') as $part) {
                 $carPart = CarPart::where('name', $part['name'])->first();
@@ -225,7 +226,7 @@ class OrderController extends Controller
                 if ($carPart) {
                     // Sync the part to the order using the correct field names
                     $order->carParts()->syncWithoutDetaching([$carPart->id => [
-                        'damage_count' => $part['damage_count'], 
+                        'damage_count' => $part['damage_count'],
                     ]]);
                 }
             }

@@ -25,9 +25,10 @@
                 @endrole
             </div>
         </div>
+    <x-top-scrollbar id="top-scrollbar" />
 
-        <div class="overflow-x-auto rounded-md">
-            <table class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
+        <div id="table" class="overflow-x-auto rounded-md">
+            <table id="get-width"  class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
                 <thead class="bg-[#F5F5F5]">
                     <tr class="w-full text-left text-gray-600 text-sm leading-normal">
                         @role('customer')
@@ -184,3 +185,6 @@
     ])
 
 </div>
+
+{{-- script per sincronia tra scrollbar superiore e inferiore (la scrollbar inferiore è quella legit del browser) --}}
+<script src="{{ asset('js/top-scrollbar.js') }}"></script>

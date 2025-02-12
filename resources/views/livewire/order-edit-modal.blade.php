@@ -46,6 +46,18 @@
                     <span id="damage_diameter-error" class="text-red-500 text-xs hidden"></span>
                 </div>
                 @role('admin')
+
+                {{-- montaggio/smontaggio --}}
+                 <div>
+                  <label for="assembly_deassembly"
+                                    class="block text-sm text-[#9F9F9F] text-[13px]">Montaggio/Smontaggio</label>
+                                    <select name="assembly_disassembly" id="assembly_disassembly" class="mt-1 p-2 border-transparent rounded-md w-20 bg-white">
+                                    <option value="1" <?= $order->assembly_disassembly ? 'selected' : '' ?>>Si</option>
+                                    <option value="0" <?= !$order->assembly_disassembly ? 'selected' : '' ?>>No</option>
+                                </select>
+                    <span id="assembly_deassembly-error" class="text-red-500 text-xs hidden"></span>
+                </div>
+                {{-- --------------------- --}}
                     <div>
                         <label for="earn_mechanic_percentage" class="block text-sm text-[13px] text-[#9F9F9F]">Guadagno
                             Tecnico %</label>

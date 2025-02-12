@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Events\MessageSent;
+use App\Notifications\NewChatMessage;
 use Livewire\Component;
 use App\Models\Chat;
 use App\Models\Message;
@@ -12,12 +13,15 @@ use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Notification;
+use App\Models\User;
+use DB;
 
 class ChatList extends Component
 {
     use WithFileUploads;
-    
-    public $file; 
+
+    public $file;
     public $selectedFile;
     public $chats;
     public $selectedChat = null; // Inizialmente nessuna chat è selezionata
@@ -36,7 +40,7 @@ class ChatList extends Component
         'D' => 'bg-[#FCF3E4]',
         'Z' => 'bg-[#F7F0FC]',
     ];
-    
+
     public $textColors = [
         'A' => 'text-[#FDA254]',
         'B' => 'text-[#68C9BB]',
@@ -57,7 +61,7 @@ class ChatList extends Component
             $this->filterType = 'client';
         }
         $this->loadChats();
-      
+
         $this->dispatch('messagesLoaded');
     }
 
@@ -181,7 +185,7 @@ class ChatList extends Component
     {
         // Trova e seleziona la chat
         $this->selectedChat = Auth::user()->chats()->with('users')->find($chatId);
-        
+
         if ($this->selectedChat) {
             $this->loadMessages();
             $this->setOtherUser();
@@ -199,7 +203,7 @@ class ChatList extends Component
         ->whereNotNull('file_path')
         ->get();
            $receiverId = $this->selectedChat->users->where('id', '!=', Auth::user()->id)->pluck('id')[0];
-      
+
         $this->dispatch('chatSelected', $this->selectedChat->id, $receiverId, $this->selectedChat->users);
     }
 
@@ -213,18 +217,18 @@ class ChatList extends Component
             ->get()
             ->reverse() // Inverti l'array per visualizzarli correttamente
             ->toArray();
-    
+
         // Invia l'evento dopo aver caricato i messaggi
         $this->dispatch('messagesLoaded');
-    
+
         // Per debug: rimuovi o commenta questa riga in produzione
         // dd($this->messages);
     }
-    
+
 
     public function loadMoreMessages()
     {
-        
+
      $this->messageCount += 20; // Aumenta il numero di messaggi da caricare
         $this->messages = Message::where('chat_id', $this->selectedChat->id)
             ->latest() // Carica i messaggi più recenti
@@ -233,22 +237,19 @@ class ChatList extends Component
             ->get()
             ->reverse() // Inverti l'array per visualizzarli correttamente
             ->toArray();
-    
+
         // Invia l'evento dopo aver caricato i messaggi
         $this->dispatch('messagesLoaded');
             // dd(0);
     }
-    
-    
-
 
     public function setOtherUser()
     {
         if ($this->selectedChat && count($this->selectedChat['users']) > 1) {
             // Trova l'utente che non è l'utente attualmente connesso
             // dd($this->selectedChat['users']);
-            $this->otherUser = $this->selectedChat['users'][0]['id'] === Auth::user()->id 
-                ? $this->selectedChat['users'][1] 
+            $this->otherUser = $this->selectedChat['users'][0]['id'] === Auth::user()->id
+                ? $this->selectedChat['users'][1]
                 : $this->selectedChat['users'][0];
         } else {
             // Se ci sono meno di 2 utenti, imposta otherUser a null o gestisci il caso come preferisci
@@ -260,7 +261,7 @@ class ChatList extends Component
     {
         $this->messages[] = $message;  // Aggiungi il nuovo messaggio alla lista
     }
-    
+
     public function sendMessage()
     {
         // Validate the new message and file (if file exists)
@@ -272,7 +273,7 @@ class ChatList extends Component
         // Initialize file path as null
         $filePath = null;
 
-                
+
         if ($this->file) {
             // Get the original file name and extension
             $originalName = pathinfo($this->file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -309,6 +310,14 @@ class ChatList extends Component
         // Broadcast the message to others (if using broadcasting)
         MessageSent::broadcast($message)->toOthers();
 
+        //prendo gli tutenti della chat tranne chi ha inviato il messaggio
+        $chatUsers = $this->selectedChat->users->reject(function ($user) {
+            return $user->id === Auth::user()->id;
+        });
+
+        //il nuovo messaggio viene salvato su DB e inviato come notifica
+        Notification::send($chatUsers, new NewChatMessage($this->newMessage));
+
         // Append the new message to the current list of messages
         $this->messages[] = $message->toArray();
 
@@ -317,7 +326,7 @@ class ChatList extends Component
 
         // Reset the new message input field
         $this->newMessage = '';
-       
+
         // Dispatch a messageSent event for any further actions
         $this->dispatch('messageSent', $message);
     }
@@ -329,7 +338,7 @@ class ChatList extends Component
         // dd($this->filterType);
         $this->loadChats();
         $this->dispatch('chatsFiltered');
-        
+
         $this->dispatch('listenChats', $this->chats);
         // $this->selectedChat = null;
     }
@@ -340,7 +349,7 @@ class ChatList extends Component
             if ($chat['id'] == $chatId) {
                 // Increment unread message count
                 $this->chats[$key]['unread_count'] = isset($chat['unread_count']) ? $chat['unread_count'] + 1 : 1;
-                
+
                 // Update the latest message content and timestamp
                 $this->chats[$key]['latest_message'] = [
                     'content' => $message['content'],
@@ -356,13 +365,13 @@ class ChatList extends Component
 
                 // Add the updated chat to the front
                 array_unshift($this->chats, $updatedChat);
-                
+
                 break; // Exit the loop after finding the chat
             }
         }
     }
 
-    
+
     public function updateLastMessage($message)
     {
         foreach ($this->chats as $key => &$chat) {
@@ -383,7 +392,7 @@ class ChatList extends Component
                 Auth::user()->chats()->updateExistingPivot($chat['id'], [
                     'last_read_message_id' => $message['id'],
                 ]);
-                
+
                 break;
             }
         }

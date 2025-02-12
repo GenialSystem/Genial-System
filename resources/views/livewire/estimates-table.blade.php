@@ -63,9 +63,11 @@
         bg-[#A892D1],
         bg-[#E68B69],
         --}}
+            <x-top-scrollbar id="top-scrollbar" />
+
         {{-- @dd($rows[0]->customer) --}}
-        <div class="overflow-x-auto rounded-md mt-4">
-            <table class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
+        <div id="table" class="overflow-x-auto rounded-md mt-4">
+            <table id="get-width" class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
                 <thead class="bg-[#F5F5F5]">
                     <tr class="w-full text-left text-gray-600 text-sm leading-normal">
                         @role('admin')
@@ -244,3 +246,5 @@
         'buttons' => ['delete', 'download', 'archive'],
     ])
 </div>
+{{-- script per sincronia tra scrollbar superiore e inferiore (la scrollbar inferiore è quella legit del browser) --}}
+<script src="{{ asset('js/top-scrollbar.js') }}"></script>

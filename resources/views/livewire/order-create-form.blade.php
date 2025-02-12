@@ -113,6 +113,15 @@
                         <span id="earn_mechanic_percentage-error" class="text-red-500 text-xs hidden">Campo
                             obbligatorio.</span>
                     </div>
+                <div>
+                  <label for="assembly_deassembly"
+                                    class="block text-sm text-[#9F9F9F] text-[13px]">Montaggio/Smontaggio</label>
+                                    <select name="assembly_disassembly" id="assembly_disassembly" class="mt-1 p-2 border-transparent rounded-md w-20 bg-white">
+                                    <option value="1">Si</option>
+                                    <option value="0">No</option>
+                                </select>
+                    <span id="assembly_deassembly-error" class="text-red-500 text-xs hidden"></span>
+                </div>
                 @endrole
                 <div>
                     <label for="color" class="block text-sm font-medium">Colore</label>

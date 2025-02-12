@@ -10,9 +10,11 @@
             </button>
         </div>
     </div>
+    <x-top-scrollbar id="top-scrollbar" />
+
     <!-- bg-[#FFF9EC] bg-[#E9EFF5] bg-[#EFF7E9] text-[#FCC752] text-[#7FBC4B] text-[#5E66CC] text-[#DC0851] bg-[#FEF0F5] -->
-    <div class="overflow-x-auto rounded-md">
-        <table class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
+    <div  id="table" class="overflow-x-auto rounded-md">
+        <table id="get-width" class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
             <thead class="bg-[#F5F5F5]">
                 <tr class="w-full text-left text-gray-600 text-sm leading-normal">
                     <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Tecnico</th>
@@ -98,3 +100,8 @@
         </div>
     </div>
 </div>
+
+
+
+{{-- script per sincronia tra scrollbar superiore e inferiore (la scrollbar inferiore è quella legit del browser) --}}
+<script src="{{ asset('js/top-scrollbar.js') }}"></script>

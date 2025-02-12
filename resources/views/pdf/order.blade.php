@@ -30,7 +30,7 @@
                     <div>
                         <span class="text-gray-400 text-[15px] mr-2">Stato riparazione: </span>
                         <span
-                            class="px-2 py-1 rounded-md 
+                            class="px-2 py-1 rounded-md
                             text-[13px] font-semibold
                             @switch($order->state)
                                 @case('Riparata')
@@ -108,7 +108,7 @@
                     <div>
                         <span class="text-[#808080] text-[15px]">Stato pagamento: </span>
                         <span
-                            class="px-2 py-1 rounded-md 
+                            class="px-2 py-1 rounded-md
                             text-[13px] font-semibold bg-[#EFF7E9] text-[#7FBC4B]">
                             Saldato
                         </span>

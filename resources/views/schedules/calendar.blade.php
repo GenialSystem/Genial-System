@@ -55,11 +55,8 @@
 
         {{-- Schedule Section --}}
         <div id="schedule-section" class="my-8 mx-4 hidden">
+            <x-top-scrollbar id="top-scrollbar" />
 
-            <div id="top-scrollbar" class="overflow-x-auto overflow-y-hidden h-4">
-    <div class=" w-fit h-full"></div>
-
-</div>
         {{-- Matteo Denni 6/02/2025 ho aggiunto l'altezza h-3/4 della tabella per non far scrollare l'header della tabella --}}
             <div id="table-container" class="overflow-y-auto overflow-x-auto h-3/4">
             {{-- Matteo Denni 6/02/2025 per adattare la tabella Programmazione allo schermo tolgo la classe table-fixed dall'elemento table --}}
@@ -681,3 +678,8 @@
 
 
 </script>
+
+
+{{-- qui non troverai lo script per il file pubblico top-scrolling,
+perchè con questa tabella il procedimento di creazione del div della
+scrollbar è diverso --}}

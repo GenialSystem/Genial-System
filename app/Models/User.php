@@ -16,7 +16,6 @@ class User extends Authenticatable
     use HasApiTokens, Notifiable, HasFactory, HasRoles;
 
     protected $guard_name = 'web';
-
     /**
      * The attributes that are mass assignable.
      *
@@ -97,7 +96,7 @@ class User extends Authenticatable
 
     public function chats()
     {
-        return $this->belongsToMany(Chat::class)->withPivot('last_read_message_id');    
+        return $this->belongsToMany(Chat::class)->withPivot('last_read_message_id');
     }
 
     public function messages()

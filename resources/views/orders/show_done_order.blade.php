@@ -149,7 +149,7 @@
                         <div class="my-3">
                             <span class="text-[#808080] text-[15px]">Stato riparazione: </span>
                             <span
-                                class="px-2 py-1 rounded-md 
+                                class="px-2 py-1 rounded-md
                                 text-[13px] font-semibold
                                 @switch($order->state)
                                     @case('Riparata')

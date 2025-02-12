@@ -8,9 +8,10 @@
         </div>
         <!-- text-[#DC76E0] bg-[#FFF2FF] bg-[#FCE5E8] bg-[#E7FAF4] bg-[#D6D6D6] bg-[#F5F5F5] bg-[#FAF2DD] text-[#DC0814] text-[#92D1BB] text-[#464646] text-[#9F9F9F] text-[#E8C053] -->
 
+            <x-top-scrollbar id="top-scrollbar" />
 
-        <div class="overflow-x-auto rounded-md">
-            <table class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
+        <div id="table" class="overflow-x-auto rounded-md">
+            <table id="get-width" class="min-w-full bg-white border border-gray-200 whitespace-nowrap">
                 <thead class="bg-[#F5F5F5]">
                     <tr class="w-full text-left text-gray-600 text-sm leading-normal">
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Cliente</th>
@@ -72,3 +73,5 @@
         </div>
     </div>
 </div>
+{{-- script per sincronia tra scrollbar superiore e inferiore (la scrollbar inferiore è quella legit del browser) --}}
+<script src="{{ asset('js/top-scrollbar.js') }}"></script>

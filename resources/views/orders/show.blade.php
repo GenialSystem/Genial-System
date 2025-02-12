@@ -19,7 +19,7 @@
                     <div>
                         <span class="text-gray-400 text-[15px] mr-2">Stato riparazione: </span>
                         <span
-                            class="px-2 py-1 rounded-md 
+                            class="px-2 py-1 rounded-md
                             text-[13px] font-semibold
                             @switch($order->state)
                                 @case('Riparata')
@@ -102,7 +102,7 @@
                     <div>
                         <span class="text-[#808080] text-[15px]">Stato pagamento: </span>
                         <span
-                            class="px-2 py-1 rounded-md 
+                            class="px-2 py-1 rounded-md
                             text-[13px] font-semibold bg-[#EFF7E9] text-[#7FBC4B]">
                             Saldato
                         </span>
@@ -164,13 +164,27 @@
                         @livewire('car-parts-table', ['order' => $order])
                         <div class="grid grid-cols-2 gap-4 my-6">
                             <div>
-                                <label for="assembly_deassembly"
+
+
+
+
+                                <label for="assembly_disassembly"
                                     class="block text-sm text-[#9F9F9F] text-[13px]">Montaggio/Smontaggio</label>
-                                <input disabled value="{{ $order->assembly_disassembly ? 'Si' : 'No' }}" type="text"
-                                    name="assembly_deassembly" id="assembly_deassembly"
-                                    class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
-                                <span id="assembly_deassembly-error" class="text-red-500 text-xs hidden">Campo
+                                    <select name="assembly_disassembly" id="assembly_disassembly" name="status" class="mt-1 p-2 border-transparent rounded-md w-20 bg-white">
+                                    <option value="1" <?= $order->assembly_disassembly ? 'selected' : '' ?>>Si</option>
+                                    <option value="0" <?= !$order->assembly_disassembly ? 'selected' : '' ?>>No</option>
+                                </select>
+
+                              {{-- <input disabled value="{{ $order->assembly_disassembly ? 'checked' : '' }}" type="checkbox"
+                                    name="assembly_disassembly" id="assembly_disassembly"
+                                    class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">--}}
+
+                                <span id="assembly_disassembly-error" class="text-red-500 text-xs hidden">Campo
                                     obbligatorio.</span>
+
+
+
+
                             </div>
                             <div class="flex place-items-center">
                                 <input disabled {{ $order->aluminium ? 'checked' : '' }} type="checkbox" name="aluminium"

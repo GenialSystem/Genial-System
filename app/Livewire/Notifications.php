@@ -50,7 +50,7 @@ class Notifications extends Component
 
         // Regroup notifications after marking one as read
         $this->groupNotificationsByDate();
-        
+
     }
 
     // Group notifications by date and format date
@@ -67,7 +67,7 @@ class Notifications extends Component
             } else {
                 $formattedDate = $carbonDate->format('d/m/Y'); // Date in dd/mm/yyyy format
             }
-
+                
             return [
                 'formatted_date' => $formattedDate,
                 'notifications' => $dailyNotifications,
@@ -92,7 +92,7 @@ class Notifications extends Component
         array_unshift($this->notifications, $newNotification);
 
         // Re-group notifications after adding
-        $this->groupNotificationsByDate(); 
+        $this->groupNotificationsByDate();
     }
 
 
