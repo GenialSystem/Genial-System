@@ -87,7 +87,7 @@
                                     <!-- Dropdown Button -->
                                     <button @click="open = !open"
                                         class="block w-full text-left rounded {{ $row->is_closed ? 'bg-[#F5F5F5] text-[#9F9F9F]' : 'bg-[#EFF7E9] text-[#7FBC4B]' }} text-[13px] font-semibold py-1 px-2 flex items-center justify-between">
-                                        {{ $row->is_closed ? 'Chiuso' : 'Aperto' }}
+                                        {{ $row->is_closed ? __('invoice.Chiuso') : __('invoice.Aperto')}}
                                         <!-- Chevron Icon -->
                                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -102,13 +102,13 @@
                                             <div @click="open = false"
                                                 wire:click="updateIsClosed({{ $row->id }}, false)"
                                                 class="bg-[#EFF7E9] text-[#7FBC4B] px-3 py-2 cursor-pointer text-[13px] font-semibold">
-                                                Aperto
+                                                {{ __('invoice.Aperto')}}
                                             </div>
                                         @else
                                             <div @click="open = false"
                                                 wire:click="updateIsClosed({{ $row->id }}, true)"
                                                 class="bg-[#F5F5F5] text-[#9F9F9F] px-3 py-2 cursor-pointer text-[13px] font-semibold">
-                                                Chiuso
+                                                 {{ __('invoice.Chiuso')}}
                                             </div>
                                         @endif
                                     </div>

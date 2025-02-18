@@ -13,7 +13,7 @@
                 </div>
                 <div class="px-2 space-y-4">
                     {{-- @if ($invoice->user->hasRole('customer'))
-                    
+
                     @else
                         mechanic
                     @endif --}}
@@ -121,7 +121,7 @@
                    @else
                        bg-[#EFF7E9] text-[#7FBC4B] @endif
                     ">
-                    {{ $invoice->is_closed ? 'Chiuso' : 'Aperto' }}
+                    {{ $invoice->is_closed ? __('invoice.Chiuso') :  __('invoice.Aperto')}}
                 </span>
             </div>
             <div class="border-dashed border border-[#E8E8E8] my-4"></div>
