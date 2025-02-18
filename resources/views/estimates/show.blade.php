@@ -124,7 +124,7 @@
                             bg-white
                     @endswitch
                     ">
-                    {{ $estimate->type }}
+                    {{ __('estimate.' . $estimate->type )}}
                 </span>
             </div>
 

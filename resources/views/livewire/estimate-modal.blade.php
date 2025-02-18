@@ -81,7 +81,7 @@
                     class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                     @foreach ($types as $key => $value)
                         <option value="{{ $key }}" {{ $newType === $key ? 'selected' : '' }}>
-                            {{ $value }}</option>
+                            {{ __('estimate.' . $value) }}</option>
                     @endforeach
                 </select>
             </div>
