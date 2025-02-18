@@ -81,7 +81,7 @@
                                     <!-- Dropdown Button -->
                                     <button @if (Auth::user()->hasAnyRole(['admin', 'mechanic'])) @click="open = !open" @endif
                                         class="block w-full text-left rounded {{ $states[$row->state] }} {{ $statesText[$row->state] }} text-[13px] font-semibold py-1 px-2 flex items-center justify-between">
-                                        {{ ucfirst($row->state) }}
+                                        {{ ucfirst( __('orders.' . $row->state) ) }}
                                         <svg class="w-4 h-4 ml-2 {{ $statesText[$row->state] }}" fill="none"
                                             stroke="currentColor" viewBox="0 0 24 24"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -98,7 +98,7 @@
                                                 <div @click="open = false"
                                                     wire:click="updateState({{ $row->id }}, '{{ $state }}')"
                                                     class="{{ $color }} {{ $statesText[$state] }} px-3 py-2 cursor-pointer text-[13px] font-semibold">
-                                                    {{ ucfirst($state) }}
+                                                   {{ ucfirst( __('orders.' . $state) ) }}
                                                 </div>
                                             @endif
                                         @endforeach
