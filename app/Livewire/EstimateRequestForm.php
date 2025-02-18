@@ -81,13 +81,13 @@ class EstimateRequestForm extends Component
 
             Archive::create([
                 'customer_id' => $customerId,
-                'user_id' => $creator, 
+                'user_id' => $creator,
                 'date' => now(),
-                'title' => 'Invio preventivo' 
+                'title' => 'Invio preventivo'
             ]);
 
-            Mail::to('info.genialsystem@gmail.com')->send(new EstimateRequestMail($emailData));
-            
+            Mail::to('gestionalegenialsystem@gmail.com')->send(new EstimateRequestMail($emailData));
+
             $customerName = Auth::user()->getFullName();
             $user = User::find(1);
             $user->notify(new EstimateRequest($customerName));

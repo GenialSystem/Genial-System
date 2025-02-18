@@ -18,7 +18,7 @@
             <tbody class=" text-sm text-[#222222]">
 
                 @forelse($mechanics as $row)
-                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                    <tr translate="no" class="border-b border-gray-200 hover:bg-gray-100">
                         <td class="py-3 px-6 flex place-items-center"> <img
                                 src="{{ asset($mechanic->user->image_path ?? 'images/placeholder.png') }}"
                                 alt="profile image" class="w-8 h-8 rounded-full mr-2">{{ $row->user->name }}

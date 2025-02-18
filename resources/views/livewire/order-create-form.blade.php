@@ -113,6 +113,19 @@
                         <span id="earn_mechanic_percentage-error" class="text-red-500 text-xs hidden">Campo
                             obbligatorio.</span>
                     </div>
+                             {{-- Stato Pagamento --}}
+                <div>
+                    <label for="payment"
+                        class="block text-sm text-[#9F9F9F] text-[13px]">Stato pagamento</label>
+                            <select name="payment" id="payment" class="mt-1 p-2 border-transparent rounded-md w-52 bg-white">
+                                 <option value="">Stato di pagamento</option>
+                        @foreach ($payments as $key => $payment)
+                            <option value="{{ $key }}">{{ $payment }}</option>
+                        @endforeach
+                            </select>
+                    <span id="payment-error" class="text-red-500 text-xs hidden"></span>
+                </div>
+                {{-- --------------- --}}
                 <div>
                   <label for="assembly_deassembly"
                                     class="block text-sm text-[#9F9F9F] text-[13px]">Montaggio/Smontaggio</label>

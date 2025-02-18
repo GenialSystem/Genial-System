@@ -17,6 +17,7 @@ class Order extends Model
         'brand',
         'notes',
         'car_size',
+        'payment',
         'replacements',
         'aluminium',
         'assembly_disassembly',
@@ -49,15 +50,15 @@ class Order extends Model
 
     public function getPriceAttribute($value)
     {
-        return number_format($value, 2, ',', '.'); 
+        return number_format($value, 2, ',', '.');
     }
-    
+
     // An order has many mechanics
     public function mechanics()
     {
         return $this->belongsToMany(MechanicInfo::class, 'order_mechanic', 'order_id', 'mechanic_id');
     }
-   
+
     protected static function boot()
     {
         parent::boot();
@@ -66,11 +67,11 @@ class Order extends Model
         static::deleting(function ($order) {
             // Define the folder path for the order (assuming it's `/orders/{id}`)
             $folderPath = 'public/orders/' . $order->id;
-    
+
             if (Storage::exists($folderPath)) {
                 Storage::deleteDirectory($folderPath);  // Delete the folder and all its contents
             }
-    
+
         });
 
     }

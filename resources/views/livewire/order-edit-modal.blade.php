@@ -37,6 +37,19 @@
                     </select>
                     <span id="car_size-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                 </div>
+                         <div>
+                    <label for="payments" class="block text-sm text-[13px] text-[#9F9F9F]">Stato pagamento</label>
+                    <select name="payments" id="payments"
+                        class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
+                        <option value="">- Seleziona -</option>
+                        @foreach ($payments as $payment)
+                            <option value="{{ $payment }}" {{ $payment == $order->payment ? 'selected' : '' }}>
+                                {{ $payment }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <span id="car_size-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
+                </div>
                 <div>
                     <label for="damage_diameter" class="block text-sm text-[13px] text-[#9F9F9F]">Diametro bolli</label>
                     <input required type="text" value="{{ $order->damage_diameter ?? '' }}" name="damage_diameter"

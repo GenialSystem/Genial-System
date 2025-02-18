@@ -37,7 +37,7 @@
             <ul>
                 @foreach ($chats as $chat)
                     <li class="py-4 hover:bg-[#FAFAFA] cursor-pointer border-b border-b-[#F0F0F0] truncate"
-                        wire:click="selectChat({{ $chat['id'] }})" wire:key="chat-{{ $chat['id'] }}">
+                        wire:click="selectChat({{ $chat['id'] }})" wire:click='markAsRead("{{ $chat['id'] }}")' wire:key="chat-{{ $chat['id'] }}">
                         @if ($chat['type'] === 'single')
                             @php
                                 $otherUser = collect($chat['users'])

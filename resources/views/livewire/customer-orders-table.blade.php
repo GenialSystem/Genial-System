@@ -30,7 +30,7 @@
                 </thead>
                 <tbody class="text-sm text-[#222222]">
                     @forelse($rows as $row)
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <tr translate="no" class="border-b border-gray-200 hover:bg-gray-100">
 
                             <td class="py-3 px-6">{{ str_pad($row->id, 5, '0', STR_PAD_LEFT) }}</td>
                             <td class="py-3 px-6 relative" wire:key="order-{{ $row->id }}">

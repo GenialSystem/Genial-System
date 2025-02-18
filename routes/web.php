@@ -28,19 +28,20 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
 use Pusher\Pusher;
 
+
 require __DIR__ . '/auth.php';
 Route::middleware('auth')->group(function () {
     Route::get('edit_profile',[ProfileController::class, 'edit'])->name('editProfile');
-    
+
     Route::get('/', function () {
         $workingOrdersCount = Order::where('state', 'In lavorazione')->count('id');
         $newOrdersCount = Order::where('state', 'Nuova')->count('id');
         $estimates = Estimate::count();
-        $mechanics = MechanicInfo::count(); 
+        $mechanics = MechanicInfo::count();
         $customers = CustomerInfo::count();
         return view('home', compact('workingOrdersCount', 'newOrdersCount', 'mechanics', 'customers', 'estimates'));
     })->name('home');
-    
+
     Route::get('/mechanic-calendar/{mechanic}', [MechanicInfoController::class, 'calendar'])->name('mechanic-calendar');
     Route::resource('/calendar', CalendarController::class);
     Route::resource('/orders', OrderController::class);
@@ -74,3 +75,4 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+

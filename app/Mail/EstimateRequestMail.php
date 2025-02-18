@@ -8,13 +8,16 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Address;
+use Illuminate\Support\Facades\Auth;
+
 
 class EstimateRequestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $data;
-
+    public $dynamicSubject;
     /**
      * Create a new message instance.
      *
@@ -23,6 +26,7 @@ class EstimateRequestMail extends Mailable
     public function __construct($data)
     {
         $this->data = $data;
+        $this->dynamicSubject ='Nuova Richiesta Riparazione ' . now()->format('Y-m-d H:i:s') . ' ' . uniqid();
     }
 
     /**
@@ -31,7 +35,8 @@ class EstimateRequestMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nuova Richiesta Riparazione',  // The subject of the email
+            //from: new Address("pippo@topolinia.it", "Pippo"),
+            subject: $this->dynamicSubject,  // The subject of the email
         );
     }
 

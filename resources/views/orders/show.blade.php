@@ -101,11 +101,8 @@
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Stato pagamento: </span>
-                        <span
-                            class="px-2 py-1 rounded-md
-                            text-[13px] font-semibold bg-[#EFF7E9] text-[#7FBC4B]">
-                            Saldato
-                        </span>
+                        <span class="text-[#222222] text-[15px]"> {{ $order->payment }}</span>
+
                     </div>
                     @role('admin')
                         <hr class="my-3">

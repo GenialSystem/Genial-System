@@ -6,11 +6,13 @@
     <div class="w-full lg:w-max flex justify-between lg:justify-normal items-center space-x-4 mt-4 lg:mt-0">
         <!-- Language Selector -->
         <div class="">
-            <select class="border-none text-gray-900 text-sm rounded-lg">
+                      <div id="google_translate_element_modern" class="modern-translate"></div>
+
+           {{-- <select class="border-none text-gray-900 text-sm rounded-lg">
                 <option value="it">Italiano</option>
                 <option value="en">English</option>
                 <option value="fr">Français</option>
-            </select>
+            </select> --}}
         </div>
         <div class="flex space-x-2">
             <a href="{{ route('chats.index') }}">

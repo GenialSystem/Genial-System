@@ -64,6 +64,7 @@ class OrderController extends Controller
                 'brand' => $request->input('brand'),
                 'price' => $price,
                 'car_size' => $request->input('car_size'),
+                'payment' => $request->input('payment'),
                 'aluminium' => $request->input('aluminium') == 'on',
                 'assembly_disassembly' => $request->input('assembly_disassembly'),
                 'damage_diameter' => $request->input('damage_diameter'),
@@ -206,10 +207,10 @@ class OrderController extends Controller
         try {
             // 1. Find the existing order
             $order = Order::findOrFail($id);
-
             // 2. Update the order details
             $order->update([
                 'car_size' => $request->car_size,
+                'payment' => $request->payments,
                 'aluminium' => $request->aluminium == 'on' ? true : false,
                 'replacements' => $request->replacements,
                 'color' => $request->color,

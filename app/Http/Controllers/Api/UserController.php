@@ -116,24 +116,24 @@ class UserController extends Controller
         $user->address = $request->address;
         $user->cap = $request->cap;
         $user->province = $request->province;
-        
-        
+
+
         // Verifica e aggiorna la password se necessaria
         if ($request->oldPassword && $request->newPassword && $request->confirmPassword) {
             // Verifica che la vecchia password sia corretta
             if (!Hash::check($request->oldPassword, $user->password)) {
                 return response()->json(['message' => 'password-incorrect']);
             }
-    
+
             // Aggiorna la password solo se la vecchia password è corretta
             $user->password = Hash::make($request->newPassword);
             $user->mechanicInfo->plain_password = $request->newPassword;
             $user->mechanicInfo->save();
         }
-    
+
         // Salva le modifiche
         $user->save();
-    
+
         // Ritorna una risposta positiva
         return response()->json(['user' =>  $user, 'role_id' => $user->mechanicInfo->id], 200);
     }

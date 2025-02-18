@@ -29,7 +29,7 @@
             </thead>
             <tbody class="text-sm text-[#222222]">
                 @forelse($rows as $row)
-                    <tr wire:key="{{ str()->random(10) }}" class="border-b border-gray-200 hover:bg-gray-100">
+                    <tr wire:key="{{ str()->random(10) }}" translate="no" class="border-b border-gray-200 hover:bg-gray-100">
                         <td class="py-3 px-6">
                             <div class="flex place-items-center">
 

@@ -73,7 +73,7 @@
                 </thead>
                 <tbody class="text-sm text-[#222222]">
                     @forelse($rows as $row)
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <tr translate="no" class="border-b border-gray-200 hover:bg-gray-100">
                             <td class="py-3 px-6">
                                 <input id="{{ rand() }}" type="checkbox"
                                     class="border border-[#D6D6D6] checked:bg-[#7FBC4B] text-[#7FBC4B] focus:ring-0 rounded-sm"

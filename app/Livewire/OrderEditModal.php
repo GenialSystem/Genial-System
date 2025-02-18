@@ -25,6 +25,8 @@ class OrderEditModal extends ModalComponent
     {
         $parts = CarPart::all();
         $car_sizes = ['Piccolo', 'Medio', 'Grande', 'Veicolo commerciale'];
-        return view('livewire.order-edit-modal', ['car_sizes' => $car_sizes, 'parts' => $parts]);
+        $payments = ['Fattura non emessa','Fattura emessa', 'Fattura ricevuta', 'Saldato', 'Da saldare'];
+
+        return view('livewire.order-edit-modal', ['car_sizes' => $car_sizes, 'parts' => $parts, 'payments' => $payments]);
     }
 }

@@ -140,6 +140,7 @@
                 });
             };
 
+
             // Initialize chart with default data
             updateChart(@json($months), @json($orderCounts));
 
@@ -158,7 +159,7 @@
                     year: this.value
                 });
                 Livewire.on('chartDataUpdated', (data) => {
-                    console.log(data[0].months, data[0].orderCounts, this.value);
+                    //console.log(data[0].months, data[0].orderCounts, this.value);
                     updateChart(data[0].months, data[0].orderCounts);
                 });
                 document.getElementById('dateDisplay').textContent = this.value;

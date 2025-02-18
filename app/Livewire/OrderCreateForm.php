@@ -6,10 +6,12 @@ use App\Models\CarPart;
 use App\Models\CustomerInfo;
 use App\Models\MechanicInfo;
 use Livewire\Component;
+use DB;
 
 class OrderCreateForm extends Component
 {
     public  $car_sizes = ['Piccolo', 'Medio', 'Grande', 'Veicolo commerciale'];
+    public  $payments = ['Fattura non emessa','Fattura emessa', 'Fattura ricevuta', 'Saldato', 'Da saldare'];
     public $adminName = '';
     public $selectedCustomerId = null;
     public $brand = '';
@@ -21,9 +23,9 @@ class OrderCreateForm extends Component
         if ($customerId = request()->query('customer_id')) {
             $this->selectedCustomerId = $customerId;
             $customer = CustomerInfo::find($customerId);
-            
+
             if ($customer) {
-                $this->adminName = $customer->admin_name; 
+                $this->adminName = $customer->admin_name;
             }
         }
 
@@ -37,28 +39,29 @@ class OrderCreateForm extends Component
 
         if ($mechanicIdFromEstimate = request()->query('mechanic_id')) {
             $this->mechanicIdFromEstimate = $mechanicIdFromEstimate;
-        
+
             $mechanic = MechanicInfo::with('user:id,name,surname')
                         ->find($this->mechanicIdFromEstimate);
-        
+
             if ($mechanic && $mechanic->user) {
                 $data = [
                     'mechanic_id' => $mechanic->id,
                     'name'        => $mechanic->user->name,
                     'surname'     => $mechanic->user->surname,
                 ];
-        
+
                 $this->dispatch('default_mechanic', $data);
             }
         }
-        
-    }
-    
+}
+
     public function render()
     {
         $customers = CustomerInfo::all();
         $mechanics = MechanicInfo::all();
         $parts = CarPart::all();
-        return view('livewire.order-create-form', ['customers' => $customers, 'mechanics'=> $mechanics, 'parts' => $parts, 'car_sizes' => $this->car_sizes]);
+
+
+        return view('livewire.order-create-form', ['customers' => $customers, 'mechanics'=> $mechanics, 'parts' => $parts, 'car_sizes' => $this->car_sizes, 'payments' => $this->payments]);
     }
 }
