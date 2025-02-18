@@ -20,6 +20,7 @@
         "wire-elements/modal": "^2.0"
     },
     "require-dev": {
+        "laravel-lang/common": "^6.5",
         "laravel/breeze": "^2.1",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",

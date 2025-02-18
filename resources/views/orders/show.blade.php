@@ -197,7 +197,8 @@
                             <div>
                                 <label for="car_size" class="block text-sm text-[#9F9F9F] text-[13px]">Dimensioni
                                     veicolo</label>
-                                <input disabled type="text" value="{{ $order->car_size }}" name="car_size"
+                                
+                                <input disabled type="text" value="{{ __('orders.' . $order->car_size)  }}" name="car_size"
                                     id="car_size"
                                     class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                                 <span id="car_size-error" class="text-red-500 text-xs hidden">Campo
