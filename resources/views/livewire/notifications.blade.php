@@ -14,7 +14,7 @@
     <div id="notificationSidebar"
         class="z-50 fixed top-0 right-0 w-96 h-full bg-white shadow-lg transform {{ $isSidebarOpen ? 'translate-x-0' : 'translate-x-full' }} transition-transform duration-300 ease-in-out overflow-y-auto">
         <div class="bg-[#F5F5F5] h-20 flex justify-between place-items-center px-6">
-            <span class="text-[#222222] text-lg">Notifiche</span>
+            <span class="text-[#222222] text-lg">{{ __('notifications.Notifiche')}}</span>
             <button wire:click="closeSidebar" class="text-gray-500 hover:text-[#9F9F9F] text-3xl">&times;</button>
         </div>
 
@@ -23,7 +23,7 @@
             <ul id="notificationList" class="mb-4">
                 @if ($groupedNotifications->isEmpty())
                     <li>
-                        <p class="text-gray-500 px-4">Nessuna notifica</p>
+                        <p class="text-gray-500 px-4">{{ __('notifications.Nessuna notifica')}}</p>
                     </li>
                 @else
                     @foreach ($groupedNotifications as $group)
