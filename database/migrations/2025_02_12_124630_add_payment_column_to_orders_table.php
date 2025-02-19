@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            //
+            $table->enum('payment', ['Fattura non emessa','Fattura emessa','Fattura ricevuta','Saldato','Da saldare']);
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            //
+            $table->dropColumn('payment'); // Rimuove la colonna payment
         });
     }
 };

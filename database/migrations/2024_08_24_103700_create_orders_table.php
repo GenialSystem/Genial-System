@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('customer_id');
             $table->enum('state', ['Nuova', 'Riparata', 'In lavorazione', 'Annullata']);
             $table->enum('car_size', ['Piccolo', 'Grande', 'Medio', 'Veicolo commerciale']);
-            $table->enum('payment', ['Fattura non emessa','Fattura emessa','Fattura ricevuta','Saldato','Da saldare']);
+            // $table->enum('payment', ['Fattura non emessa','Fattura emessa','Fattura ricevuta','Saldato','Da saldare']);
             $table->string('plate');
             $table->string('notes');
             $table->string('brand');
