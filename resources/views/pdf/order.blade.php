@@ -273,7 +273,7 @@
                         <label class="block text-sm mt-4 text-[#9F9F9F]" for="notes">Appunti</label>
                         <textarea disabled rows="5"
                             class="mt-1 mb-6 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">{{ $order->notes }}</textarea>
-                        <span class="text-sm font-semibold text-[#222222] text-[15px]">Prezzo :</span>
+                        <span class="text-sm font-semibold text-[#222222] text-[15px]">Prezzo + IVA:</span>
                         <span
                             class="bg-[#66C0DB] px-4 py-0.5 rounded-2xl text-white text-[15px] font-semibold">{{ $order->price }}
                             €</span>

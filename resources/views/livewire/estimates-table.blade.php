@@ -91,7 +91,7 @@
                             <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Targa/Telaio</th>
                             <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Tecnico</th>
                         @endrole
-                        <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Importo</th>
+                        <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Importo + IVA</th>
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Stato</th>
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Data</th>
                         <th class="py-3 px-6"></th>

@@ -90,7 +90,7 @@
 
         <div class="grid grid-cols-3 gap-4">
             <div class="mb-4">
-                <label class="block text-sm font-medium text-[#9F9F9F] text-[13px]">Prezzo</label>
+                <label class="block text-sm font-medium text-[#9F9F9F] text-[13px]">Prezzo + IVA</label>
                 <input wire:model='price' required type="number" name="price" step="0.01" min="1"
                     value="{{ $estimate ? $estimate->price : '' }}"
                     class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">

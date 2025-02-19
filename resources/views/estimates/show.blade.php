@@ -175,7 +175,7 @@
 
             </div>
             <div class="border-dashed border border-[#E8E8E8] my-4"></div>
-            <span class="text-sm font-medium text-[#9F9F9F] text-[13px]">Prezzo :</span>
+            <span class="text-sm font-medium text-[#9F9F9F] text-[13px]">Prezzo + IVA:</span>
             <span class="bg-[#66C0DB] px-4 py-0.5 rounded-2xl text-white text-[15px] font-semibold">{{ $estimate->price }}
                 €</span>
         </div>

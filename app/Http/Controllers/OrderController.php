@@ -64,7 +64,7 @@ class OrderController extends Controller
                 'brand' => $request->input('brand'),
                 'price' => $price,
                 'car_size' => $request->input('car_size'),
-                'payment' => $request->input('payment'),
+                //'payment' => $request->input('payment'),
                 'aluminium' => $request->input('aluminium') == 'on',
                 'assembly_disassembly' => $request->input('assembly_disassembly'),
                 'damage_diameter' => $request->input('damage_diameter'),

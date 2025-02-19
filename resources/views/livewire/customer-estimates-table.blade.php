@@ -36,7 +36,7 @@
                     <tr class="w-full text-left text-gray-600 text-sm leading-normal">
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Numero</th>
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Tipologia Lavorazione</th>
-                        <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Importo</th>
+                        <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Importo + IVA</th>
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Stato</th>
                         <th class="py-3 px-6 text-[15px] text-[#808080] font-light">Data</th>
                         <th class="py-3 px-6"></th>

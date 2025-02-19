@@ -96,7 +96,7 @@
                 </div>
                 <div class="px-2 space-y-4">
                     <div>
-                        <span class="text-[#808080] text-[15px]">Importo: </span>
+                        <span class="text-[#808080] text-[15px]">Importo + IVA: </span>
                         <span class="text-[#222222] text-[15px]"> {{ $order->price }}€</span>
                     </div>
                     <div>
@@ -148,11 +148,13 @@
                     class="py-2 px-4 border-b-2 focus:outline-none">
                     Foto Smontaggio
                 </button>
+                @role('admin')
                 <button @click="activeTab = 'tab4'"
                     :class="activeTab === 'tab4' ? 'border-[#4453A5] text-[#4453A5]' : 'border-transparent text-[#9F9F9F]'"
                     class="py-2 px-4 border-b-2 focus:outline-none">
                     Documenti
                 </button>
+                @endrole
             </div>
 
             <div x-show="activeTab === 'tab1'">
@@ -353,7 +355,7 @@
                         <label class="block text-sm mt-4 text-[#9F9F9F]" for="notes">Appunti</label>
                         <textarea disabled rows="5"
                             class="mt-1 mb-6 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">{{ $order->notes }}</textarea>
-                        <span class="text-sm font-semibold text-[#222222] text-[15px]">Prezzo :</span>
+                        <span class="text-sm font-semibold text-[#222222] text-[15px]">Prezzo +IVA:</span>
                         <span
                             class="bg-[#66C0DB] px-4 py-0.5 rounded-2xl text-white text-[15px] font-semibold">{{ $order->price }}
                             €</span>
