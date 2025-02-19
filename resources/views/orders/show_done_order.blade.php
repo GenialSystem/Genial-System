@@ -298,7 +298,8 @@
                                                 class="transition-colors duration-200 group-hover:stroke-white" />
                                         </g>
                                     </svg>
-                                    Scarica pdf
+                                    {{ __('orders.Scarica pdf')}}
+
                                 </button>
                             </a>
                         </div>

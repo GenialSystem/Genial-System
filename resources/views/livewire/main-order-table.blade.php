@@ -156,7 +156,7 @@
                                                         class="transition-colors duration-200 group-hover:stroke-white" />
                                                 </g>
                                             </svg>
-                                            Scarica pdf
+                                            {{ __('orders.Scarica pdf')}}
                                         </button>
                                     </a>
 
@@ -166,7 +166,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="10" class="py-3 px-6 text-center">Nessun risultato</td>
+                            <td colspan="10" class="py-3 px-6 text-center">{{ __('utility.Nessun risultato')}}</td>
                         </tr>
                     @endforelse
                 </tbody>

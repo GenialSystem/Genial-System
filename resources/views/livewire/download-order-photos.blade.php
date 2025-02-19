@@ -19,6 +19,6 @@
                     class="transition-colors duration-200 group-hover:stroke-white" />
             </g>
         </svg>
-        Scarica foto
+        {{ __('orders.Scarica foto')}}
     </button>
 </div>

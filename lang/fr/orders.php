@@ -7,5 +7,9 @@ return [
     'Riparata' => 'Réparée',
     'Nuova' => 'Nouvelle',
     'In lavorazione' => 'En cours',
-    'Annullata' => 'Annulée'
+    'Annullata' => 'Annulée',
+    'Scarica pdf' => 'Télécharger le PDF',
+    'Scarica foto' => 'Télécharger la photo'
+
+
 ];

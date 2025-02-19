@@ -8,5 +8,9 @@ return [
     'Riparata' => 'Repaired',
     'Nuova' => 'New',
     'In lavorazione' => 'In progress',
-    'Annullata' => 'Cancelled'
+    'Annullata' => 'Cancelled',
+    'Scarica pdf' => 'Download PDF',
+    'Scarica foto' => 'Download photo'
+
+
 ];
