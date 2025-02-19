@@ -2,9 +2,8 @@
 namespace App\Livewire;
 
 use App\Models\Estimate;
-use App\Notifications\EstimateStateChanged;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Illuminate\Support\Facades\Schema;
 
 class SelectionBanner extends Component
 {
@@ -12,6 +11,8 @@ class SelectionBanner extends Component
     public $actionButtons = [];
     public $modelClass; 
     public $modelName;
+    public $hasPriceColumn = false;
+    public $totalPrice = 0;
 
     protected $listeners = ['rowsSelected' => 'updateSelectedRows', 'updateSelectionBanner' => 'clearSelection', 'refresh' => '$refresh'];
 
@@ -21,16 +22,24 @@ class SelectionBanner extends Component
         $this->modelName = $modelName;
 
         $this->actionButtons = $buttons;
+        // Controlla se il modello ha la colonna "price"
+        if (Schema::hasColumn((new $modelClass)->getTable(), 'price')) {
+            $this->hasPriceColumn = true;
+        }
     }
 
     public function updateSelectedRows($rows)
     {
         $this->selectedRows = $rows;
+        if ($this->hasPriceColumn) {
+            $this->totalPrice = $this->modelClass::whereIn('id', $this->selectedRows)->sum('price');
+        }
     }
 
     public function clearSelection()
     {
         $this->selectedRows = [];
+        $this->totalPrice = 0;
         $this->dispatch('selectionDeleted');
     }
     

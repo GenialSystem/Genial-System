@@ -5,6 +5,8 @@
                 <span class="text-white text-2xl font-bold">{{ count($selectedRows) }}</span>
                 <span class="text-white text-lg">Elementi selezionati</span>
             </div>
+
+
             <div>
                 <div wire:loading wire:target="applyStateToSelectedRows"
                     class="flex place-items-center place-content-center justify-center h-full px-10">
@@ -58,6 +60,12 @@
                     @endif
                 @endforeach
             </div>
+            @if ($hasPriceColumn)
+                <div class="bg-gray-100 p-5 flex items-center space-x-2">
+                    <span class="text-gray-800 text-xl font-bold">Totale:
+                        €{{ number_format($totalPrice, 2, ',', '.') }}</span>
+                </div>
+            @endif
         </div>
     @endif
 
