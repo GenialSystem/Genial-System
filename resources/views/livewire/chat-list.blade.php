@@ -75,7 +75,7 @@
                                         <p class="text-[#4453A5] text-sm mt-1 w-1">Riparazione #{{ $chat['order_id'] }}
                                         </p>
                                     @else
-                                        <p class="text-[#656565] text-sm mt-1 w-1">{{ $lastMessage }}</p>
+                                        <p translate="no" class="text-[#656565] text-sm mt-1 w-1">{{ $lastMessage }}</p>
                                     @endif
                                 </div>
                             </div>
@@ -277,14 +277,14 @@
                                     src="{{ asset($message['user']['image_path'] ?? 'images/placeholder.png') }}"
                                     alt="profile image">
                                 <div class="w-4"></div>
-                                <div>
+                                <div >
                                     <div
                                         class="max-w-sm 2xl:max-w-3xl p-4 {{ $message['user']['id'] === Auth::user()->id ? 'bg-[#EEEDFA]' : 'bg-[#F5F5F5]' }} rounded shadow break-words">
                                         <span class="font-semibold">{{ $message['user']['name'] }}</span>
 
                                         <!-- Display message content -->
                                         @if ($message['content'])
-                                            <p class="whitespace-pre-wrap">{{ $message['content'] }}</p>
+                                            <p translate="no" class="whitespace-pre-wrap">{{ $message['content'] }}</p>
                                         @endif
 
                                         @if (
