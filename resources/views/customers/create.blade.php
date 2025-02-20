@@ -70,9 +70,9 @@
                     </div>
                     <div>
                         <label for="email" class="block text-sm font-medium">Email</label>
-                        <input autocomplete="email-customer" type="text" name="email-customer" id="email"
+                        <input autocomplete="email-customer" type="text" name="email-customer" id="email-customer"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
-                        <span id="email-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
+                        <span id="email-customer-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
                 </div>
                 <div class="border-dashed border mb-2 mt-4"></div>
@@ -130,9 +130,10 @@
                     </div>
                     <div>
                         <label for="password" class="block text-sm font-medium">Password</label>
-                        <input autocomplete="password-customer" type="password" name="password-customer" id="password"
+                        <input autocomplete="password-customer" type="password" name="password-customer"
+                            id="password-customer"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
-                        <span id="password-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
+                        <span id="password-customer-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
                 </div>
 
@@ -300,8 +301,9 @@
                 if (stepCounter === 1) {
                     const requiredFieldsStep1 = ['name', 'surname', 'assigned_cars', 'city', 'admin_name',
                         'cellphone',
-                        'email', 'rag_sociale', 'iva', 'pec', 'sdi', 'legal_address', 'cap', 'province',
-                        'password'
+                        'email-customer', 'rag_sociale', 'iva', 'pec', 'sdi', 'legal_address', 'cap',
+                        'province',
+                        'password-customer'
                     ];
 
                     requiredFieldsStep1.forEach(field => {
