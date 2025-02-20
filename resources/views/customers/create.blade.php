@@ -23,7 +23,8 @@
         <form autocomplete="off" action="{{ route('customers.store') }}" method="POST"
             class="mt-4 text-[#9F9F9F] text-[13px]">
             @csrf
-
+  <input type="text" style="display:none" name="fakeusernameremembered">
+  <input type="password" style="display:none" name="fakepasswordremembered">
             <!-- Step 1 -->
             <div id="step-1">
                 <!-- Row 1 -->
