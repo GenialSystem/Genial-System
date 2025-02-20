@@ -129,7 +129,7 @@
                     </div>
                     <div>
                         <label for="password" class="block text-sm font-medium">Password</label>
-                        <input autocomplete="password-customer" type="password" name="password-customer"
+                        <input autocomplete="new-password" type="password" name="password-customer"
                             id="password-customer"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <span id="password-customer-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
