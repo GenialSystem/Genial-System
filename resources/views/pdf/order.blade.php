@@ -107,10 +107,9 @@
                     </div>
                     <div>
                         <span class="text-[#808080] text-[15px]">Stato pagamento: </span>
-                        <span
-                            class="px-2 py-1 rounded-md
-                            text-[13px] font-semibold bg-[#EFF7E9] text-[#7FBC4B]">
-                            Saldato
+                        <span class="px-2 py-1 rounded-md
+                            text-[13px] font-semibold">
+                            {{ $order->payment }}
                         </span>
                     </div>
                     @role('admin')
@@ -118,16 +117,12 @@
                             <hr class="my-3">
                             <div>
                                 <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                                <span class="text-[#222222] text-[15px]"> {{ $order->mechanics[0]->user->name }}
-                                    {{ $order->mechanics[0]->user->surname }}</span>
-                            </div>
-                            <div>
-                                <span class="text-[#808080] text-[15px]">Guadagno tecnico: </span>
                                 <span class="text-[#222222] text-[15px]">
-                                    {{ number_format(($order->earn_mechanic_percentage / 100) * floatval(str_replace(['.', ','], ['', '.'], $order->price)), 2, ',', '.') }}€
+                                    {{ $order->mechanics->map(fn($mechanic) => $mechanic->user->name . ' ' . $mechanic->user->surname)->implode(', ') }}
                                 </span>
                             </div>
                         @endif
+
                     @endrole
                 </div>
             </div>

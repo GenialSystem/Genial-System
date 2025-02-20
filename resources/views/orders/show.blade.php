@@ -65,10 +65,12 @@
                         </div>
                     @endhasanyrole
                     @if (!empty($order->mechanics) && isset($order->mechanics[0]->user))
-                        <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                        <span class="text-[#222222] text-[15px]">
-                            {{ $order->mechanics[0]->user->name }} {{ $order->mechanics[0]->user->surname }}
-                        </span>
+                        <div>
+                            <span class="text-[#808080] text-[15px]">Tecnici: </span>
+                            <span class="text-[#222222] text-[15px]">
+                                {{ $order->mechanics->map(fn($mechanic) => $mechanic->user->name . ' ' . $mechanic->user->surname)->implode(', ') }}
+                            </span>
+                        </div>
                     @else
                         <span class="text-[#808080] text-[15px]">Tecnico: </span>
                         <span class="text-[#222222] text-[15px]">Nessun tecnico assegnato</span>

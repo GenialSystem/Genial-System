@@ -89,10 +89,10 @@
             </div>
 
             <div x-show="activeTab === 'tab1'" class="p-4">
-                <div class="my-3">
+                {{-- <div class="my-3">
                     <span class="text-[#808080] text-[15px]">Filiale: </span>
                     <span class="text-[#222222] text-[15px]"> Como</span>
-                </div>
+                </div> --}}
                 <div class="my-3">
                     <span class="text-[#808080] text-[15px]">Targa: </span>
                     <span class="text-[#222222] text-[15px]"> {{ $order->plate }}</span>
@@ -298,7 +298,7 @@
                                                 class="transition-colors duration-200 group-hover:stroke-white" />
                                         </g>
                                     </svg>
-                                    {{ __('orders.Scarica pdf')}}
+                                    {{ __('orders.Scarica pdf') }}
 
                                 </button>
                             </a>

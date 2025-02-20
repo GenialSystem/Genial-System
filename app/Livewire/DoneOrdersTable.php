@@ -44,9 +44,11 @@ class DoneOrdersTable extends Component
             $query->where(function ($q) {
                 $q->where('id', 'like', "%{$this->searchTerm}%")
                     ->orWhere('state', 'like', "%{$this->searchTerm}%")
+                    ->orWhere('payment', 'like', "%{$this->searchTerm}%")
                     ->orWhere('plate', 'like', "%{$this->searchTerm}%")
                     ->orWhere('price', 'like', "%{$this->searchTerm}%")
                     ->orWhere('brand', 'like', "%{$this->searchTerm}%")
+                    ->orWhere('color', 'like', "%{$this->searchTerm}%")
                     ->orWhereHas('customer', function ($userQuery) {
                         $userQuery->where('admin_name', 'like', "%{$this->searchTerm}%")
                             ->orWhereHas('user', function ($infoQuery) {
@@ -56,8 +58,11 @@ class DoneOrdersTable extends Component
                             });
                     })
                     ->orWhereHas('mechanics', function ($mechanicQuery) {
-                        $mechanicQuery->where('name', 'like', "%{$this->searchTerm}%");
+                        $mechanicQuery->whereHas('user', function ($userQuery) {
+                            $userQuery->where('name', 'like', "%{$this->searchTerm}%");
+                        });
                     });
+                    
             });
         }
 
