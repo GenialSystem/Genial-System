@@ -55,6 +55,7 @@ class PdfController extends Controller
                         ->waitUntilNetworkIdle()
                         ->setOption('printBackground', true)
                         ->setOption('args', ['--no-sandbox'])
+                        ->format('A4')
                         ->setOption('executablePath', '/usr/bin/google-chrome-stable') // Use Google Chrome
                         ->save($pdfFullPath);
 
@@ -87,6 +88,7 @@ class PdfController extends Controller
                         ->waitUntilNetworkIdle()
                         ->setOption('printBackground', true)
                         ->setOption('args', ['--no-sandbox'])
+                        ->format('A4')
                         ->setOption('executablePath', '/usr/bin/google-chrome-stable') // Use Google Chrome
                         ->save($pdfFullPath);
                 
