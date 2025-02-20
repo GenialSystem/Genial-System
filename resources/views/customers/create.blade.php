@@ -20,7 +20,7 @@
             </div>
             <span id="step-2-text" class="text-[#9F9F9F] text-[15px]">Permessi</span>
         </div>
-        <form action="{{ route('customers.store') }}" method="POST" class="mt-4 text-[#9F9F9F] text-[13px]">
+        <form autocomplete="off" action="{{ route('customers.store') }}" method="POST" class="mt-4 text-[#9F9F9F] text-[13px]">
             @csrf
 
             <!-- Step 1 -->
