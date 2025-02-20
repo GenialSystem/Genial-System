@@ -52,10 +52,10 @@
                         <span class="text-[#808080] text-[15px]">Password: </span>
                         <span class="text-[#222222] text-[15px]">{{ $mechanic->plain_password }}</span>
                     </div>
-                    <div>
+                  {{--<div>
                         <span class="text-[#808080] text-[15px]">Filiale: </span>
                         <span class="text-[#222222] text-[15px]">{{ $mechanic->branch }}</span>
-                    </div>
+                    </div> --}}
                     <div>
                         <span class="text-[#808080] text-[15px]">Data creazione: </span>
                         <span class="text-[#222222] text-[15px]">{{ $mechanic->created_at->format('d/m/Y') }}</span>
