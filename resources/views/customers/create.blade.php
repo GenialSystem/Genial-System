@@ -20,7 +20,8 @@
             </div>
             <span id="step-2-text" class="text-[#9F9F9F] text-[15px]">Permessi</span>
         </div>
-        <form autocomplete="off" action="{{ route('customers.store') }}" method="POST" class="mt-4 text-[#9F9F9F] text-[13px]">
+        <form autocomplete="off" action="{{ route('customers.store') }}" method="POST"
+            class="mt-4 text-[#9F9F9F] text-[13px]">
             @csrf
 
             <!-- Step 1 -->
@@ -69,7 +70,7 @@
                     </div>
                     <div>
                         <label for="email" class="block text-sm font-medium">Email</label>
-                        <input type="text" name="email" id="email"
+                        <input autocomplete="off" type="text" name="email" id="email"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <span id="email-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
@@ -129,7 +130,7 @@
                     </div>
                     <div>
                         <label for="password" class="block text-sm font-medium">Password</label>
-                        <input type="password" name="password" id="password"
+                        <input autocomplete="off" type="password" name="password" id="password"
                             class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
                         <span id="password-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                     </div>
