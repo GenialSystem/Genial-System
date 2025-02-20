@@ -48,7 +48,7 @@ class CustomerInfoController extends Controller
                 'surname' => $validatedData['surname'],
                 'cdf' => 'cdf',
                 'email' => $validatedData['email'],
-                'password' => Hash::make('password'),
+                'password' => Hash::make($validatedData['password']),
                 'city' => $validatedData['city'],
                 'address' => $validatedData['legal_address'],
                 'cap' => $validatedData['cap'],

@@ -37,6 +37,7 @@ class StoreCustomerRequest extends FormRequest
             'legal_address' => 'required|string|max:255',
             'cap' => 'required|string|max:100',
             'province' => 'required|string|max:255',
+            'password' => 'required|string|max:255',
         ];
     }
 }
