@@ -28,7 +28,7 @@ class StoreCustomerRequest extends FormRequest
             'city' => 'required|string|max:255',
             'admin_name' => 'required|string|max:255',
             'cellphone' => 'required|string|max:30',
-            'email' => 'required|email|max:255',
+            'email-customer' => 'required|email|max:255',
             'rag_sociale' => 'required|string|max:255',
             'iva' => 'required|string|max:100',
             'pec' => 'required|string|max:255',
@@ -37,7 +37,7 @@ class StoreCustomerRequest extends FormRequest
             'legal_address' => 'required|string|max:255',
             'cap' => 'required|string|max:100',
             'province' => 'required|string|max:255',
-            'password' => 'required|string|max:255',
+            'password-customer' => 'required|string|max:255',
         ];
     }
 }
