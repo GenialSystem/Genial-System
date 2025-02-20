@@ -148,13 +148,13 @@
                     class="py-2 px-4 border-b-2 focus:outline-none">
                     Foto Smontaggio
                 </button>
-                @role('admin')
+                @hasAnyRole(['admin', 'customer'])
                 <button @click="activeTab = 'tab4'"
                     :class="activeTab === 'tab4' ? 'border-[#4453A5] text-[#4453A5]' : 'border-transparent text-[#9F9F9F]'"
                     class="py-2 px-4 border-b-2 focus:outline-none">
                     Documenti
                 </button>
-                @endrole
+                @endhasanyrole
             </div>
 
             <div x-show="activeTab === 'tab1'">
