@@ -29,7 +29,6 @@ class StoreMechanicInfoRequest extends FormRequest
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'province' => 'required|string|max:255',
-            'branch' => 'required|string|max:255',
             'cap' => 'required|integer',
             'repaired_count' => 'nullable|integer',
             'working_count' => 'nullable|integer',

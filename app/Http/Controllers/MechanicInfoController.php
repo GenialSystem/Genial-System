@@ -56,7 +56,7 @@ class MechanicInfoController extends Controller
                 'address' => $validatedData['address'],
                 'city' => $validatedData['city'],
                 'province' => $validatedData['province'],
-                'branch' => $validatedData['branch'],
+                'branch' => 'x',
                 'cap' => $validatedData['cap'],
                 'repaired_count' => $validatedData['repaired_count'] ?? 0,
                 'working_count' => $validatedData['working_count'] ?? 0,

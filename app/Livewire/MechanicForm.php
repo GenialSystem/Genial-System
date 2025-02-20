@@ -23,7 +23,6 @@ class MechanicForm extends ModalComponent
     public $province;
     public $plain_password;
     public $city;
-    public $branch;
     public $repaired_count;
     public $working_count;
 
@@ -58,7 +57,6 @@ class MechanicForm extends ModalComponent
             $this->cap = $mechanic->user->cap;
             $this->province = $mechanic->user->province;
             $this->city = $mechanic->user->city;
-            $this->branch = $mechanic->branch;
             $this->repaired_count = $mechanic->repaired_count;
             $this->working_count = $mechanic->working_count;
         }
@@ -100,7 +98,7 @@ class MechanicForm extends ModalComponent
                 ]);
                 
                 $mechanicInfo->update([
-                    'branch' => $this->branch,
+                    'branch' => 'x',
                     'repaired_count' => $validatedData['repaired_count'] ?? 0,
                     'working_count' => $validatedData['working_count'] ?? 0,
                     'plain_password' => $validatedData['plain_password'] ?? $mechanicInfo->plain_password, // Update plain_password
@@ -123,7 +121,7 @@ class MechanicForm extends ModalComponent
 
                 MechanicInfo::create([
                     'user_id' => $newUser->id,
-                    'branch' => $this->branch,
+                    'branch' => 'x',
                     'repaired_count' => $validatedData['repaired_count'] ?? 0,
                     'working_count' => $validatedData['working_count'] ?? 0,
                     'plain_password' => $validatedData['plain_password'] ?? null, // Store plain_password
