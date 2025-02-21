@@ -54,6 +54,7 @@
         </div>
 
         {{-- Schedule Section --}}
+
         <div id="schedule-section" class="my-8 mx-4 hidden">
             <x-top-scrollbar id="top-scrollbar" />
 

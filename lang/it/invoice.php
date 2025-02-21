@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'Aperto' => 'Aperto',
+    'Aperto' => 'Aperto', 
     'Chiuso' => 'Chiuso'
 ];
