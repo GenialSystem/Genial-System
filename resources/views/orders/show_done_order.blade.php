@@ -175,17 +175,16 @@
                             <span class="text-[#808080] text-[15px]">Data: </span>
                             <span class="text-[#222222] text-[15px]">{{ $order->created_at->format('d/m/Y') }}</span>
                         </div>
-                        @if ($order->mechanics->isNotEmpty())
-                            <div class="flex justify-between my-3">
-                                <div>
-                                    <span class="text-[#808080] text-[15px]">Tecnico: </span>
-                                    <span class="text-[#222222] text-[15px]">{{ $order->mechanics[0]->user->name }}
-                                        {{ $order->mechanics[0]->user->surname }}</span>
-                                </div>
-                                <a href="{{ route('mechanics.show', $order->mechanics[0]->id) }}"
-                                    class="text-[#4453A5]">Vai
-                                    all'anagrafica</a>
+                        @if (!empty($order->mechanics) && isset($order->mechanics[0]->user))
+                            <div>
+                                <span class="text-[#808080] text-[15px]">Tecnici: </span>
+                                <span class="text-[#222222] text-[15px]">
+                                    {{ $order->mechanics->map(fn($mechanic) => $mechanic->user->name . ' ' . $mechanic->user->surname)->implode(', ') }}
+                                </span>
                             </div>
+                        @else
+                            <span class="text-[#808080] text-[15px]">Tecnico: </span>
+                            <span class="text-[#222222] text-[15px]">Nessun tecnico assegnato</span>
                         @endif
 
                         <table class="w-full mt-6 bg-white border border-gray-200">

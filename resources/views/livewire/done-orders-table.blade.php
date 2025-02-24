@@ -36,18 +36,26 @@
                             <td class="py-3 px-6">{{ $row->price }} €</td>
                             <td class="py-3 px-6">{{ $row->payment }}</td>
 
-                            <td class="py-3 px-6">
-                                <div class="flex place-items-center">
-                                    @if ($row->mechanics->isNotEmpty())
-                                        <img class="inline-block w-8 h-8  rounded-full border mr-2"
-                                            src="{{ asset($row->mechanics->first()->image_path ?? 'images/placeholder.png') }}"
-                                            alt="profile image">
-                                        {{ $row->mechanics->first()->name }}
-                                        {{ $row->mechanics->first()->surname }}
-                                    @else
-                                        N/A
-                                    @endif
-                                </div>
+                            <td class="py-3 px-6 relative group">
+                                @if ($row->mechanics->isNotEmpty())
+                                    <div class="flex -space-x-4">
+                                        @foreach ($row->mechanics->take(4) as $mechanic)
+                                            <img class="inline-block w-8 h-8 rounded-full"
+                                                src="{{ asset($mechanic->image_path ?? 'images/placeholder.png') }}"
+                                                alt="profile image">
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Tooltip that shows all mechanics on hover -->
+                                    <div
+                                        class="absolute right-0 top-4 mt-1 hidden group-hover:block bg-gray-700 text-white text-xs rounded-lg px-2 py-1 whitespace-nowrap z-10">
+                                        @foreach ($row->mechanics as $mechanic)
+                                            {{ $mechanic->user->name }} {{ $mechanic->user->surname }}<br>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    N/A
+                                @endif
                             </td>
                             <td class="py-3 px-6 flex space-x-2">
                                 @livewire('show-button', ['customRoute' => 'showDoneOrder', 'modelId' => $row->id, 'modelClass' => \App\Models\Order::class], key(str()->random(10)))
