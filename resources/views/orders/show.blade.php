@@ -121,9 +121,9 @@
 
                         </div>
                         <div>
-                            <span class="text-[#808080] text-[15px]">Guadagno tecnico: </span>
+                            <span class="text-[#808080] text-[15px]">Guadagno singolo tecnico: </span>
                             <span class="text-[#222222] text-[15px]">
-                                {{ number_format(($order->earn_mechanic_percentage / 100) * floatval(str_replace(['.', ','], ['', '.'], $order->price)), 2, ',', '.') }}€
+                                {{ number_format((($order->earn_mechanic_percentage / count($order->mechanics) )/ 100) * floatval(str_replace(['.', ','], ['', '.'], $order->price)), 2, ',', '.') }}€
                             </span>
                         </div>
                     @endrole
