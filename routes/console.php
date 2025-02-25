@@ -35,9 +35,11 @@ Artisan::command('notify:upcoming-events', function () {
 
         Log::info("Event Start Time: {$eventStartTime->toDateTimeString()}");
         Log::info("Notification Time: {$notificationTime->toDateTimeString()}");
-
+        Log::info($currentDateTime->format('Y-m-d H:i') === $notificationTime->format('Y-m-d H:i'));
+        Log::info($currentDateTime->format('Y-m-d H:i'));
+        Log::info($notificationTime->format('Y-m-d H:i'));
         // Check if it's time to send notifications
-        if ($currentDateTime->between($notificationTime, $eventStartTime)) {
+        if ($currentDateTime->format('Y-m-d H:i') === $notificationTime->format('Y-m-d H:i')) {
             foreach ($event->mechanics as $mechanic) {
                 $user = $mechanic->user; // Get the related user
             
