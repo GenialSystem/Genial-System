@@ -481,6 +481,8 @@
                                     });
                                 }
 
+                                Livewire.dispatch('notification-received');
+
                                 setTimeout(() => {
                                     updateLastMessageTimes();
                                 }, 100); // Allow time for DOM to render

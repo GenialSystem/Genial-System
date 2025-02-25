@@ -1,9 +1,10 @@
 <div class="z-40">
     <!-- Button to trigger sidebar -->
-    <div id="toggleSidebar" wire:click='toggleSidebar'
+ <div id="toggleSidebar" wire:click='toggleSidebar'
         class="cursor-pointer w-8 h-8 bg-[#F0F0F0] rounded-full flex items-center place-content-center">
-        <img src="{{ asset('images/button header notifiche.svg') }}" alt="notifications"
-            class="cursor-pointer hover:text-primary">
+        <livewire:notifications-indicator />
+       {{-- <img src="{{ asset('images/button header notifiche.svg') }}" alt="notifications"
+            class="cursor-pointer hover:text-primary">--}}
     </div>
 
     <!-- Overlay -->
