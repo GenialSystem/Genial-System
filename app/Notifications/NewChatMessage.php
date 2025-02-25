@@ -8,7 +8,6 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Support\Facades\Log;
-
 class NewChatMessage extends Notification
 {
     use Queueable;
@@ -35,6 +34,7 @@ class NewChatMessage extends Notification
 
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
+
         return new BroadcastMessage([
             'title' =>  $notifiable->name . ' ' . $notifiable->surname . ' ti ha inviato un nuovo messaggio: ',
             'message' => $this->chatMessage ,

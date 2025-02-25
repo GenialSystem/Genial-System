@@ -105,7 +105,6 @@ class OrderController extends Controller
                 foreach ($request->file('images') as $image) {
                     // Store image in "orders/{order_id}/normal" directory
                     $imagePath = $image->storeAs("orders/{$order->id}/normal", $image->getClientOriginalName(), 'public');
-
                     // Create a record in order_images table
                     $order->images()->create([
                         'image_path' => $imagePath,

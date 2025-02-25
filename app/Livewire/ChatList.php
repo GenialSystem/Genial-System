@@ -61,7 +61,7 @@ class ChatList extends Component
             $this->filterType = 'client';
         }
         $this->loadChats();
-
+        $this->dispatch('notification-received');
         $this->dispatch('messagesLoaded');
     }
 
@@ -202,9 +202,12 @@ class ChatList extends Component
         $this->fileMessages = Message::where('chat_id', $this->selectedChat['id'])
         ->whereNotNull('file_path')
         ->get();
-           $receiverId = $this->selectedChat->users->where('id', '!=', Auth::user()->id)->pluck('id')[0];
 
+        $receiverId = $this->selectedChat->users->where('id', '!=', Auth::user()->id)->pluck('id')[0];
+
+        $this->dispatch('notifications-read');
         $this->dispatch('chatSelected', $this->selectedChat->id, $receiverId, $this->selectedChat->users);
+
     }
 
 
@@ -329,6 +332,7 @@ class ChatList extends Component
 
         // Dispatch a messageSent event for any further actions
         $this->dispatch('messageSent', $message);
+        $this->dispatch('notification-received');
     }
 
     public function filterChats($type = null)
