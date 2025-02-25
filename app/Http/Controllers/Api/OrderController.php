@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\MechanicInfo;
 use App\Models\Order;
 use App\Models\OrderFile;
+use App\Models\OrderImage;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
 class OrderController extends Controller
@@ -127,6 +129,26 @@ class OrderController extends Controller
         return response()->json($order->images);
     
     }
+
+    public function deleteImage($imageId)
+    {
+        $image = OrderImage::find($imageId);
+
+        if (!$image) {
+            return response()->json(['message' => 'Immagine non trovata'], 404);
+        }
+
+        // Elimina il file fisico dallo storage
+        if (Storage::disk('public')->exists($image->image_path)) {
+            Storage::disk('public')->delete($image->image_path);
+        }
+
+        // Elimina il record dal database
+        $image->delete();
+
+        return response()->json(['message' => 'Immagine eliminata con successo']);
+    }
+
 
     public function uploadFiles(Request $request, $id)
     {
