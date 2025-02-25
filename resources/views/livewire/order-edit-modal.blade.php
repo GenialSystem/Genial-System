@@ -37,7 +37,7 @@
                     </select>
                     <span id="car_size-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
                 </div>
-                         <div>
+                <div>
                     <label for="payments" class="block text-sm text-[13px] text-[#9F9F9F]">Stato pagamento</label>
                     <select name="payments" id="payments"
                         class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
@@ -59,18 +59,18 @@
                     <span id="damage_diameter-error" class="text-red-500 text-xs hidden"></span>
                 </div>
                 @role('admin')
-
-                {{-- montaggio/smontaggio --}}
-                 <div>
-                  <label for="assembly_deassembly"
-                                    class="block text-sm text-[#9F9F9F] text-[13px]">Montaggio/Smontaggio</label>
-                                    <select name="assembly_disassembly" id="assembly_disassembly" class="mt-1 p-2 border-transparent rounded-md w-20 bg-white">
-                                    <option value="1" <?= $order->assembly_disassembly ? 'selected' : '' ?>>Si</option>
-                                    <option value="0" <?= !$order->assembly_disassembly ? 'selected' : '' ?>>No</option>
-                                </select>
-                    <span id="assembly_deassembly-error" class="text-red-500 text-xs hidden"></span>
-                </div>
-                {{-- --------------------- --}}
+                    {{-- montaggio/smontaggio --}}
+                    <div>
+                        <label for="assembly_deassembly"
+                            class="block text-sm text-[#9F9F9F] text-[13px]">Montaggio/Smontaggio</label>
+                        <select name="assembly_disassembly" id="assembly_disassembly"
+                            class="mt-1 p-2 border-transparent rounded-md w-20 bg-white">
+                            <option value="1" <?= $order->assembly_disassembly ? 'selected' : '' ?>>Si</option>
+                            <option value="0" <?= !$order->assembly_disassembly ? 'selected' : '' ?>>No</option>
+                        </select>
+                        <span id="assembly_deassembly-error" class="text-red-500 text-xs hidden"></span>
+                    </div>
+                    {{-- --------------------- --}}
                     <div>
                         <label for="earn_mechanic_percentage" class="block text-sm text-[13px] text-[#9F9F9F]">Guadagno
                             Tecnico %</label>
@@ -104,7 +104,7 @@
 
             <!-- Notes Textarea value="" -->
             <label class="block text-sm text-[13px] text-[#9F9F9F] mt-4" for="notes">Appunti</label>
-            <textarea required name="notes" id="notes" cols="10" rows="5"
+            <textarea name="notes" id="notes" cols="10" rows="5"
                 class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">{{ $order->notes }}</textarea>
             <span id="notes-error" class="text-red-500 text-xs hidden">Campo obbligatorio.</span>
 

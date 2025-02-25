@@ -69,7 +69,7 @@ class OrderController extends Controller
                 'assembly_disassembly' => $request->input('assembly_disassembly'),
                 'damage_diameter' => $request->input('damage_diameter'),
                 'replacements' => $request->input('replacements'),
-                'notes' => $request->input('notes'),
+                'notes' => $request->input('notes') ?? '',
                 'color' => $request->input('color')
             ]);
 
@@ -214,7 +214,7 @@ class OrderController extends Controller
                 'aluminium' => $request->aluminium == 'on' ? true : false,
                 'replacements' => $request->replacements,
                 'color' => $request->color,
-                'notes' => $request->notes,
+                'notes' => $request->notes ?? '',
                 'damage_diameter' => $request->damage_diameter,
                 'assembly_disassembly' => $request->assembly_disassembly,
                 'earn_mechanic_percentage' => $request->earn_mechanic_percentage ?? 0,

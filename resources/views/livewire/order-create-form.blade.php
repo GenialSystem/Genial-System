@@ -113,28 +113,28 @@
                         <span id="earn_mechanic_percentage-error" class="text-red-500 text-xs hidden">Campo
                             obbligatorio.</span>
                     </div>
-                             {{-- Stato Pagamento --}}
-                <div>
-                    <label for="payment"
-                        class="block text-sm text-[#9F9F9F] text-[13px]">Stato pagamento</label>
-                            <select name="payment" id="payment" class="mt-1 p-2 border-transparent rounded-md w-52 bg-white">
-                                 <option value="">Stato di pagamento</option>
-                        @foreach ($payments as $key => $payment)
-                            <option value="{{ $key }}">{{ $payment }}</option>
-                        @endforeach
-                            </select>
-                    <span id="payment-error" class="text-red-500 text-xs hidden"></span>
-                </div>
-                {{-- --------------- --}}
-                <div>
-                  <label for="assembly_deassembly"
-                                    class="block text-sm text-[#9F9F9F] text-[13px]">Montaggio/Smontaggio</label>
-                                    <select name="assembly_disassembly" id="assembly_disassembly" class="mt-1 p-2 border-transparent rounded-md w-20 bg-white">
-                                    <option value="1">Si</option>
-                                    <option value="0">No</option>
-                                </select>
-                    <span id="assembly_deassembly-error" class="text-red-500 text-xs hidden"></span>
-                </div>
+                    {{-- Stato Pagamento --}}
+                    <div>
+                        <label for="payment" class="block text-sm text-[#9F9F9F] text-[13px]">Stato pagamento</label>
+                        <select name="payment" id="payment" class="mt-1 p-2 border-transparent rounded-md w-52 bg-white">
+                            <option value="">Stato di pagamento</option>
+                            @foreach ($payments as $key => $payment)
+                                <option value="{{ $key }}">{{ $payment }}</option>
+                            @endforeach
+                        </select>
+                        <span id="payment-error" class="text-red-500 text-xs hidden"></span>
+                    </div>
+                    {{-- --------------- --}}
+                    <div>
+                        <label for="assembly_deassembly"
+                            class="block text-sm text-[#9F9F9F] text-[13px]">Montaggio/Smontaggio</label>
+                        <select name="assembly_disassembly" id="assembly_disassembly"
+                            class="mt-1 p-2 border-transparent rounded-md w-20 bg-white">
+                            <option value="1">Si</option>
+                            <option value="0">No</option>
+                        </select>
+                        <span id="assembly_deassembly-error" class="text-red-500 text-xs hidden"></span>
+                    </div>
                 @endrole
                 <div>
                     <label for="color" class="block text-sm font-medium">Colore</label>
@@ -342,7 +342,7 @@
                     stepCounter++;
                 }
             } else if (stepCounter === 2) {
-                const requiredFieldsStep2 = ['replacements', 'notes', 'car_size', 'damage_diameter'];
+                const requiredFieldsStep2 = ['replacements', 'car_size', 'damage_diameter'];
                 valid = validateParts() && validateFields(requiredFieldsStep2);
 
                 if (valid) {

@@ -25,7 +25,7 @@ class UpdateOrderRequest extends FormRequest
             'car_size' => 'required|string',
             'replacements' => 'required|string',
             'color' => 'required|string',
-            'notes' => 'required|string',
+            
             // 'earn_mechanic_percentage' => 'required|integer',
             'aluminium' => 'nullable',
             'parts.*.damage_count' => 'required|integer|min:0',
