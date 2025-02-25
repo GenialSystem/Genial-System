@@ -82,7 +82,14 @@ class MainOrderTable extends Component
             
             foreach ($order->mechanics as $mechanic) {
                 $mechanic->increment('repaired_count');
+                //crea fatttura per tenico $mechanic->user->id
+                // Invoice::create([
+                //     'iva' => $this->iva,
+                //     'price' => $this->price,
+                //     'user_id' => $mechanic->user->id,
+                //    ]);   
             }
+            
         }
         $order->finish_date = now();
         $order->update();

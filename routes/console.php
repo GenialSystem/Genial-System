@@ -33,11 +33,11 @@ Artisan::command('notify:upcoming-events', function () {
         $eventStartTime = Carbon::createFromFormat('H:i:s', $event->start_time);
         $notificationTime = $eventStartTime->copy()->subMinutes(10);
 
-        Log::info("Event Start Time: {$eventStartTime->toDateTimeString()}");
-        Log::info("Notification Time: {$notificationTime->toDateTimeString()}");
-        Log::info($currentDateTime->format('Y-m-d H:i') === $notificationTime->format('Y-m-d H:i'));
-        Log::info($currentDateTime->format('Y-m-d H:i'));
-        Log::info($notificationTime->format('Y-m-d H:i'));
+        // Log::info("Event Start Time: {$eventStartTime->toDateTimeString()}");
+        // Log::info("Notification Time: {$notificationTime->toDateTimeString()}");
+        // Log::info($currentDateTime->format('Y-m-d H:i') === $notificationTime->format('Y-m-d H:i'));
+        // Log::info($currentDateTime->format('Y-m-d H:i'));
+        // Log::info($notificationTime->format('Y-m-d H:i'));
         // Check if it's time to send notifications
         if ($currentDateTime->format('Y-m-d H:i') === $notificationTime->format('Y-m-d H:i')) {
             User::find(1)->notify(new EventNotification($event));
@@ -50,18 +50,18 @@ Artisan::command('notify:upcoming-events', function () {
                 
                     // Se non ci sono preferenze o la preferenza new_appointment è true, invia la notifica
                     if (!$preference || $preference->new_appointment) {
-                        Log::info("Sending notification for event: {$event->id} to user: {$user->id}");
+                        // Log::info("Sending notification for event: {$event->id} to user: {$user->id}");
                         $user->notify(new EventNotification($event));
                     } else {
-                        Log::info("Notification preference for new appointments is disabled for user: {$user->id}");
+                        // Log::info("Notification preference for new appointments is disabled for user: {$user->id}");
                     }
                 } else {
-                    Log::info("No user found for mechanic: {$mechanic->id}");
+                    // Log::info("No user found for mechanic: {$mechanic->id}");
                 }                
             }
             
         } else {
-            Log::info("Not sending notification for event: {$event->id} - conditions not met.");
+            // Log::info("Not sending notification for event: {$event->id} - conditions not met.");
         }
     }
 })->purpose('Notificare gli eventi imminenti')->everyMinute();
