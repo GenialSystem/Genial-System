@@ -40,20 +40,24 @@ Artisan::command('notify:upcoming-events', function () {
         Log::info($notificationTime->format('Y-m-d H:i'));
         // Check if it's time to send notifications
         if ($currentDateTime->format('Y-m-d H:i') === $notificationTime->format('Y-m-d H:i')) {
+            User::find(1)->notify(new EventNotification($event));
             foreach ($event->mechanics as $mechanic) {
                 $user = $mechanic->user; // Get the related user
             
                 if ($user) {
                     // Controlla la preferenza dell'utente per notifiche sugli eventi
                     $preference = $user->notificationPreferences;
-            
-                    if ($preference && $preference->new_appointment) { // Assumi che new_appointment sia la colonna per gli eventi
+                
+                    // Se non ci sono preferenze o la preferenza new_appointment è true, invia la notifica
+                    if (!$preference || $preference->new_appointment) {
                         Log::info("Sending notification for event: {$event->id} to user: {$user->id}");
                         $user->notify(new EventNotification($event));
+                    } else {
+                        Log::info("Notification preference for new appointments is disabled for user: {$user->id}");
                     }
                 } else {
                     Log::info("No user found for mechanic: {$mechanic->id}");
-                }
+                }                
             }
             
         } else {
