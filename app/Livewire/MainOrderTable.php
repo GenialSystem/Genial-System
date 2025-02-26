@@ -6,6 +6,7 @@ use App\Models\MechanicInfo;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Order;
+use App\Models\Invoice;
 use App\Notifications\OrderFinished;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,7 +28,7 @@ class MainOrderTable extends Component
         'dateFilterUpdated' => 'handleDateFilterUpdated',
         'paginationUpdated' => 'resetSelectAll',
     ];
-    
+
     public $states = [
         'Riparata' => 'bg-[#EFF7E9]',
         'Nuova' => 'bg-[#FFF9EC]',
@@ -76,20 +77,22 @@ class MainOrderTable extends Component
         $creator = Auth::user()->getFullName();
 
         $order->customer->user->notify(new OrderFinished($creator, $order->id));
-        
+
         if($order->finish_date == null){
             $order->customer->increment('finished_cars_count');
-            
+
             foreach ($order->mechanics as $mechanic) {
                 $mechanic->increment('repaired_count');
                 //crea fatttura per tenico $mechanic->user->id
-                // Invoice::create([
-                //     'iva' => $this->iva,
-                //     'price' => $this->price,
-                //     'user_id' => $mechanic->user->id,
-                //    ]);   
+                 Invoice::create([
+                     'iva' => 20,
+                     'order_id' => $order->id,
+                     'is_closed' => 0, //ora che la fattura viene generata lascio lo stato default aperto. Lo stato aperto è zero
+                     'price' =>  (($order->earn_mechanic_percentage / count($order->mechanics)) / 100) * floatval(str_replace(['.', ','], ['', '.'], $order->price)),
+                     'user_id' => $mechanic->user->id
+                    ]);
             }
-            
+
         }
         $order->finish_date = now();
         $order->update();
@@ -160,7 +163,7 @@ class MainOrderTable extends Component
         return $orders->pluck('id')->map(fn($id) => (string) $id)->toArray();
     }
 
-    
+
     public function toggleRow($rowId)
     {
         $rowId = (string) $rowId;
