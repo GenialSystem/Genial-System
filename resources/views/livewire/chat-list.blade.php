@@ -37,7 +37,8 @@
             <ul>
                 @foreach ($chats as $chat)
                     <li class="py-4 hover:bg-[#FAFAFA] cursor-pointer border-b border-b-[#F0F0F0] truncate"
-                        wire:click="selectChat({{ $chat['id'] }})" wire:click='markAsRead("{{ $chat['id'] }}")' wire:key="chat-{{ $chat['id'] }}">
+                        wire:click="selectChat({{ $chat['id'] }})" wire:click='markAsRead("{{ $chat['id'] }}")'
+                        wire:key="chat-{{ $chat['id'] }}">
                         @if ($chat['type'] === 'single')
                             @php
                                 $otherUser = collect($chat['users'])
@@ -75,7 +76,8 @@
                                         <p class="text-[#4453A5] text-sm mt-1 w-1">Riparazione #{{ $chat['order_id'] }}
                                         </p>
                                     @else
-                                        <p translate="no" class="text-[#656565] text-sm mt-1 w-1">{{ $lastMessage }}</p>
+                                        <p translate="no" class="text-[#656565] text-sm mt-1 w-1">{{ $lastMessage }}
+                                        </p>
                                     @endif
                                 </div>
                             </div>
@@ -277,14 +279,15 @@
                                     src="{{ asset($message['user']['image_path'] ?? 'images/placeholder.png') }}"
                                     alt="profile image">
                                 <div class="w-4"></div>
-                                <div >
+                                <div>
                                     <div
                                         class="max-w-sm 2xl:max-w-3xl p-4 {{ $message['user']['id'] === Auth::user()->id ? 'bg-[#EEEDFA]' : 'bg-[#F5F5F5]' }} rounded shadow break-words">
                                         <span class="font-semibold">{{ $message['user']['name'] }}</span>
 
                                         <!-- Display message content -->
                                         @if ($message['content'])
-                                            <p translate="no" class="whitespace-pre-wrap">{{ $message['content'] }}</p>
+                                            <p translate="no" class="whitespace-pre-wrap">{{ $message['content'] }}
+                                            </p>
                                         @endif
 
                                         @if (
@@ -294,18 +297,15 @@
                                                 target="_blank">
                                                 <img src="{{ asset('storage/' . $message['file_path']) }}"
                                                     alt="file-allegato"
-                                                    class="mt-2 max-w-3xl max-h-80 rounded shadow object-cover">
+                                                    class="mt-2 rounded shadow object-contain max-w-full max-h-80">
                                             </a>
                                         @elseif ($message['file_path'])
                                             <a href="{{ asset('storage/' . $message['file_path']) }}"
                                                 target="_blank">
-                                                <div class="w-20 text-6xl my-4">
-                                                    📄
-                                                </div>
+                                                <div class="w-20 text-6xl my-4">📄</div>
                                                 <div class="text-[#4453A5]">
                                                     {{ collect(explode('_', basename($message['file_path'])))->last() }}
                                                 </div>
-
                                             </a>
                                         @endif
                                     </div>
