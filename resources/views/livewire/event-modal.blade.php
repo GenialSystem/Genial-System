@@ -41,11 +41,11 @@
             </div>
 
             <!-- End Time Field -->
-            <div class="mb-4">
+         {{--  <div class="mb-4">
                 <label class="block text-sm text-[#9F9F9F] text-[13px]">Ora fine</label>
                 <input wire:model="end_time" required type="time" name="end_time"
                     class="mt-1 block w-full px-3 py-2 border border-[#F0F0F0] rounded-md focus:outline-none">
-            </div>
+            </div> --}}
         </div>
 
         <div class="mb-4">
