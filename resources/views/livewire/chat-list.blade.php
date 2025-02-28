@@ -286,7 +286,7 @@
 
                                         <!-- Display message content -->
                                         @if ($message['content'])
-                                            <p translate="no" class="whitespace-pre-wrap">{{ $message['content'] }}
+                                            <p translate="no" class="">{{ $message['content'] }}
                                             </p>
                                         @endif
 
@@ -297,7 +297,7 @@
                                                 target="_blank">
                                                 <img src="{{ asset('storage/' . $message['file_path']) }}"
                                                     alt="file-allegato"
-                                                    class="mt-2 rounded shadow object-contain max-w-full max-h-80">
+                                                    class="mt-2 rounded shadow object-cover max-w-full max-h-80">
                                             </a>
                                         @elseif ($message['file_path'])
                                             <a href="{{ asset('storage/' . $message['file_path']) }}"
@@ -325,7 +325,7 @@
                 <!-- Input per inviare nuovi messaggi -->
                 <div class="flex h-12 space-x-4 px-10 mb-6">
                     <div class="flex items-center border border-[#F0F0F0] rounded w-full p-1">
-                        <input type="text" id="messageInput" wire:model="newMessage"
+                        <input maxlength="250" type="text" id="messageInput" wire:model="newMessage"
                             placeholder="Scrivi un messaggio..."
                             class="flex-1 p-2 rounded-none border-transparent focus:border-transparent focus:ring-0">
 
@@ -366,6 +366,7 @@
         // Check if there's either a message or a selected file
         if (messageValue !== '' || selectedFile) {
             Livewire.dispatch('sendMessage');
+            console.log(messageValue);
         }
     }
 

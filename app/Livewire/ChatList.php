@@ -267,12 +267,13 @@ class ChatList extends Component
 
     public function sendMessage()
     {
+        
         // Validate the new message and file (if file exists)
         $this->validate([
             'newMessage' => 'nullable|string|max:255', // Message can be empty if a file is attached
             'file' => 'nullable|file|max:10240', // File can be up to 10MB
         ]);
-
+       
         // Initialize file path as null
         $filePath = null;
 
