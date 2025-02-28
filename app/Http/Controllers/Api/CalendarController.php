@@ -43,7 +43,7 @@ class CalendarController extends Controller
         $av = Availability::find($request->id);
         if ($av) {
             $state = $request->state == 'Disponibile' ? 'available' : 'not_available';
-           
+
             $av->update(['state' => $state]);
             return response()->json($av);
         }
@@ -61,36 +61,36 @@ class CalendarController extends Controller
         $startDate = Carbon::parse($request->start_date);
         $endDate = Carbon::parse($request->end_date);
         $state = $request->state == 'Disponibile' ? 'available' : 'not_available';
-    
+
         $mechanicId = $request->mechanic_id;
         $array = [];
-    
+
         // Itera su tutte le date nell'intervallo
         $dates = [];
         for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
             $dates[] = $date->toDateString();
-            
+
             // Trova o crea la disponibilità
             $availability = Availability::firstOrNew([
                 'mechanic_info_id' => $mechanicId,
                 'date' => $date->toDateString(),
-                
+
             ]);
             $availability->state = $state;
             $availability->save();
             array_push($array, $availability);
         }
-    
+
         return response()->json($array);
     }
-    
+
 
     public function createEvent(Request $request){
         $event = Event::create([
             'name' => $request->name,
             'date' => $request->date,
             'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
+            'end_time' => $request->start_time,
             'notify_me' => $request->notifyMe ?? false
         ]);
 
@@ -106,10 +106,10 @@ class CalendarController extends Controller
                 $relativeUserIds[] = $mechanic->user->id;
             }
         }
-        
+
         $admin = User::role('admin')->get();
         $relativeUserIds[] = $admin[0]->id;
-        
+
         $creator = User::find($request->user_id);
         $fullName = $creator->name . ' ' . $creator->surname;
 
@@ -118,7 +118,7 @@ class CalendarController extends Controller
             $query->where('new_appointment', true);
         })
         ->get();
-        
+
         Notification::send($users, new newAppointment($fullName));
 
         return response()->json($event);

@@ -93,6 +93,14 @@ class MainOrderTable extends Component
                     ]);
             }
 
+            Invoice::create([
+                'iva' => 20,
+                'order_id' => $order->id,
+                'is_closed' => 0, //ora che la fattura viene generata lascio lo stato default aperto. Lo stato aperto è zero
+                'price' =>  floatval(str_replace(['.', ','], ['', '.'], $order->price)),
+                'user_id' => $order->customer->user->id
+               ]);
+
         }
         $order->finish_date = now();
         $order->update();

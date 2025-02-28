@@ -37,11 +37,11 @@ class EventModal extends ModalComponent
             $this->end_time = $event->end_time;
 
             // Initialize selectedMechanics as an array of mechanic IDs
-            $this->selectedMechanics = $event->mechanics->pluck('id')->toArray(); 
+            $this->selectedMechanics = $event->mechanics->pluck('id')->toArray();
         } else {
             $this->selectedMechanics = [];
             if (Auth::user()->hasRole('mechanic')) {
-                $this->selectedMechanics[] = Auth::user()->mechanicInfo->id; 
+                $this->selectedMechanics[] = Auth::user()->mechanicInfo->id;
             }
         }
     }
@@ -68,7 +68,7 @@ class EventModal extends ModalComponent
             'name' => 'required|string|max:255',
             'date' => 'required|date',
             'start_time' => 'required',
-            'end_time' => 'required|after:start_time',
+            //'end_time' => 'required|after:start_time',
             'selectedMechanics' => 'required|array', // Ensure selectedMechanics is an array
         ]);
 
@@ -77,7 +77,7 @@ class EventModal extends ModalComponent
             'name' => $this->name,
             'date' => $this->date,
             'start_time' => $this->start_time,
-            'end_time' => $this->end_time,
+            'end_time' => $this->start_time,
             'notify_me' => $this->notifyMe ?? false
         ]);
 
@@ -94,10 +94,10 @@ class EventModal extends ModalComponent
                 $relativeUserIds[] = $mechanic->user->id;
             }
         }
-        
+
         $admin = User::role('admin')->get();
         $relativeUserIds[] = $admin[0]->id;
-        
+
         $creator = Auth::user()->getFullName();
 
         $users = User::whereIn('id', $relativeUserIds)
@@ -105,7 +105,7 @@ class EventModal extends ModalComponent
             $query->where('new_appointment', true);
         })
         ->get();
-        
+
         Notification::send($users, new newAppointment($creator));
 
         return redirect()->route('calendar.index')->with('success', ['title' => 'Evento creato con successo', 'subtitle' => 'Sarà visibile sul calendario degli utenti selezionati']);
