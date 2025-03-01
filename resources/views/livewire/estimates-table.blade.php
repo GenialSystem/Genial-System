@@ -3,7 +3,7 @@
     <div class="bg-white p-4">
 
         <div class="mb-4 space-y-3 2xl:space-y-0 2xl:flex justify-between">
-            <input type="text" class="p-2 border border-gray-300 rounded h-8 w-full xl:w-[600px]"
+            <input type="text" class="p-2 border border-gray-300 rounded h-8 w-full 2xl:w-[350px]"
                 placeholder="Cerca elemento..." wire:model.debounce.300ms.live="searchTerm" />
 
 
@@ -63,7 +63,7 @@
         bg-[#A892D1],
         bg-[#E68B69],
         --}}
-            <x-top-scrollbar id="top-scrollbar" />
+        <x-top-scrollbar id="top-scrollbar" />
 
         {{-- @dd($rows[0]->customer) --}}
         <div id="table" class="overflow-x-auto rounded-md mt-4">
@@ -118,7 +118,7 @@
                             @endrole
                             <td class="py-3 px-6 text-white">
                                 <div class="inline rounded-md py-1 px-2 text-center {{ $typeColor[$row->type] }}">
-                                    {{ __('estimate.' . $row->type)}}
+                                    {{ __('estimate.' . $row->type) }}
                                 </div>
                             </td>
                             @role('customer')
@@ -138,7 +138,7 @@
                                     <!-- Dropdown Button -->
                                     <button @if (Auth::user()->hasAnyRole(['admin', 'mechanic'])) @click="open = !open" @endif
                                         class="block w-full text-left rounded {{ $states[$row->state] }} {{ $statesText[$row->state] }} text-[13px] font-semibold py-1 px-2 flex items-center justify-between">
-                                        {{ ucfirst(__('estimate.' . $row->state )) }}
+                                        {{ ucfirst(__('estimate.' . $row->state)) }}
                                         <!-- Chevron Icon -->
                                         <svg class="w-4 h-4 ml-2 {{ $statesText[$row->state] }}" fill="none"
                                             stroke="currentColor" viewBox="0 0 24 24"
@@ -155,7 +155,7 @@
                                                 <div wire:key="{{ str()->random(10) }}" @click="open = false"
                                                     wire:click="updateState({{ $row->id }}, '{{ $state }}')"
                                                     class="{{ $color }} {{ $statesText[$state] }} px-3 py-2 cursor-pointer text-[13px] font-semibold">
-                                        {{ ucfirst(__('estimate.' . $state )) }}
+                                                    {{ ucfirst(__('estimate.' . $state)) }}
                                                 </div>
                                             @endif
                                         @endforeach

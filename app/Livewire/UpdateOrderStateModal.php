@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Invoice;
 use App\Models\Order;
 use App\Notifications\OrderFinished;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +39,7 @@ class UpdateOrderStateModal extends ModalComponent
                 $order->state = $this->newState;
                 $order->save();
 
-                if ($this->newState === 'Riparata' && $order->customer) {
+                if ($this->newState === 'Riparata' && $order->customer && $order->finish_date == null) {
                     $this->handleOrderFinish($order);
                 }
             }
@@ -56,8 +57,27 @@ class UpdateOrderStateModal extends ModalComponent
         $order->customer->increment('finished_cars_count');
 
         foreach ($order->mechanics as $mechanic) {
-            $mechanic->mechanicInfo->increment('repaired_count');
+            $mechanic->increment('repaired_count');
+            //crea fatttura per tenico $mechanic->user->id
+            Invoice::create([
+                'iva' => 20,
+                'order_id' => $order->id,
+                'is_closed' => 0, //ora che la fattura viene generata lascio lo stato default aperto. Lo stato aperto è zero
+                'price' =>  (($order->earn_mechanic_percentage / count($order->mechanics)) / 100) * floatval(str_replace(['.', ','], ['', '.'], $order->price)),
+                'user_id' => $mechanic->user->id
+               ]);
         }
+
+        Invoice::create([
+            'iva' => 20,
+            'order_id' => $order->id,
+            'is_closed' => 0, //ora che la fattura viene generata lascio lo stato default aperto. Lo stato aperto è zero
+            'price' =>  floatval(str_replace(['.', ','], ['', '.'], $order->price)),
+            'user_id' => $order->customer->user->id
+           ]);
+
+        $order->finish_date = now();
+        $order->update();
     }
 
     public function render()

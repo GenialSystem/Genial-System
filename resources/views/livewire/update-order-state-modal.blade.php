@@ -27,10 +27,18 @@
 
                 <div class="flex justify-end">
 
-                    <button type="submit" class="mt-3 px-2 bg-[#1E1B58] text-white rounded-md text-sm h-8">
+                    <button type="submit" class="mt-3 px-2 bg-[#1E1B58] text-white rounded-md text-sm h-8"
+                        wire:loading.remove>
                         Conferma
                     </button>
+                    <button disabled class="mt-3 px-2 bg-[#1E1B58] text-white rounded-md text-sm h-8" wire:loading>
+                        <div class="flex items-center">
 
+                            <div
+                                class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white] border-t-transparent mr-2">
+                            </div>
+                        </div>
+                    </button>
                 </div>
             </form>
         </div>
